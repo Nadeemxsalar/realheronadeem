@@ -1,225 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Media Platform</title>
+  <title>🔥 Full Reels App</title>
   <style>
-    /* Basic reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Arial', sans-serif;
-      background: linear-gradient(45deg, #f06, #4a90e2, #50e3c2);
-      color: white;
-      text-align: center;
-      padding: 0;
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: #121212;
+      color: #fff;
+      overflow-x: hidden;
+      transition: all 0.3s ease;
+    }
+    .container {
+      height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding-top: 20px;
+    }
+    .video-box {
+      position: relative;
+      width: 320px; height: 540px;
+      background: #111;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .overlay {
+      position: absolute;
+      bottom: 10px; left: 10px; right: 10px;
+      display: flex; flex-direction: column;
+      gap: 10px;
+      z-index: 1;
+    }
+    .user-info { font-weight: bold; display: flex; align-items: center; gap: 10px; color: #fff; }
+    .user-info img {
+      width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
+    }
+    .sound-title { font-size: 14px; color: #bbb; }
+    .caption { font-size: 14px; color: #fff; margin-top: 5px; }
+    .actions {
+      display: flex; justify-content: space-between;
       align-items: center;
+    }
+    .btn {
+      background: rgba(255,255,255,0.1);
+      padding: 5px 10px;
+      border-radius: 10px; cursor: pointer;
+    }
+    .liked { background: red !important; color: #fff; }
+    .nav-buttons, .upload {
+      margin-top: 12px;
+      display: flex; gap: 10px;
       justify-content: center;
+    }
+    .upload input, .form input {
+      border: none; padding: 5px;
+      border-radius: 10px;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      background: #ff4081;
+      color: #fff;
       transition: all 0.3s;
     }
-
-    /* Styling for upload form */
-    .upload-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
+    button:hover {
+      background: #e91e63;
     }
-
-    .upload-form input[type="file"] {
+    .profile-page {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #111;
+      display: none; flex-direction: column;
+      align-items: center; padding: 20px;
+      color: #fff;
+      overflow-y: scroll;
+    }
+    .profile-page.active { display: flex; }
+    .dark-mode {
+      position: absolute; top: 10px; right: 10px;
+      cursor: pointer; background: rgba(255,255,255,0.1);
+      padding: 5px 10px; border-radius: 20px;
+    }
+    .touch-area {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+    .profile-img {
+      width: 80px; height: 80px;
+      border-radius: 50%; object-fit: cover;
       margin-bottom: 10px;
-      padding: 8px;
     }
-
-    .upload-form input[type="text"] {
-      padding: 8px;
-      margin-bottom: 10px;
-      width: 250px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
+    #deleteBtn {
+      background: rgba(255,0,0,0.6);
     }
-
-    .upload-form button {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .upload-form button:hover {
-      background-color: #45a049;
-    }
-
-    /* Container for user posts */
-    #posts-container {
-      width: 80%;
-      margin-top: 20px;
-    }
-
-    /* Individual post styling */
-    .post-box {
-      background-color: rgba(0, 0, 0, 0.6);
+    #muteBtn {
+      background: rgba(255,255,255,0.2);
+      padding: 5px 15px;
       border-radius: 10px;
-      margin-bottom: 20px;
-      padding: 20px;
-      position: relative;
-      transition: transform 0.3s ease;
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    .post-box:hover {
-      transform: scale(1.05);
-    }
-
-    .post-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .username {
-      font-size: 1.2em;
-      font-weight: bold;
-    }
-
-    .delete-btn {
-      background: red;
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
     }
-
-    /* Post body for video display */
-    .post-body video {
-      width: 100%;
-      max-width: 500px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      display: block;
-      margin: 0 auto;
-      background-color: #000;
+    #muteBtn.muted {
+      background: rgba(255,0,0,0.6);
     }
-
-    /* Animation for fade-in effect */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
   </style>
 </head>
 <body>
 
-  <!-- Upload and user name form -->
-  <div class="upload-form">
-    <input type="text" id="username" placeholder="Enter your name">
-    <input type="file" id="file-upload" accept="video/*">
-    <button onclick="uploadPost()">Upload Post</button>
+<!-- Dark Mode Toggle -->
+<div class="dark-mode" onclick="toggleDarkMode()">🌓</div>
+
+<!-- Profile Page -->
+<div class="profile-page" id="profilePage">
+  <h2>@your_username</h2>
+  <img src="https://via.placeholder.com/80" alt="Profile Picture" class="profile-img" />
+  <p>📌 Bio: Just a creator.</p>
+  <p>👥 Followers: 123 | Following: 45</p>
+  <button onclick="showMyReels()">My Reels</button>
+  <button onclick="closeProfile()">Back</button>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+  <!-- Video Reel -->
+  <div class="video-box">
+    <video id="reel" autoplay muted></video>
+    <div class="overlay">
+      <div class="user-info" id="userInfo">
+        <img src="https://via.placeholder.com/30" alt="User" id="profilePic" />
+        <span id="username">@user</span>
+      </div>
+      <div class="sound-title" id="sound">🎵 Sound Title</div>
+      <div class="caption" id="caption">🔥 Caption text...</div>
+      <div class="actions">
+        <div class="btn" id="likeBtn" onclick="toggleLike()">❤️ <span id="likeCount">0</span></div>
+        <div class="btn" onclick="alert('Shared!')">📤 Share</div>
+        <div class="btn" onclick="alert('Saved!')">💾 Save</div>
+        <div class="btn" id="muteBtn" onclick="toggleMute()">🔊</div>
+      </div>
+    </div>
+    <div class="touch-area" id="touchArea"></div>
   </div>
 
-  <!-- Container to display user posts -->
-  <div id="posts-container"></div>
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button onclick="prevReel()">⬅️ Prev</button>
+    <button onclick="nextReel()">➡️ Next</button>
+    <button onclick="randomReel()">🎲 Random</button>
+    <button onclick="openProfile()">👤 Profile</button>
+  </div>
 
-  <script>
-    // Load posts from localStorage when page loads
-    window.onload = function() {
-      const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-      savedPosts.forEach(post => {
-        displayPost(post.username, post.videoURL);
-      });
-    };
+  <!-- Reel Upload Section -->
+  <div class="upload">
+    <input type="file" accept="video/*" onchange="uploadReel(event)" />
+    <input type="text" placeholder="Sound" id="uploadSound" />
+    <input type="text" placeholder="Caption" id="uploadCaption" />
+  </div>
+</div>
 
-    // Function to upload a post
-    function uploadPost() {
-      const fileInput = document.getElementById('file-upload');
-      const usernameInput = document.getElementById('username');
-      const file = fileInput.files[0];
-      const username = usernameInput.value.trim();
+<script>
+  const reels = [
+    { src: "https://www.w3schools.com/html/mov_bbb.mp4", username: "@skater", sound: "Lo-Fi Beat", caption: "Skating through life 🛹", id: "reel1", owner: false },
+    { src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4", username: "@flora", sound: "Nature Melody", caption: "Flowers in bloom 🌸", id: "reel2", owner: false }
+  ];
 
-      // Validate user input
-      if (!file || !username) {
-        alert("Please enter your name and select a video!");
-        return;
-      }
+  let current = 0;
+  const video = document.getElementById("reel");
+  const username = document.getElementById("username");
+  const sound = document.getElementById("sound");
+  const caption = document.getElementById("caption");
+  const likeBtn = document.getElementById("likeBtn");
+  const likeCount = document.getElementById("likeCount");
+  const touchArea = document.getElementById("touchArea");
+  const muteBtn = document.getElementById("muteBtn");
 
-      const videoURL = URL.createObjectURL(file);
+  // Load current reel data
+  function loadReel(index) {
+    const r = reels[index];
+    video.src = r.src;
+    username.textContent = r.username;
+    sound.textContent = "🎵 " + r.sound;
+    caption.textContent = r.caption;
+    updateLikeDisplay(r.id);
+    video.play();
+  }
 
-      // Create post object
-      const post = {
-        username: username,
-        videoURL: videoURL
+  // Change to the next reel
+  function nextReel() {
+    current = (current + 1) % reels.length;
+    loadReel(current);
+  }
+
+  // Change to the previous reel
+  function prevReel() {
+    current = (current - 1 + reels.length) % reels.length;
+    loadReel(current);
+  }
+
+  // Random reel
+  function randomReel() {
+    current = Math.floor(Math.random() * reels.length);
+    loadReel(current);
+  }
+
+  // Toggle like status for the reel
+  function toggleLike() {
+    const id = reels[current].id;
+    const liked = localStorage.getItem(id) === "true";
+    localStorage.setItem(id, !liked);
+    updateLikeDisplay(id);
+  }
+
+  // Update the like button display
+  function updateLikeDisplay(id) {
+    const liked = localStorage.getItem(id) === "true";
+    likeBtn.classList.toggle("liked", liked);
+    likeCount.textContent = liked ? "1" : "0";
+  }
+
+  // Toggle dark mode (light/dark background)
+  function toggleDarkMode() {
+    const dark = document.body.style.background === "black";
+    document.body.style.background = dark ? "#fff" : "#000";
+    document.body.style.color = dark ? "#000" : "#fff";
+  }
+
+  // Upload a new reel
+  function uploadReel(event) {
+    const file = event.target.files[0];
+    const soundTitle = document.getElementById("uploadSound").value || "Custom Sound";
+    const captionText = document.getElementById("uploadCaption").value || "My reel!";
+    if (file) {
+      const url = URL.createObjectURL(file);
+      const newReel = {
+        src: url,
+        username: "@you",
+        sound: soundTitle,
+        caption: captionText,
+        id: "upload_" + Date.now(),
+        owner: true
       };
-
-      // Save post to localStorage
-      const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-      savedPosts.push(post);
-      localStorage.setItem('posts', JSON.stringify(savedPosts));
-
-      // Display the post
-      displayPost(username, videoURL);
-
-      // Reset input fields
-      fileInput.value = '';  // Reset file input
-      usernameInput.value = '';  // Reset username input
+      reels.push(newReel);
+      current = reels.length - 1;
+      loadReel(current);
     }
+  }
 
-    // Function to display a post
-    function displayPost(username, videoURL) {
-      // Create post container
-      const postContainer = document.createElement('div');
-      postContainer.classList.add('post-box');
-      
-      // Post Header (username and delete button)
-      const postHeader = document.createElement('div');
-      postHeader.classList.add('post-header');
-      const userNameSpan = document.createElement('span');
-      userNameSpan.classList.add('username');
-      userNameSpan.textContent = username;
-      postHeader.appendChild(userNameSpan);
+  // Mute/unmute video sound
+  function toggleMute() {
+    video.muted = !video.muted;
+    muteBtn.classList.toggle("muted", video.muted);
+  }
 
-      const deleteButton = document.createElement('button');
-      deleteButton.classList.add('delete-btn');
-      deleteButton.textContent = 'Delete';
-      deleteButton.onclick = function() {
-        // Remove post from localStorage and update display
-        const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-        const updatedPosts = savedPosts.filter(post => post.videoURL !== videoURL);
-        localStorage.setItem('posts', JSON.stringify(updatedPosts));
+  // Open profile page
+  function openProfile() {
+    document.getElementById("profilePage").classList.add("active");
+  }
 
-        postContainer.remove();
-      };
-      postHeader.appendChild(deleteButton);
-      postContainer.appendChild(postHeader);
+  // Close profile page
+  function closeProfile() {
+    document.getElementById("profilePage").classList.remove("active");
+    loadReel(current);
+  }
 
-      // Post Body (video element)
-      const postBody = document.createElement('div');
-      postBody.classList.add('post-body');
-      const videoElement = document.createElement('video');
-      videoElement.src = videoURL;
-      videoElement.controls = true;
-      postBody.appendChild(videoElement);
-      postContainer.appendChild(postBody);
+  // Handle touch swipe navigation
+  let startX = 0;
+  touchArea.addEventListener("touchstart", e => { startX = e.touches[0].clientX; });
+  touchArea.addEventListener("touchend", e => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) nextReel();
+    if (endX - startX > 50) prevReel();
+  });
 
-      // Append post to the container
-      document.getElementById('posts-container').appendChild(postContainer);
-    }
-  </script>
+  // Load initial reel
+  window.onload = () => loadReel(current);
+</script>
+
 </body>
 </html>
