@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Educational Website</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            overflow-x: hidden;
+            transition: background-color 0.5s;
+        }
+
+        /* Header */
+        header {
+            background-color: #3b3b3b;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #222;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background-color: #ff6a00;
+        }
+
+        /* Course Section */
+        #courses {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 50px 20px;
+            background: #fff;
+        }
+
+        .course-item {
+            width: 30%;
+            margin: 15px 0;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .course-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-item h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .course-item p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-left {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .footer-center {
+            flex: 1;
+        }
+
+        .footer-center .social-links a {
+            margin: 0 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+
+        .footer-right {
+            flex: 1;
+        }
+
+        .footer-right input[type="email"] {
+            padding: 10px;
+            width: 60%;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        .footer-right button {
+            background-color: #ff6a00;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .footer-right button:hover {
+            background-color: #ee0979;
+        }
+
+        /* Pop-up Engagement */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .popup-content {
+            background-color: #fff;
+            padding: 40px;
+            text-align: center;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .popup-content button {
+            background-color: #ff6a00;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .popup-content button:hover {
+            background-color: #ee0979;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .course-item {
+                width: 100%;
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-right input[type="email"] {
+                width: 80%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="#courses">Courses</a></li>
+            <li><a href="#signup">Sign Up</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Welcome to Our Educational Portal</h1>
+        <p>Transforming knowledge with interactive learning</p>
+    </header>
+
+    <!-- Courses Section -->
+    <section id="courses">
+        <div class="course-item">
+            <h3>Web Development</h3>
+            <p>Learn the foundations of web design and development with hands-on projects.</p>
+        </div>
+        <div class="course-item">
+            <h3>Data Science</h3>
+            <p>Discover the exciting world of data analysis, machine learning, and AI.</p>
+        </div>
+        <div class="course-item">
+            <h3>UI/UX Design</h3>
+            <p>Understand the principles of user interface and user experience design.</p>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>Real Hero Nadeem - All Rights Reserved &copy; 2025</p>
+            </div>
+            <div class="footer-center">
+                <div class="social-links">
+                    <a href="#" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                </div>
+            </div>
+            <div class="footer-right">
+                <p>Don't miss out! Sign up for exclusive updates:</p>
+                <input type="email" placeholder="Enter your email" id="newsletter">
+                <button onclick="subscribe()">Subscribe</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Pop-up for User Engagement -->
+    <div id="popup" class="popup-overlay">
+        <div class="popup-content">
+            <h2>Stay with us for more exciting content!</h2>
+            <button onclick="closePopup()">Stay with us</button>
+        </div>
+    </div>
+
+    <script>
+        // Pop-up functionality to show when the user is about to leave the page
+        window.onbeforeunload = function () {
+            document.getElementById("popup").style.display = "flex";
+            return null;
+        };
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        function subscribe() {
+            var email = document.getElementById('newsletter').value;
+            if (email) {
+                alert('Thanks for subscribing, ' + email);
+                document.getElementById('newsletter').value = '';
+            }
+        }
+    </script>
+
+</body>
+</html>

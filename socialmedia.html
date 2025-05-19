@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media Platform</title>
+  <style>
+    /* Basic reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(45deg, #f06, #4a90e2, #50e3c2);
+      color: white;
+      text-align: center;
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    /* Styling for upload form */
+    .upload-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .upload-form input[type="file"] {
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+
+    .upload-form input[type="text"] {
+      padding: 8px;
+      margin-bottom: 10px;
+      width: 250px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .upload-form button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .upload-form button:hover {
+      background-color: #45a049;
+    }
+
+    /* Container for user posts */
+    #posts-container {
+      width: 80%;
+      margin-top: 20px;
+    }
+
+    /* Individual post styling */
+    .post-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      padding: 20px;
+      position: relative;
+      transition: transform 0.3s ease;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .post-box:hover {
+      transform: scale(1.05);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .username {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .delete-btn {
+      background: red;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Post body for video display */
+    .post-body video {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      display: block;
+      margin: 0 auto;
+      background-color: #000;
+    }
+
+    /* Animation for fade-in effect */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Upload and user name form -->
+  <div class="upload-form">
+    <input type="text" id="username" placeholder="Enter your name">
+    <input type="file" id="file-upload" accept="video/*">
+    <button onclick="uploadPost()">Upload Post</button>
+  </div>
+
+  <!-- Container to display user posts -->
+  <div id="posts-container"></div>
+
+  <script>
+    // Load posts from localStorage when page loads
+    window.onload = function() {
+      const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+      savedPosts.forEach(post => {
+        displayPost(post.username, post.videoURL);
+      });
+    };
+
+    // Function to upload a post
+    function uploadPost() {
+      const fileInput = document.getElementById('file-upload');
+      const usernameInput = document.getElementById('username');
+      const file = fileInput.files[0];
+      const username = usernameInput.value.trim();
+
+      // Validate user input
+      if (!file || !username) {
+        alert("Please enter your name and select a video!");
+        return;
+      }
+
+      const videoURL = URL.createObjectURL(file);
+
+      // Create post object
+      const post = {
+        username: username,
+        videoURL: videoURL
+      };
+
+      // Save post to localStorage
+      const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+      savedPosts.push(post);
+      localStorage.setItem('posts', JSON.stringify(savedPosts));
+
+      // Display the post
+      displayPost(username, videoURL);
+
+      // Reset input fields
+      fileInput.value = '';  // Reset file input
+      usernameInput.value = '';  // Reset username input
+    }
+
+    // Function to display a post
+    function displayPost(username, videoURL) {
+      // Create post container
+      const postContainer = document.createElement('div');
+      postContainer.classList.add('post-box');
+      
+      // Post Header (username and delete button)
+      const postHeader = document.createElement('div');
+      postHeader.classList.add('post-header');
+      const userNameSpan = document.createElement('span');
+      userNameSpan.classList.add('username');
+      userNameSpan.textContent = username;
+      postHeader.appendChild(userNameSpan);
+
+      const deleteButton = document.createElement('button');
+      deleteButton.classList.add('delete-btn');
+      deleteButton.textContent = 'Delete';
+      deleteButton.onclick = function() {
+        // Remove post from localStorage and update display
+        const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+        const updatedPosts = savedPosts.filter(post => post.videoURL !== videoURL);
+        localStorage.setItem('posts', JSON.stringify(updatedPosts));
+
+        postContainer.remove();
+      };
+      postHeader.appendChild(deleteButton);
+      postContainer.appendChild(postHeader);
+
+      // Post Body (video element)
+      const postBody = document.createElement('div');
+      postBody.classList.add('post-body');
+      const videoElement = document.createElement('video');
+      videoElement.src = videoURL;
+      videoElement.controls = true;
+      postBody.appendChild(videoElement);
+      postContainer.appendChild(postBody);
+
+      // Append post to the container
+      document.getElementById('posts-container').appendChild(postContainer);
+    }
+  </script>
+</body>
+</html>

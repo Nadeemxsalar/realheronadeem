@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HackElite</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Share Tech Mono', monospace;
+      background: black;
+      color: #00ffcc;
+      overflow-x: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(0,0,0,0.6);
+      border-bottom: 1px solid #0f0;
+      position: fixed;
+      width: 100%;
+      z-index: 10;
+    }
+
+    header h1 {
+      color: #0ff;
+      text-shadow: 0 0 5px #0ff;
+    }
+
+    nav a {
+      margin-left: 2rem;
+      color: #0f0;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #ff0;
+      text-shadow: 0 0 5px #ff0;
+    }
+
+    .matrix-canvas {
+      position: fixed;
+      z-index: 0;
+      top: 0;
+      left: 0;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 10vh 5vw;
+      min-height: 100vh;
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      color: #0f0;
+      text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+      animation: glitch 1.5s infinite;
+    }
+
+    .hero p {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #ffffffcc;
+    }
+
+    .btn {
+      margin-top: 30px;
+      padding: 12px 25px;
+      border: 2px solid #0f0;
+      background: transparent;
+      color: #0f0;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #0f0;
+      color: #000;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: #0ff;
+      margin-bottom: 20px;
+      border-left: 4px solid #0ff;
+      padding-left: 10px;
+    }
+
+    .project-list li {
+      margin: 10px 0;
+      list-style: square;
+      color: #fff;
+    }
+
+    footer {
+      background: #000;
+      padding: 20px;
+      text-align: center;
+      color: #0f0;
+      border-top: 1px solid #0f0;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 0 0 5px #0f0; }
+      20% { text-shadow: -2px 0 red, 2px 0 blue; }
+      40% { text-shadow: -1px -1px lime, 1px 1px cyan; }
+      60% { text-shadow: 0 0 5px #0f0; }
+      80% { text-shadow: 2px 0 magenta, -2px 0 yellow; }
+      100% { text-shadow: 0 0 5px #0f0; }
+    }
+
+    #terminal {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-height: 40vh;
+      background: #111;
+      border-top: 2px solid #0f0;
+      padding: 10px;
+      display: none;
+      color: #0f0;
+      font-size: 14px;
+      overflow-y: auto;
+    }
+
+    #terminalInput {
+      background: transparent;
+      color: #0f0;
+      border: none;
+      width: 100%;
+      outline: none;
+    }
+
+    .open-terminal {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: #000;
+      border: 2px solid #0f0;
+      color: #0f0;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <canvas class="matrix-canvas"></canvas>
+
+  <header>
+    <h1>HackElite</h1>
+    <nav>
+      <a href="#hero">Home</a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="hero">
+    <h2>Welcome to HackElite</h2>
+    <p>Experience the cutting edge of tech in a hacker's universe.</p>
+    <button class="btn" onclick="toggleTerminal()">Open Terminal</button>
+  </section>
+
+  <section id="about">
+    <div class="section-title">About Us</div>
+    <p>HackElite is a digital tech lab, coding ideas into real-world innovations with AI, Cybersecurity, Blockchain and more.</p>
+  </section>
+
+  <section id="projects">
+    <div class="section-title">Projects</div>
+    <ul class="project-list">
+      <li>💻 AI Chatbot Assistant</li>
+      <li>🛡️ Cyber Defense Scanner</li>
+      <li>🌐 Web3 Crypto Explorer</li>
+      <li>📱 Mobile Tech Tools</li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <div class="section-title">Contact</div>
+    <p>Email: nadeemrealhero@gmail.com</p>
+    <p>Twitter: @realheronadeem</p>
+  </section>
+
+  <footer>© 2025 HackVerse Inc. | Digital Futures Engineered</footer>
+
+  <div id="terminal">
+    <div>> Welcome to HackVerse Terminal. Type 'help' to begin.</div>
+    <input type="text" id="terminalInput" onkeydown="handleTerminal(event)">
+  </div>
+
+  <button class="open-terminal" onclick="toggleTerminal()">⌨️ Terminal</button>
+
+  <script>
+    // Terminal toggle
+    function toggleTerminal() {
+      const terminal = document.getElementById("terminal");
+      terminal.style.display = terminal.style.display === "block" ? "none" : "block";
+      document.getElementById("terminalInput").focus();
+    }
+
+    // Terminal commands
+    function handleTerminal(e) {
+      if (e.key === "Enter") {
+        const input = e.target.value.toLowerCase();
+        const terminal = document.getElementById("terminal");
+        const response = document.createElement("div");
+
+        if (input === "help") response.textContent = "> Commands: about, contact, clear";
+        else if (input === "about") response.textContent = "> HackVerse is your tech base.";
+        else if (input === "contact") response.textContent = "> Email: hack@verse.tech";
+        else if (input === "clear") terminal.innerHTML = '';
+        else response.textContent = "> Unknown command. Try 'help'.";
+
+        if (input !== "clear") terminal.appendChild(response);
+
+        e.target.value = "";
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+    }
+
+    // Matrix Effect
+    const canvas = document.querySelector('.matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const cols = Math.floor(canvas.width / 20);
+    const ypos = Array(cols).fill(0);
+
+    function matrix() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0f0';
+      ctx.font = '15pt monospace';
+
+      ypos.forEach((y, i) => {
+        const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+        const x = i * 20;
+        ctx.fillText(text, x, y);
+        ypos[i] = y > canvas.height + Math.random() * 100 ? 0 : y + 20;
+      });
+    }
+
+    setInterval(matrix, 50);
+    window.onresize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+  </script>
+</body>
+</html>
