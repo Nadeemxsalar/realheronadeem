@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EK Health</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1c1c1c);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 1rem 2rem;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: #00f0ff;
+    }
+
+    section {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 3.2rem;
+      background: linear-gradient(to right, #00f0ff, #1ed6ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-top: 1rem;
+    }
+
+    .card, .form, .quiz-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .form input, .form textarea, .form select {
+      width: 100%;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    ::placeholder {
+      color: #ccc;
+    }
+
+    .form button, .quiz-box button {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(to right, #00f0ff, #1ed6ff);
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00f0ff;
+    }
+
+    .form button:hover, .quiz-box button:hover {
+      transform: scale(1.05);
+    }
+
+    .appointment-item {
+      padding: 1rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      margin: 0.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .appointment-item button {
+      background: crimson;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    canvas {
+      background: #fff;
+      border-radius: 15px;
+      padding: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0,0,0,0.8);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EK Health</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#appointment">Appointment</a>
+      <a href="#bmi">BMI</a>
+      <a href="#stats">Stats</a>
+      <a href="#quiz">Quiz</a>
+    </nav>
+  </header>
+  <section class="hero">
+    <h2>Your Health, Our Priority</h2>
+    <p>Empowering wellness through science, care, and technology.</p>
+  </section>
+  <section id="about">
+    <h2>About Us</h2>
+    <p>We provide top-tier healthcare services that prioritize patient wellness and innovation. Our mission is to guide you to a healthier life.</p>
+  </section>
+  <section id="services">
+    <h2>Our Services</h2>
+    <div class="card"><h3>Diet Plans</h3><p>Customized meal plans for weight loss, diabetes, and more.</p></div>
+    <div class="card"><h3>Fitness Programs</h3><p>Home & gym workout schedules with live trainer access.</p></div>
+    <div class="card"><h3>Therapy & Counseling</h3><p>Mental health support with licensed therapists online.</p></div>
+  </section>
+  <section id="appointment">
+    <h2>Book an Appointment</h2>
+    <div class="form">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="date" id="date" required>
+      <textarea id="message" placeholder="Reason for Appointment"></textarea>
+      <button onclick="addAppointment()">Submit</button>
+    </div>
+    <div id="appointmentsList" style="margin-top: 2rem;"></div>
+  </section>
+  <section id="bmi">
+    <h2>Calculate Your BMI</h2>
+    <div class="form">
+      <input type="number" id="weight" placeholder="Weight in kg">
+      <input type="number" id="height" placeholder="Height in cm">
+      <button onclick="calculateBMI()">Calculate</button>
+      <p id="bmiResult"></p>
+    </div>
+  </section>
+  <section id="stats">
+    <h2>Health Statistics</h2>
+    <canvas id="statsChart" width="400" height="200"></canvas>
+  </section>
+  <section id="quiz">
+    <h2>Mental Health Quiz</h2>
+    <div class="quiz-box">
+      <p>How often do you feel stressed?</p>
+      <select id="stressLevel">
+        <option value="">Select</option>
+        <option value="1">Rarely</option>
+        <option value="2">Sometimes</option>
+        <option value="3">Often</option>
+        <option value="4">Always</option>
+      </select>
+      <button onclick="checkStress()">Submit</button>
+      <p id="stressResult"></p>
+    </div>
+  </section>
+  <footer>
+    &copy; 2025 EK Health. All rights reserved.
+  </footer>
+  <script>
+    function addAppointment() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const date = document.getElementById("date").value;
+      const message = document.getElementById("message").value;
+      if (!name || !email || !date || !message) {
+        alert("Please fill all fields.");
+        return;
+      }
+      const appointment = { name, email, date, message };
+      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+      appointments.push(appointment);
+      localStorage.setItem("appointments", JSON.stringify(appointments));
+      renderAppointments();
+      document.querySelectorAll(".form input, .form textarea").forEach(e => e.value = '');
+    }
+
+    function renderAppointments() {
+      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+      const appointmentsList = document.getElementById("appointmentsList");
+      appointmentsList.innerHTML = "<h3>Your Appointments:</h3>";
+      appointments.forEach((apt, index) => {
+        appointmentsList.innerHTML += `
+          <div class="appointment-item">
+            <div><strong>${apt.name}</strong> on <em>${apt.date}</em><br/>${apt.message}</div>
+            <button onclick="deleteAppointment(${index})">Delete</button>
+          </div>
+        `;
+      });
+    }
+
+    function deleteAppointment(index) {
+      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+      appointments.splice(index, 1);
+      localStorage.setItem("appointments", JSON.stringify(appointments));
+      renderAppointments();
+    }
+
+    function calculateBMI() {
+      const w = parseFloat(document.getElementById("weight").value);
+      const h = parseFloat(document.getElementById("height").value) / 100;
+      if (!w || !h) return alert("Please enter valid weight and height.");
+      const bmi = w / (h * h);
+      let status = "";
+      if (bmi < 18.5) status = "Underweight";
+      else if (bmi < 24.9) status = "Normal";
+      else if (bmi < 29.9) status = "Overweight";
+      else status = "Obese";
+      document.getElementById("bmiResult").textContent = `Your BMI is ${bmi.toFixed(2)} (${status})`;
+    }
+
+    function checkStress() {
+      const level = document.getElementById("stressLevel").value;
+      let result = "";
+      if (level == 1) result = "You are doing great!";
+      else if (level == 2) result = "Take short breaks during work.";
+      else if (level == 3) result = "Try breathing exercises daily.";
+      else if (level == 4) result = "Consider talking to a professional.";
+      else result = "Please select a level.";
+      document.getElementById("stressResult").textContent = result;
+    }
+
+    function drawChart() {
+      const ctx = document.getElementById('statsChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Appointments', 'New Patients', 'Therapies', 'Diets'],
+          datasets: [{
+            label: 'Stats',
+            data: [12, 19, 7, 15],
+            backgroundColor: ['#00f0ff', '#1ed6ff', '#00f0ff', '#1ed6ff']
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    window.onload = () => {
+      renderAppointments();
+      drawChart();
+    };
+  </script>
+</body>
+</html>
