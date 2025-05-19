@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real Hero Nadeem</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      
+      color: #333;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #f5f7fa, red);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      padding: 40px 20px;
+      cursor: url('custom-cursor.png'), auto;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      z-index: -1;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      color: #000;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .container {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px 20px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .profile img {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 4px solid #0077ff;
+      box-shadow: 0 0 20px #0077ff;
+      transition: transform 0.3s ease;
+    }
+
+    .profile img:hover {
+      transform: scale(1.05);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin: 15px 0 5px;
+      color: #222;
+    }
+
+    .tagline {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 25px;
+      height: 24px;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #0077ff;
+      width: 100%;
+      margin-top: 10px;
+      animation: typing 4s steps(40, end), blink 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      background: orange;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px 18px;
+      margin: 10px 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .card:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 20px rgba(0,119,255,0.3);
+    }
+
+    .card i {
+      font-size: 20px;
+      margin-right: 15px;
+      color: #0077ff;
+      width: 28px;
+      text-align: center;
+    }
+
+    .card span {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    #visitorCount {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #0077ff;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    @media (max-width: 600px) {
+      .profile img {
+        width: 100px;
+        height: 100px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .card span {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<audio autoplay loop>
+  <source src="your-music-file.mp3" type="audio/mpeg">
+</audio>
+
+<div id="welcomePopup" class="popup">
+  <div class="popup-content">
+    <h2>Welcome to Real Hero Nadeem's World!</h2>
+    <p>Explore and enjoy the journey.</p>
+    <button onclick="closePopup()">Enter</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="profile">
+    <img id="profilePic" src="C:\Users\Nadeem\Pictures\Saved Pictures\images.jfif" alt="Profile">
+  </div>
+  <h1>Real Hero Nadeem</h1>
+  <div class="tagline">💫 Inspiring Millions Through Real Stories 💫</div>
+
+  <a href="https://www.youtube.com/c/RealHeroNadeem"><div class="card"><i class="fab fa-youtube"></i><span>Real Hero Nadeem (YouTube)</span></div></a>
+  <a href="https://www.youtube.com/@TopRealNadeem"><div class="card"><i class="fab fa-youtube"></i><span>Top Real Nadeem (YouTube)</span></div></a>
+  <a href="https://www.youtube.com/@realgaminghero"><div class="card"><i class="fab fa-youtube"></i><span>Real Gaming Hero (YouTube)</span></div></a>
+  <a href="https://www.youtube.com/channel/UCMFSlwNUuKDqyaEgBLiab4w"><div class="card"><i class="fab fa-youtube"></i><span>Technology Withh Nadeem (YouTube)</span></div></a>
+  <a href="https://www.youtube.com/results?search_query=nadeem+fact+star"><div class="card"><i class="fab fa-youtube"></i><span>Nadeem Fact Star (YouTube)</span></div></a>
+
+  <a href="https://www.instagram.com/real_hero_nadeem/"><div class="card"><i class="fab fa-instagram"></i><span>Real Hero Nadeem (Instagram)</span></div></a>
+  <a href="https://www.instagram.com/top_real_nadeem/"><div class="card"><i class="fab fa-instagram"></i><span>Top Real Nadeem (Instagram)</span></div></a>
+  <a href="https://www.instagram.com/nadeem_fact_star/"><div class="card"><i class="fab fa-instagram"></i><span>Nadeem Fact Star (Instagram)</span></div></a>
+
+  <a href="#"><div class="card"><i class="fab fa-facebook"></i><span>Real Hero Nadeem (Facebook)</span></div></a>
+
+  <div id="visitorCount">Visitors: <span id="count">0</span></div>
+</div>
+
+<script>
+  // Particles Background
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let particles = [];
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2 + 1,
+      dx: (Math.random() - 0.5) * 1,
+      dy: (Math.random() - 0.5) * 1
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = "#0077ff";
+      ctx.fill();
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  // Welcome popup close
+  function closePopup() {
+    document.getElementById('welcomePopup').style.display = 'none';
+  }
+
+  // Visitor Counter (local)
+  let count = localStorage.getItem('visitorCount') || 0;
+  count++;
+  localStorage.setItem('visitorCount', count);
+  document.getElementById('count').innerText = count;
+</script>
+
+</body>
+</html>
