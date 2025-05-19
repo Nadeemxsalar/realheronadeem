@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Tile Puzzle</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: moveBackground 20s linear infinite;
+      z-index: 0;
+    }
+    @keyframes moveBackground {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(40px, 40px); }
+    }
+    h1 {
+      margin: 20px;
+      text-shadow: 2px 2px 5px black;
+      z-index: 1;
+    }
+    #grid, #goal {
+      display: grid;
+      gap: 5px;
+      margin: 10px;
+      z-index: 1;
+    }
+    .tile {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      transition: background 0.3s, transform 0.2s;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+    .tile:active {
+      transform: scale(0.95);
+    }
+    #levelDisplay {
+      margin-bottom: 10px;
+      font-size: 18px;
+      z-index: 1;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #00bcd4;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      z-index: 1;
+    }
+    .confetti {
+      position: fixed;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: pink;
+      animation: fall 3s linear infinite;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .level-up-msg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px 40px;
+      border-radius: 12px;
+      color: white;
+      font-size: 24px;
+      z-index: 2000;
+      opacity: 0;
+      animation: popup 1.5s ease forwards;
+    }
+    @keyframes popup {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    @media (max-width: 600px) {
+      .tile {
+        width: 40px;
+        height: 40px;
+      }
+      #grid, #goal {
+        gap: 3px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Color Tile Puzzle</h1>
+  <div id="levelDisplay">Level: 1</div>
+  <div id="grid"></div>
+  <div>Match this:</div>
+  <div id="goal"></div>
+  <button onclick="resetLevel()">Reset</button>
+
+  <script>
+    const colors = ["red", "blue", "green", "yellow"];
+    let level = 1;
+    let gridSize = 3;
+    let grid = [];
+    let goal = [];
+
+    function createGrid(size) {
+      const gridContainer = document.getElementById("grid");
+      const goalContainer = document.getElementById("goal");
+      gridContainer.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+      goalContainer.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+      gridContainer.innerHTML = "";
+      goalContainer.innerHTML = "";
+      grid = [];
+      goal = [];
+
+      for (let i = 0; i < size * size; i++) {
+        const tile = document.createElement("div");
+        const goalTile = document.createElement("div");
+
+        let colorIndex = Math.floor(Math.random() * colors.length);
+        let goalColorIndex = Math.floor(Math.random() * colors.length);
+
+        tile.classList.add("tile");
+        goalTile.classList.add("tile");
+
+        tile.style.background = colors[colorIndex];
+        goalTile.style.background = colors[goalColorIndex];
+
+        tile.dataset.colorIndex = colorIndex;
+        goalTile.dataset.colorIndex = goalColorIndex;
+
+        tile.addEventListener("click", () => {
+          let index = (parseInt(tile.dataset.colorIndex) + 1) % colors.length;
+          tile.dataset.colorIndex = index;
+          tile.style.background = colors[index];
+          checkWin();
+        });
+
+        grid.push(tile);
+        goal.push(goalTile);
+
+        gridContainer.appendChild(tile);
+        goalContainer.appendChild(goalTile);
+      }
+    }
+
+    function checkWin() {
+      let matched = true;
+      for (let i = 0; i < grid.length; i++) {
+        if (grid[i].dataset.colorIndex !== goal[i].dataset.colorIndex) {
+          matched = false;
+          break;
+        }
+      }
+      if (matched) {
+        showConfetti();
+        showLevelUpMessage();
+        setTimeout(() => {
+          level++;
+          gridSize = Math.min(6, 3 + Math.floor(level / 2));
+          document.getElementById("levelDisplay").textContent = `Level: ${level}`;
+          createGrid(gridSize);
+        }, 1500);
+      }
+    }
+
+    function resetLevel() {
+      createGrid(gridSize);
+    }
+
+    function showConfetti() {
+      for (let i = 0; i < 40; i++) {
+        let confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+
+    function showLevelUpMessage() {
+      const msg = document.createElement('div');
+      msg.className = 'level-up-msg';
+      msg.textContent = `🎉 Level ${level + 1}!`;
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 1500);
+    }
+
+    createGrid(gridSize);
+  </script>
+</body>
+</html>
