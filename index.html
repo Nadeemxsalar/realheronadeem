@@ -93,6 +93,10 @@
       background: linear-gradient(45deg, rgba(255,255,255,0.2), transparent);
       transform: skewY(-10deg);
       transition: 0.5s;
+     animation: rgbPulse 2s infinite;
+       background: rgba(255, 255, 255, 0.1);
+       backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .card p {
@@ -175,6 +179,13 @@
   }
     
 }
+    @keyframes rgbPulse {
+  0% { box-shadow: 0 0 20px red; }
+  33% { box-shadow: 0 0 20px green; }
+  66% { box-shadow: 0 0 20px blue; }
+  100% { box-shadow: 0 0 20px red; }
+}
+
     nav {
       background: rgba(8, 14, 25, 0.908);
       padding: 1rem 2rem;
