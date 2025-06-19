@@ -30,7 +30,7 @@
     body {
       background: linear-gradient(120deg, #e0c3fc, #8ec5fc);
       color: #333;
-      padding: auto;
+      padding: 50px 20px;
     }
 
     h1 {
