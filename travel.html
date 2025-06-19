@@ -11,65 +11,71 @@
   <!-- Icons -->
   <script src="https://kit.fontawesome.com/a2e8c2f167.js" crossorigin="anonymous"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-   body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
-  background-size: 400% 400%;
-  animation: gradientMove 15s ease infinite;
-  color: #333;
-}
-
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+      color: #333;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
     /* Navbar */
     nav {
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 1rem 2rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 999;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(90deg, #6a11cb, #2575fc);
-      padding: 1rem 2rem;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 999;
     }
     nav .logo {
-      font-size: 1.5rem;
       font-weight: bold;
+      font-size: 1.5rem;
     }
-    nav .menu {
+    nav ul {
       display: flex;
+      list-style: none;
       gap: 1.5rem;
     }
-    nav .menu a {
+    nav ul li a {
       color: white;
       text-decoration: none;
       font-weight: 500;
     }
-    nav .menu-toggle {
+    .menu-toggle {
       display: none;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
     }
-
     @media (max-width: 768px) {
-      nav .menu {
+      nav ul {
         flex-direction: column;
-        background: #222;
+        background: rgba(0,0,0,0.85);
         position: absolute;
-        top: 100%;
+        top: 60px;
         left: 0;
         width: 100%;
         display: none;
       }
-      nav .menu.active {
+      nav ul.active {
         display: flex;
       }
-      nav .menu a {
-        padding: 1rem;
-        border-bottom: 1px solid #444;
-      }
-      nav .menu-toggle {
+      .menu-toggle {
         display: block;
       }
     }
@@ -84,6 +90,7 @@
       text-align: center;
       color: white;
       position: relative;
+      padding-top: 60px;
     }
     header::after {
       content: '';
@@ -92,14 +99,15 @@
       background: rgba(0,0,0,0.5);
       z-index: 0;
     }
+    header h1, header p, header button {
+      z-index: 1;
+    }
     header h1 {
       font-size: 4rem;
-      z-index: 1;
     }
     header p {
       font-size: 1.5rem;
       margin: 1rem 0;
-      z-index: 1;
     }
     header button {
       padding: 0.8rem 1.5rem;
@@ -108,13 +116,11 @@
       background: #ff6b6b;
       color: white;
       cursor: pointer;
-      z-index: 1;
       transition: background 0.3s ease;
     }
     header button:hover {
       background: #ff4757;
     }
-
     section {
       padding: 4rem 2rem;
       max-width: 1200px;
@@ -126,13 +132,11 @@
       font-size: 2rem;
       color: #222;
     }
-
     .destinations, .packages, .testimonials {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
     }
-
     .card {
       background: white;
       border-radius: 10px;
@@ -155,7 +159,6 @@
       font-size: 1.3rem;
       margin-bottom: 0.5rem;
     }
-
     .testimonial {
       background: #fff;
       padding: 1rem;
@@ -164,7 +167,6 @@
     .testimonial p {
       font-style: italic;
     }
-
     form {
       background: white;
       padding: 2rem;
@@ -189,25 +191,24 @@
       background: #10ac84;
     }
 
-    .appointment-list {
+    .booking-output {
       margin-top: 2rem;
-    }
-    .appointment-item {
       background: #fff;
       padding: 1rem;
-      margin-bottom: 1rem;
-      border-left: 4px solid #00cec9;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      border-left: 5px solid #1dd1a1;
+      border-radius: 5px;
+      position: relative;
     }
-    .appointment-item button {
-      background: #ff7675;
-      border: none;
+    .booking-output button {
+      background: #ff6b6b;
       color: white;
+      border: none;
       padding: 0.5rem 1rem;
       border-radius: 5px;
       cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
     }
 
     footer {
@@ -215,19 +216,8 @@
       color: white;
       text-align: center;
       padding: 2rem 1rem;
+      margin-top: 4rem;
     }
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
   </style>
 </head>
 <body>
@@ -236,12 +226,11 @@
   <nav>
     <div class="logo">TravelX</div>
     <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-    <div class="menu" id="navMenu">
-      <a href="#">Home</a>
-      <a href="#booking">Book</a>
-      <a href="#destinations">Destinations</a>
-      <a href="#packages">Packages</a>
-    </div>
+    <ul id="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#booking">Book</a></li>
+      <li><a href="#testimonials">Testimonials</a></li>
+    </ul>
   </nav>
 
   <!-- Hero Section -->
@@ -252,7 +241,7 @@
   </header>
 
   <!-- Destinations -->
-  <section id="destinations">
+  <section>
     <h2 class="section-title" data-aos="fade-up">Top Destinations</h2>
     <div class="destinations">
       <div class="card" data-aos="zoom-in">
@@ -280,7 +269,7 @@
   </section>
 
   <!-- Packages -->
-  <section id="packages">
+  <section>
     <h2 class="section-title" data-aos="fade-up">Popular Packages</h2>
     <div class="packages">
       <div class="card" data-aos="fade-right">
@@ -299,7 +288,7 @@
   </section>
 
   <!-- Testimonials -->
-  <section>
+  <section id="testimonials">
     <h2 class="section-title" data-aos="fade-up">Happy Travelers</h2>
     <div class="testimonials">
       <div class="testimonial" data-aos="flip-left">
@@ -316,7 +305,7 @@
   <!-- Booking Form -->
   <section id="booking">
     <h2 class="section-title" data-aos="fade-up">Book Your Adventure</h2>
-    <form id="bookingForm" data-aos="fade-up">
+    <form data-aos="fade-up" onsubmit="handleBooking(event)">
       <input type="text" id="name" placeholder="Full Name" required>
       <input type="email" id="email" placeholder="Email Address" required>
       <select id="destination" required>
@@ -328,9 +317,7 @@
       <input type="date" id="date" required>
       <button type="submit">Submit Booking</button>
     </form>
-
-    <!-- Show Booking List -->
-    <div class="appointment-list" id="appointmentList"></div>
+    <div id="booking-output"></div>
   </section>
 
   <!-- Footer -->
@@ -338,7 +325,7 @@
     <p>© 2025 TravelX. All rights reserved.</p>
   </footer>
 
-  <!-- AOS & Script -->
+  <!-- AOS -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <script>
     AOS.init();
@@ -347,29 +334,28 @@
       document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function toggleMenu() {
-      const menu = document.getElementById('navMenu');
-      menu.classList.toggle('active');
-    }
-
-    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    function handleBooking(e) {
       e.preventDefault();
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
-      const destination = document.getElementById('destination').value;
+      const dest = document.getElementById('destination').value;
       const date = document.getElementById('date').value;
 
-      const list = document.getElementById('appointmentList');
-      const item = document.createElement('div');
-      item.className = 'appointment-item';
-      item.innerHTML = `
-        <div><strong>${name}</strong> - ${destination} on ${date}</div>
-        <button onclick="this.parentElement.remove()">Delete</button>
+      const output = document.getElementById('booking-output');
+      output.innerHTML = `
+        <div class="booking-output">
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Destination:</strong> ${dest}</p>
+          <p><strong>Date:</strong> ${date}</p>
+          <button onclick="this.parentElement.remove()">Delete</button>
+        </div>
       `;
-      list.appendChild(item);
+    }
 
-      this.reset();
-    });
+    function toggleMenu() {
+      document.getElementById('nav-links').classList.toggle('active');
+    }
   </script>
 </body>
 </html>
