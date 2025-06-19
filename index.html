@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Real Hero Nadeem - Categories</title>
   <link rel="stylesheet" href="website.css">
+  <!-- AOS CSS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
 <script src="website.js"></script>
 </head>
 <body>
@@ -57,38 +60,38 @@
 <h1> 🌟🌟 Explore Real Hero Nadeem's World 🌟🌟</h1>
 
 <div class="container">
-  <div class="card" id="education"><a href="education.html">
+  <div  data-aos="slide-right" class="card" id="education"><a href="education.html">
     <h2>📚 Education</h2>
     <p>Courses, exams, learning resources and all about education for every age group.</p></a>
   </div>
-  <div class="card" id="technology"><a href="technology.html">
+  <div  data-aos="slide-left" class="card" id="technology"><a href="technology.html">
     <h2>💻 Technology</h2>
     <p>Latest in gadgets, AI, web development, and everything tech-related.</p></a>
   </div>
-  <div class="card" id="health"><a href="health.html">
+  <div  data-aos="zoom-in-up" class="card" id="health"><a href="health.html">
     <h2>🏥 Health</h2>
     <p>Tips for mental & physical health, healthy living guides, and expert advice.</p></a>
   </div>
-  <div class="card" id="travel"><a href="travel.html">
+  <div  data-aos="slide-up" class="card" id="travel"><a href="travel.html">
     <h2>🌍 Travel</h2>
     <p>Explore beautiful destinations, travel tips, and cultural experiences.</p></a>
   </div>
-  <div class="card" id="art">
+  <div  data-aos="flip-right" class="card" id="art">
      <a href="art.html">
     <h2>🎨 Art & Design</h2>
     <p>Discover creative inspirations, design ideas, and artistic expressions.</p></a>
   </div>
-  <div class="card" id="socialmedia">
+  <div  data-aos="flip-left" class="card" id="socialmedia">
     <h2>📱 Social Media</h2><a href="socialmedia.html">
     <p>All about trending platforms, influencer tips, and social growth strategies.</p></a>
   </div>
-  <div class="card" id="games">
+  <div  data-aos="zoom-out" class="card" id="games">
     <a href="gameinterface.html"> 
       <h2>🎮 Games</h2>
       <p>Latest games, reviews, tips, walkthroughs and esports updates.</p>
     </a>
   </div>
-  <div class="card" id="realheronadeem">
+  <div  data-aos="slide-up" class="card" id="realheronadeem">
     <a href="nadeeminfo.html">
       <h2> 🌟 Real Hero Nadeem</h2>
       <p>Know more about Real Hero Nadeem's journey, works, and contributions.</p>
@@ -107,8 +110,10 @@
   </p>
   <p>All rights reserved © Real Hero Nadeem</p>
 </footer>
-
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
+  AOS.init(); // ye initialize karega AOS ko
   function toggleMenu() {
     const menu = document.getElementById("menu");
     menu.classList.toggle("active");
