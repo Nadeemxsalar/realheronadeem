@@ -30,7 +30,7 @@
     body {
       background: linear-gradient(120deg, #e0c3fc, #8ec5fc);
       color: #333;
-      padding: 50px 20px;
+      padding-top: 80px;
     }
 
     h1 {
@@ -190,10 +190,11 @@
       backdrop-filter: blur(10px);
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
       z-index: 1000;
-      position:relative;
-      margin-top:-6%;
-      margin-left:-3%;
-      margin-right:-3%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
     }
 
     .nav-container {
