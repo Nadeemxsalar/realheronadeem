@@ -79,6 +79,8 @@
      animation: rgbPulse 2s infinite;
        backdrop-filter: blur(5px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+     will-change:transform, opacity;
+     transform:translateZ(0);
     }
     .card a{
       text-decoration:none;
@@ -334,7 +336,17 @@
         
       }
 
+
+
+
       .menu li:hover .submenu {
         display: block;
       }
     }
+.card{  will-change:transform, opacity;
+     transform:translateZ(0); } 
+
+
+
+
+
