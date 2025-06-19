@@ -1,4 +1,4 @@
-/* Background Video
+/* Background Video */
     video.bg-video {
       position: fixed;
       top: 0;
@@ -7,7 +7,7 @@
       height: 100%;
       object-fit: cover;
       z-index: -1;
-    } */
+    } 
 
     /* Overlay for dark effect */
     .overlay {
@@ -31,9 +31,9 @@
       background: linear-gradient(120deg, #e0c3fc, #8ec5fc);
       color: #333;
       padding-top: 60px;
-    background-image: url('box.jpg');
+ /*   background-image: url('box.jpg');
         background-size:cover;
-        background-position:center;
+        background-position:center;*/
     }
 
     h1 {
