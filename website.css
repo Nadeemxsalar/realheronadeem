@@ -342,9 +342,11 @@
       .menu li:hover .submenu {
         display: block;
       }
-    }
-.card{  will-change:transform, opacity;
-     transform:translateZ(0); } 
+    
+.card{ 
+    will-change:transform, opacity;
+     transform:translateZ(0);
+} 
 
 
 
