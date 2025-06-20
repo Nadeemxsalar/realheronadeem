@@ -2,288 +2,368 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔥 Full Reels App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MySocial App</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
     body {
-      font-family: 'Arial', sans-serif;
-      background: #121212;
-      color: #fff;
-      overflow-x: hidden;
-      transition: all 0.3s ease;
-    }
-    .container {
-      height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding-top: 20px;
-    }
-    .video-box {
-      position: relative;
-      width: 320px; height: 540px;
-      background: #111;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    }
-    video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    .overlay {
-      position: absolute;
-      bottom: 10px; left: 10px; right: 10px;
-      display: flex; flex-direction: column;
-      gap: 10px;
-      z-index: 1;
-    }
-    .user-info { font-weight: bold; display: flex; align-items: center; gap: 10px; color: #fff; }
-    .user-info img {
-      width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
-    }
-    .sound-title { font-size: 14px; color: #bbb; }
-    .caption { font-size: 14px; color: #fff; margin-top: 5px; }
-    .actions {
-      display: flex; justify-content: space-between;
-      align-items: center;
-    }
-    .btn {
-      background: rgba(255,255,255,0.1);
-      padding: 5px 10px;
-      border-radius: 10px; cursor: pointer;
-    }
-    .liked { background: red !important; color: #fff; }
-    .nav-buttons, .upload {
-      margin-top: 12px;
-      display: flex; gap: 10px;
-      justify-content: center;
-    }
-    .upload input, .form input {
-      border: none; padding: 5px;
-      border-radius: 10px;
-    }
-    button {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      background: #ff4081;
-      color: #fff;
-      transition: all 0.3s;
-    }
-    button:hover {
-      background: #e91e63;
-    }
-    .profile-page {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: #111;
-      display: none; flex-direction: column;
-      align-items: center; padding: 20px;
-      color: #fff;
-      overflow-y: scroll;
-    }
-    .profile-page.active { display: flex; }
-    .dark-mode {
-      position: absolute; top: 10px; right: 10px;
-      cursor: pointer; background: rgba(255,255,255,0.1);
-      padding: 5px 10px; border-radius: 20px;
-    }
-    .touch-area {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%;
-    }
-    .profile-img {
-      width: 80px; height: 80px;
-      border-radius: 50%; object-fit: cover;
-      margin-bottom: 10px;
-    }
-    #deleteBtn {
-      background: rgba(255,0,0,0.6);
-    }
-    #muteBtn {
-      background: rgba(255,255,255,0.2);
-      padding: 5px 15px;
-      border-radius: 10px;
+      background: linear-gradient(270deg, #ff416c, #ff4b2b, #1e90ff, #00ff9c);
+      background-size: 800% 800%;
+      animation: gradientMove 20s ease infinite;
       color: white;
     }
-    #muteBtn.muted {
-      background: rgba(255,0,0,0.6);
+
+    @keyframes gradientMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    nav {
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    nav h1 {
+      font-size: 1.5em;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {transform: translateY(0);}
+      50% {transform: translateY(-5px);}
+    }
+
+    nav ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    nav ul li {
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    nav ul li:hover {
+      transform: scale(1.1);
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background-color: rgba(0,0,0,0.7);
+        position: absolute;
+        right: 20px;
+        top: 60px;
+        border-radius: 10px;
+        padding: 10px;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
+
+    .page {
+      display: none;
+      padding: 30px;
+    }
+
+    #home {
+      display: block;
+      text-align: center;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .feature {
+      background: rgba(0,0,0,0.4);
+      border-radius: 15px;
+      padding: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .feature:hover {
+      background: rgba(255,255,255,0.1);
+      transform: scale(1.05);
+    }
+
+    .upload-section {
+      max-width: 500px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      border-radius: 20px;
+      animation: fadeSlideIn 1s ease-out forwards;
+      transform: translateY(30px);
+      opacity: 0;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    }
+
+    @keyframes fadeSlideIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .upload-section h2 {
+      text-align: center;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      animation: glowText 2s infinite alternate;
+    }
+
+    @keyframes glowText {
+      from { text-shadow: 0 0 5px #fff; }
+      to { text-shadow: 0 0 15px cyan, 0 0 25px blue; }
+    }
+
+    .upload-section input[type="file"], .upload-section textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1em;
+    }
+
+    .upload-section textarea {
+      background: rgba(0,0,0,0.3);
+      color: white;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .upload-section textarea:focus {
+      border-color: #00ffe0;
+      outline: none;
+    }
+
+    .upload-btn {
+      padding: 15px;
+      width: 100%;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: linear-gradient(90deg, #ff8a00, #e52e71, #9b00ff);
+      background-size: 300% 100%;
+      animation: shimmer 4s linear infinite;
+      transition: transform 0.3s ease;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+    }
+
+    .upload-btn:hover {
+      transform: scale(1.03);
+    }
+
+    @keyframes shimmer {
+      0% {background-position: 0%;}
+      100% {background-position: 300%;}
+    }
+
+    .reels {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .reel {
+      background: rgba(0,0,0,0.4);
+      padding: 15px;
+      border-radius: 15px;
+      animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+      from {transform: scale(0.8); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
+
+    .reel video {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .reel .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .reel button {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1em;
     }
   </style>
 </head>
 <body>
 
-<!-- Dark Mode Toggle -->
-<div class="dark-mode" onclick="toggleDarkMode()">🌓</div>
+  <nav>
+    <h1>MySocial</h1>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <ul id="navMenu">
+      <li onclick="showPage('home')">Home</li>
+      <li onclick="showPage('upload')">Upload Reel</li>
+      <li onclick="showPage('watch')">Watch Reels</li>
+    </ul>
+  </nav>
 
-<!-- Profile Page -->
-<div class="profile-page" id="profilePage">
-  <h2>@your_username</h2>
-  <img src="https://via.placeholder.com/80" alt="Profile Picture" class="profile-img" />
-  <p>📌 Bio: Just a creator.</p>
-  <p>👥 Followers: 123 | Following: 45</p>
-  <button onclick="showMyReels()">My Reels</button>
-  <button onclick="closeProfile()">Back</button>
-</div>
-
-<!-- Main Container -->
-<div class="container">
-  <!-- Video Reel -->
-  <div class="video-box">
-    <video id="reel" autoplay muted></video>
-    <div class="overlay">
-      <div class="user-info" id="userInfo">
-        <img src="https://via.placeholder.com/30" alt="User" id="profilePic" />
-        <span id="username">@user</span>
-      </div>
-      <div class="sound-title" id="sound">🎵 Sound Title</div>
-      <div class="caption" id="caption">🔥 Caption text...</div>
-      <div class="actions">
-        <div class="btn" id="likeBtn" onclick="toggleLike()">❤️ <span id="likeCount">0</span></div>
-        <div class="btn" onclick="alert('Shared!')">📤 Share</div>
-        <div class="btn" onclick="alert('Saved!')">💾 Save</div>
-        <div class="btn" id="muteBtn" onclick="toggleMute()">🔊</div>
-      </div>
+  <!-- Home Page -->
+  <div class="page" id="home">
+    <h2>Welcome to MySocial!</h2>
+    <p>Explore features of a modern social app.</p>
+    <div class="feature-grid">
+      <div class="feature" onclick="alert('Photo Upload Coming Soon')">📸 Photo Upload</div>
+      <div class="feature" onclick="showPage('watch')">🎥 Reels Feed</div>
+      <div class="feature" onclick="alert('Likes enabled on reels!')">❤️ Like System</div>
+      <div class="feature" onclick="alert('Comment Enabled!')">💬 Comment System</div>
+      <div class="feature" onclick="alert('You have 3 new notifications')">🔔 Notifications</div>
+      <div class="feature" onclick="alert('Profile features coming soon')">👤 Profile Page</div>
+      <div class="feature" onclick="alert('Analytics feature coming soon')">📈 Analytics</div>
+      <div class="feature" onclick="alert('Location tagging enabled')">📍 Location Tagging</div>
+      <div class="feature" onclick="alert('Music overlay coming')">🎵 Music Overlay</div>
+      <div class="feature" onclick="alert('Filters to be added')">🎨 Filters</div>
+      <div class="feature" onclick="alert('Explore trending reels')">🌐 Explore</div>
+      <div class="feature" onclick="alert('Messaging launching soon')">📩 Messaging</div>
+      <div class="feature" onclick="alert('Followers view enabled')">👥 Followers</div>
+      <div class="feature" onclick="alert('Stories module beta')">🕒 Stories</div>
+      <div class="feature" onclick="alert('Settings panel coming')">🛠 Settings</div>
+      <div class="feature" onclick="alert('Schedule post feature')">📅 Scheduled Posts</div>
+      <div class="feature" onclick="alert('AI Suggestions coming')">🧠 AI Suggestions</div>
+      <div class="feature" onclick="alert('Privacy control basic enabled')">🔒 Privacy Control</div>
+      <div class="feature" onclick="alert('Theme toggle planned')">🌗 Dark/Light Mode</div>
+      <div class="feature" onclick="alert('Group chat launching')">🧑‍🤝‍🧑 Group Chats</div>
     </div>
-    <div class="touch-area" id="touchArea"></div>
   </div>
 
-  <!-- Navigation Buttons -->
-  <div class="nav-buttons">
-    <button onclick="prevReel()">⬅️ Prev</button>
-    <button onclick="nextReel()">➡️ Next</button>
-    <button onclick="randomReel()">🎲 Random</button>
-    <button onclick="openProfile()">👤 Profile</button>
+  <!-- Upload Reel -->
+  <div class="page" id="upload">
+    <div class="upload-section">
+      <h2>📤 Upload Your Reel</h2>
+      <input type="file" id="videoInput" accept="video/mp4,video/webm" />
+      <textarea id="caption" maxlength="120" placeholder="Write a caption (max 120 chars)..."></textarea>
+      <button class="upload-btn" onclick="uploadReel()">✨ Upload Now</button>
+    </div>
   </div>
 
-  <!-- Reel Upload Section -->
-  <div class="upload">
-    <input type="file" accept="video/*" onchange="uploadReel(event)" />
-    <input type="text" placeholder="Sound" id="uploadSound" />
-    <input type="text" placeholder="Caption" id="uploadCaption" />
+  <!-- Watch Reels -->
+  <div class="page" id="watch">
+    <h2>Watch Latest Reels</h2>
+    <div class="reels" id="reelContainer"></div>
   </div>
-</div>
 
-<script>
-  const reels = [
-    { src: "https://www.w3schools.com/html/mov_bbb.mp4", username: "@skater", sound: "Lo-Fi Beat", caption: "Skating through life 🛹", id: "reel1", owner: false },
-    { src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4", username: "@flora", sound: "Nature Melody", caption: "Flowers in bloom 🌸", id: "reel2", owner: false }
-  ];
+  <script>
+    let savedReels = [{
+      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+      caption: "🌟 Demo Reel: Enjoy the vibes!",
+      likes: 0
+    }];
 
-  let current = 0;
-  const video = document.getElementById("reel");
-  const username = document.getElementById("username");
-  const sound = document.getElementById("sound");
-  const caption = document.getElementById("caption");
-  const likeBtn = document.getElementById("likeBtn");
-  const likeCount = document.getElementById("likeCount");
-  const touchArea = document.getElementById("touchArea");
-  const muteBtn = document.getElementById("muteBtn");
-
-  // Load current reel data
-  function loadReel(index) {
-    const r = reels[index];
-    video.src = r.src;
-    username.textContent = r.username;
-    sound.textContent = "🎵 " + r.sound;
-    caption.textContent = r.caption;
-    updateLikeDisplay(r.id);
-    video.play();
-  }
-
-  // Change to the next reel
-  function nextReel() {
-    current = (current + 1) % reels.length;
-    loadReel(current);
-  }
-
-  // Change to the previous reel
-  function prevReel() {
-    current = (current - 1 + reels.length) % reels.length;
-    loadReel(current);
-  }
-
-  // Random reel
-  function randomReel() {
-    current = Math.floor(Math.random() * reels.length);
-    loadReel(current);
-  }
-
-  // Toggle like status for the reel
-  function toggleLike() {
-    const id = reels[current].id;
-    const liked = localStorage.getItem(id) === "true";
-    localStorage.setItem(id, !liked);
-    updateLikeDisplay(id);
-  }
-
-  // Update the like button display
-  function updateLikeDisplay(id) {
-    const liked = localStorage.getItem(id) === "true";
-    likeBtn.classList.toggle("liked", liked);
-    likeCount.textContent = liked ? "1" : "0";
-  }
-
-  // Toggle dark mode (light/dark background)
-  function toggleDarkMode() {
-    const dark = document.body.style.background === "black";
-    document.body.style.background = dark ? "#fff" : "#000";
-    document.body.style.color = dark ? "#000" : "#fff";
-  }
-
-  // Upload a new reel
-  function uploadReel(event) {
-    const file = event.target.files[0];
-    const soundTitle = document.getElementById("uploadSound").value || "Custom Sound";
-    const captionText = document.getElementById("uploadCaption").value || "My reel!";
-    if (file) {
-      const url = URL.createObjectURL(file);
-      const newReel = {
-        src: url,
-        username: "@you",
-        sound: soundTitle,
-        caption: captionText,
-        id: "upload_" + Date.now(),
-        owner: true
-      };
-      reels.push(newReel);
-      current = reels.length - 1;
-      loadReel(current);
+    function toggleMenu() {
+      const menu = document.getElementById("navMenu");
+      menu.classList.toggle("show");
     }
-  }
 
-  // Mute/unmute video sound
-  function toggleMute() {
-    video.muted = !video.muted;
-    muteBtn.classList.toggle("muted", video.muted);
-  }
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+      if (id === 'watch') renderReels();
+    }
 
-  // Open profile page
-  function openProfile() {
-    document.getElementById("profilePage").classList.add("active");
-  }
+    function uploadReel() {
+      const input = document.getElementById('videoInput');
+      const caption = document.getElementById('caption').value;
 
-  // Close profile page
-  function closeProfile() {
-    document.getElementById("profilePage").classList.remove("active");
-    loadReel(current);
-  }
+      if (!input.files.length) return alert("Select a video first.");
+      if (caption.trim() === "") return alert("Please write a caption.");
 
-  // Handle touch swipe navigation
-  let startX = 0;
-  touchArea.addEventListener("touchstart", e => { startX = e.touches[0].clientX; });
-  touchArea.addEventListener("touchend", e => {
-    let endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) nextReel();
-    if (endX - startX > 50) prevReel();
-  });
+      const file = input.files[0];
+      const url = URL.createObjectURL(file);
 
-  // Load initial reel
-  window.onload = () => loadReel(current);
-</script>
+      savedReels.unshift({ videoUrl: url, caption, likes: 0 });
 
+      alert("Reel uploaded!");
+      input.value = '';
+      document.getElementById('caption').value = '';
+    }
+
+    function renderReels() {
+      const container = document.getElementById('reelContainer');
+      container.innerHTML = '';
+
+      savedReels.forEach((reel, index) => {
+        const div = document.createElement('div');
+        div.className = 'reel';
+        div.innerHTML = `
+          <video controls src="${reel.videoUrl}" autoplay muted loop></video>
+          <p>${reel.caption}</p>
+          <div class="actions">
+            <button onclick="likeReel(this, ${index})">❤️ Like (<span>${reel.likes}</span>)</button>
+            <button onclick="commentReel()">💬 Comment</button>
+            <button onclick="deleteReel(${index})">🗑️ Delete</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function likeReel(btn, index) {
+      savedReels[index].likes++;
+      btn.querySelector('span').textContent = savedReels[index].likes;
+    }
+
+    function commentReel() {
+      const comment = prompt("Enter your comment:");
+      if (comment) alert("Comment: " + comment);
+    }
+
+    function deleteReel(index) {
+      if (confirm("Delete this reel?")) {
+        savedReels.splice(index, 1);
+        renderReels();
+      }
+    }
+
+    // Initial render
+    renderReels();
+  </script>
 </body>
 </html>
