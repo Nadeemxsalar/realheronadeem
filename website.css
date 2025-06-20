@@ -34,6 +34,9 @@
  /*   background-image: url('box.jpg');
         background-size:cover;
         background-position:center;*/
+       scroll-behavior: smooth;
+      backface-visibility: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
     h1 {
@@ -49,7 +52,6 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.883);
       animation: changecolor 10s ease infinite
        , zoomGlow 2s ease infinite alternate;
-       backdrop-filter: blur(10px);
        border: 1px solid rgba(255, 255, 255, 0.2);
        
     }
@@ -78,6 +80,7 @@
       flex-wrap: wrap;
      animation: rgbPulse 2s infinite;
      backdrop-filter: blur(10px);
+     -webkit-backdrop-filter: blur(10px);
      border: 1px solid rgba(255, 255, 255, 0.2);
    
     }
@@ -97,6 +100,7 @@
       transition: 0.5s;
        background: rgba(255, 255, 255, 0.1);
        backdrop-filter: blur(5px);
+       -webkit-backdrop-filter: blur(5px);
       border: 1px solid rgba(255, 255, 255, 0.2);
   
     }
@@ -193,6 +197,7 @@
       padding: 1rem 2rem;
       border-radius: 0%;
       backdrop-filter: blur(10px);
+     -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
       z-index: 1000;
       position: fixed;
@@ -257,6 +262,7 @@
       left: 0;
       background: rgba(226, 227, 229, 0.409);
       backdrop-filter: blur(80px);
+      -webkit-backdrop-filter: blur(8px);
       padding: 1rem;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.883);
@@ -344,7 +350,9 @@
         display: block;
       }
     
-
+video{  
+    will-change: transform, opacity ;
+}
 
 
 
