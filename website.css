@@ -77,8 +77,8 @@
       scroll-margin-top: 100px;
       flex-wrap: wrap;
      animation: rgbPulse 2s infinite;
-      
-      border: 1px solid rgba(255, 255, 255, 0.2);
+     backdrop-filter: blur(10px);
+     border: 1px solid rgba(255, 255, 255, 0.2);
    
     }
     .card a{
@@ -96,7 +96,7 @@
       transform: skewY(-10deg);
       transition: 0.5s;
        background: rgba(255, 255, 255, 0.1);
-      
+       backdrop-filter: blur(5px);
       border: 1px solid rgba(255, 255, 255, 0.2);
   
     }
