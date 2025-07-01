@@ -89,6 +89,21 @@
       flex-wrap: wrap;
       justify-content: center;
     }
+
+    /* Celebration Flowers */
+    .flower {
+      position: fixed;
+      top: -50px;
+      font-size: 24px;
+      animation: fall 3s linear forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -200,12 +215,25 @@
         clearInterval(timerInterval);
         score += level * timeLeft * 10;
         scoreDisplay.textContent = `⭐ Score: ${score}`;
+        triggerCelebration(); // 🌸 Add falling flowers
         setTimeout(() => {
           level++;
           gridSize = Math.min(6, 3 + Math.floor(level / 2));
           levelDisplay.textContent = `Level: ${level}`;
           createGrid(gridSize);
-        }, 1000);
+        }, 1500);
+      }
+    }
+
+    function triggerCelebration() {
+      for (let i = 0; i < 30; i++) {
+        const flower = document.createElement("div");
+        flower.textContent = "🌸";
+        flower.className = "flower";
+        flower.style.left = `${Math.random() * 100}vw`;
+        flower.style.fontSize = `${Math.random() * 24 + 16}px`;
+        document.body.appendChild(flower);
+        setTimeout(() => flower.remove(), 3000);
       }
     }
 
