@@ -207,29 +207,7 @@
       animation: fadeIn 0.5s ease;
     }
 
-    .popup iframe {
-      width: 95%;
-      height: 85vh;
-      border: none;
-      border-radius: 1rem;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 2.5rem;
-      color: #fff;
-      cursor: pointer;
-      z-index: 1000;
-      transition: transform 0.3s ease;
-    }
-
-    .close-btn:hover {
-      transform: rotate(90deg);
-      color: #0ff;
-    }
+  
 
     @media (max-width: 768px) {
       .main {
@@ -507,36 +485,9 @@
       }
     }
 
-    .popup {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
+   
 
-    .popup iframe {
-      width: 90%;
-      height: 80vh;
-      border-radius: 1rem;
-      border: none;
-      box-shadow: 0 0 20px #0ff;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 2.5rem;
-      color: white;
-      cursor: pointer;
-    }
-
-    .toggle-btn {
-      display: none;
-    }
+  
 
     @media (max-width: 768px) {
       .sidebar {
@@ -617,19 +568,8 @@
   </div>
 
   <script>
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('show');
-    }
+   
 
-    function openGame(url) {
-      document.getElementById('gamePopup').style.display = 'flex';
-      document.getElementById('gameFrame').src = url;
-    }
-
-    function closeGame() {
-      document.getElementById('gamePopup').style.display = 'none';
-      document.getElementById('gameFrame').src = '';
-    }
 
     // Background Animation Bubbles
     const animationContainer = document.getElementById("bgAnimation");
