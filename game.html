@@ -3,60 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Tile Puzzle</title>
+  <title>Color Tile Puzzle+</title>
   <style>
-     /* Background Video */
-    video.bg-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    /* Overlay for dark effect */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-        z-index: 0;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #1f1c2c, #928dab);
       color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      animation: moveBackground 20s linear infinite;
-      z-index: 0;
-    }
-    @keyframes moveBackground {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(40px, 40px); }
+      overflow: hidden;
     }
     h1 {
-      margin: 20px;
-      text-shadow: 2px 2px 5px black;
-      z-index: 1;
+      margin-top: 20px;
+      font-size: 2.5rem;
+      text-shadow: 1px 1px 5px black;
+    }
+    #goalTitle {
+      margin: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      transition: color 0.5s ease;
     }
     #grid, #goal {
       display: grid;
@@ -70,114 +40,102 @@
       border-radius: 10px;
       transition: background 0.3s, transform 0.2s;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    }
+    .tile:hover {
+      transform: scale(1.05);
     }
     .tile:active {
       transform: scale(0.95);
     }
-    #levelDisplay {
-      margin-bottom: 10px;
-      font-size: 18px;
-      z-index: 1;
+    .button-bar {
+      margin: 10px;
     }
     button {
-      padding: 10px 20px;
-      font-size: 16px;
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 14px;
       background: #00bcd4;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      color: white;
       cursor: pointer;
-      margin-bottom: 20px;
-      color: white;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      z-index: 1;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
     }
-    .confetti {
-      position: fixed;
-      top: -10px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: pink;
-      animation: fall 3s linear infinite;
-      pointer-events: none;
-      z-index: 1000;
+    #timer, #scoreDisplay {
+      font-size: 16px;
+      margin: 5px;
     }
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    .hinted {
+      border: 3px dashed white;
     }
-    .level-up-msg {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.8);
-      padding: 20px 40px;
-      border-radius: 12px;
-      color: white;
-      font-size: 24px;
-      z-index: 2000;
-      opacity: 0;
-      animation: popup 1.5s ease forwards;
-    }
-    @keyframes popup {
-      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
-    @media (max-width: 600px) {
-      .tile {
-        width: 40px;
-        height: 40px;
-      }
-      #grid, #goal {
-        gap: 3px;
-      }
-       h1{
-margin-top:4cm;
-
-         
-       }
-      button{
-margin-left:50%;
-margin-right:50%;
-      }
+    .score-box {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <!-- Background Video -->
-  <video class="bg-video" autoplay loop muted>
-    <source src="v3.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-  <!-- Overlay for better text visibility -->
-  <div class="overlay"></div>
-  <h1>Color Tile Puzzle</h1>
-  <div id="levelDisplay">Level: 1</div>
-  <div id="grid"></div>
-  <div>Match this:</div>
+  <h1>Color Tile Puzzle+</h1>
+  <div id="goalTitle">🎯 Match this pattern:</div>
   <div id="goal"></div>
-  <button onclick="resetLevel()">Reset</button>
+
+  <div id="levelDisplay">Level: 1</div>
+  <div class="score-box">
+    <div id="timer">⏱ Time: 5:00</div>
+    <div id="scoreDisplay">⭐ Score: 0</div>
+  </div>
+
+  <div id="grid"></div>
+  <div class="button-bar">
+    <button onclick="resetLevel()">Reset</button>
+    <button onclick="showHint()">Hint</button>
+    <button onclick="undoLastMove()">Undo</button>
+  </div>
 
   <script>
-    const colors = ["red", "blue", "green", "yellow"];
+    const colors = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f"];
     let level = 1;
     let gridSize = 3;
     let grid = [];
     let goal = [];
+    let previousStates = [];
+    let score = 0;
+    let timeLeft = 300; // 5 minutes
+    let timerInterval;
+
+    const gridContainer = document.getElementById("grid");
+    const goalContainer = document.getElementById("goal");
+    const goalLabel = document.getElementById("goalTitle");
+    const levelDisplay = document.getElementById("levelDisplay");
+    const timerDisplay = document.getElementById("timer");
+    const scoreDisplay = document.getElementById("scoreDisplay");
 
     function createGrid(size) {
-      const gridContainer = document.getElementById("grid");
-      const goalContainer = document.getElementById("goal");
-      gridContainer.style.gridTemplateColumns = `repeat(${size}, 60px)`;
-      goalContainer.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+      clearInterval(timerInterval);
+      timeLeft = 300;
+      timerDisplay.textContent = `⏱ Time: 5:00`;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timerDisplay.textContent = `⏱ Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        if (timeLeft === 0) {
+          clearInterval(timerInterval);
+          alert("⏰ Time's up! Try again.");
+          resetLevel();
+        }
+      }, 1000);
+
+      previousStates = [];
       gridContainer.innerHTML = "";
       goalContainer.innerHTML = "";
       grid = [];
       goal = [];
+      gridContainer.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+      goalContainer.style.gridTemplateColumns = `repeat(${size}, 60px)`;
 
       for (let i = 0; i < size * size; i++) {
         const tile = document.createElement("div");
@@ -196,6 +154,7 @@ margin-right:50%;
         goalTile.dataset.colorIndex = goalColorIndex;
 
         tile.addEventListener("click", () => {
+          previousStates.push(grid.map(t => t.dataset.colorIndex));
           let index = (parseInt(tile.dataset.colorIndex) + 1) % colors.length;
           tile.dataset.colorIndex = index;
           tile.style.background = colors[index];
@@ -208,6 +167,8 @@ margin-right:50%;
         gridContainer.appendChild(tile);
         goalContainer.appendChild(goalTile);
       }
+
+      animateLabelColor();
     }
 
     function checkWin() {
@@ -219,14 +180,15 @@ margin-right:50%;
         }
       }
       if (matched) {
-        showConfetti();
-        showLevelUpMessage();
+        clearInterval(timerInterval);
+        score += level * timeLeft * 10;
+        scoreDisplay.textContent = `⭐ Score: ${score}`;
         setTimeout(() => {
           level++;
           gridSize = Math.min(6, 3 + Math.floor(level / 2));
-          document.getElementById("levelDisplay").textContent = `Level: ${level}`;
+          levelDisplay.textContent = `Level: ${level}`;
           createGrid(gridSize);
-        }, 1500);
+        }, 1000);
       }
     }
 
@@ -234,24 +196,28 @@ margin-right:50%;
       createGrid(gridSize);
     }
 
-    function showConfetti() {
-      for (let i = 0; i < 40; i++) {
-        let confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 3000);
+    function undoLastMove() {
+      if (previousStates.length > 0) {
+        let last = previousStates.pop();
+        grid.forEach((tile, idx) => {
+          tile.dataset.colorIndex = last[idx];
+          tile.style.background = colors[last[idx]];
+        });
       }
     }
 
-    function showLevelUpMessage() {
-      const msg = document.createElement('div');
-      msg.className = 'level-up-msg';
-      msg.textContent = `🎉 Level ${level + 1}!`;
-      document.body.appendChild(msg);
-      setTimeout(() => msg.remove(), 1500);
+    function showHint() {
+      for (let i = 0; i < grid.length; i++) {
+        if (grid[i].dataset.colorIndex !== goal[i].dataset.colorIndex) {
+          grid[i].classList.add("hinted");
+          setTimeout(() => grid[i].classList.remove("hinted"), 1000);
+          break;
+        }
+      }
+    }
+
+    function animateLabelColor() {
+      goalLabel.style.color = colors[Math.floor(Math.random() * colors.length)];
     }
 
     createGrid(gridSize);
