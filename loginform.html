@@ -5,38 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Responsive Auth Page</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      min-height: 100vh;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
 
     nav {
-      background-color: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
-      padding: 10px 20px;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: white;
-      position: sticky;
-      top: 0;
+      padding: 1rem 2rem;
+      backdrop-filter: blur(8px);
       z-index: 1000;
     }
 
     .logo {
+      color: white;
       font-size: 1.5rem;
       font-weight: bold;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
     }
 
     .menu-toggle {
@@ -46,127 +59,94 @@
     }
 
     .menu-toggle span {
-      height: 3px;
+      height: 2px;
       width: 25px;
       background: white;
-      margin: 4px 0;
-      transition: all 0.3s ease;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      list-style: none;
-    }
-
-    .nav-links li a {
-      color: white;
-      text-decoration: none;
-      padding: 5px 10px;
-    }
-
-    .nav-links li a:hover {
-      background: rgba(255,255,255,0.2);
+      margin-bottom: 5px;
       border-radius: 5px;
     }
 
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        position: absolute;
+        top: 60px;
+        left: 0;
+        padding: 1rem 0;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+    }
+
     .auth-container {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.1);
       padding: 2rem;
-      margin: 50px auto;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      border-radius: 15px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      width: 90%;
       max-width: 400px;
-      color: white;
     }
 
     .auth-container h2 {
+      color: white;
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .auth-container input {
       width: 100%;
-      padding: 12px;
-      margin: 8px 0;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
       border: none;
       border-radius: 10px;
-      background-color: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.2);
       color: white;
-      outline: none;
       font-size: 1rem;
     }
 
-    ::placeholder {
-      color: #e0e0e0;
+    .auth-container input::placeholder {
+      color: #ddd;
     }
 
     .auth-container button {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
+      padding: 0.8rem;
       border: none;
       border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
+      background: linear-gradient(45deg, #00f, #0ff);
       color: white;
       font-size: 1rem;
-      background: linear-gradient(45deg, #ff6ec4, #7873f5);
-      box-shadow: 0 0 15px #ff6ec4;
-      animation: glow 2s infinite alternate;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    .auth-container .google {
-      background: linear-gradient(45deg, #db4437, #c23321);
-      box-shadow: 0 0 15px #db4437;
+    .auth-container button:hover {
+      transform: scale(1.05);
     }
 
-    @keyframes glow {
-      from { box-shadow: 0 0 10px #ff6ec4; }
-      to { box-shadow: 0 0 20px #ff6ec4, 0 0 30px #7873f5; }
+    .google {
+      margin-top: 0.5rem;
+      background: linear-gradient(45deg, #DB4437, #F4B400);
     }
 
     .toggle, .forgot {
-      text-align: center;
-      margin-top: 12px;
-      cursor: pointer;
+      margin-top: 1rem;
       color: #fff;
+      text-align: center;
       text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: flex;
-      }
-
-      .nav-links {
-        flex-direction: column;
-        background-color: rgba(0, 0, 0, 0.8);
-        width: 100%;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        transform: translateY(-100%);
-        transition: transform 0.3s ease;
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .nav-links.active {
-        transform: translateY(0);
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      nav {
-        flex-wrap: wrap;
-      }
-
-      .nav-links li {
-        text-align: center;
-        padding: 10px 0;
-      }
+      cursor: pointer;
+      font-size: 0.95rem;
     }
   </style>
 </head>
@@ -198,14 +178,37 @@
   <div class="forgot" onclick="forgotPassword()">Forgot Password?</div>
 </div>
 
-<script>
-  function toggleMenu() {
-    document.getElementById('navLinks').classList.toggle('active');
-  }
+<!-- Firebase Auth Script -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
+    GoogleAuthProvider,
+    signInWithPopup
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCiTsXWYBZHlxuE129wp0CTioslHv0uRi0",
+    authDomain: "mypagelogin-acdee.firebaseapp.com",
+    projectId: "mypagelogin-acdee",
+    storageBucket: "mypagelogin-acdee.appspot.com",
+    messagingSenderId: "195693208087",
+    appId: "1:195693208087:web:3aab89de24b4270df1b252"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
   let isLoginMode = true;
 
-  function toggleMode() {
+  window.toggleMenu = function () {
+    document.getElementById('navLinks').classList.toggle('active');
+  };
+
+  window.toggleMode = function () {
     isLoginMode = !isLoginMode;
     document.getElementById("formTitle").innerText = isLoginMode ? "Login" : "Sign Up";
     document.getElementById("submitButton").innerText = isLoginMode ? "Login" : "Sign Up";
@@ -213,19 +216,52 @@
       ? "Don't have an account? Sign up"
       : "Already have an account? Login";
     document.getElementById("username").style.display = isLoginMode ? "none" : "block";
-  }
+  };
 
-  function handleSubmit() {
-    alert("Form submission triggered");
-  }
+  window.handleSubmit = async function () {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  function handleGoogle() {
-    alert("Google sign-in triggered");
-  }
+    try {
+      if (isLoginMode) {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login successful!");
+        window.location.href = "webfirstpage.html";
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Signup successful! You can now log in.");
+        toggleMode();
+      }
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  };
 
-  function forgotPassword() {
-    alert("Forgot password logic here");
-  }
+  window.handleGoogle = async function () {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      alert("Google Sign-In successful!");
+      window.location.href = "webfirstpage.html";
+    } catch (error) {
+      alert("Google Sign-In Error: " + error.message);
+    }
+  };
+
+  window.forgotPassword = async function () {
+    const email = document.getElementById("email").value;
+    if (!email) {
+      alert("Please enter your email.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password reset email sent!");
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  };
 
   toggleMode();
 </script>
