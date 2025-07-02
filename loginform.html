@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Responsive Auth Page</title>
+  <title>Secure Auth Portal</title>
   <style>
+    :root {
+      --main-rgb: linear-gradient(135deg, #667eea, #764ba2);
+      --glass: rgba(255, 255, 255, 0.1);
+      --blur: blur(25px);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -13,43 +19,53 @@
     }
 
     body {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      height: 100vh;
+      background: var(--main-rgb);
+      min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+      flex-direction: column;
+      overflow-x: hidden;
+      animation: bgShift 10s ease infinite alternate;
+    }
+
+    @keyframes bgShift {
+      0% { background-position: left center; }
+      100% { background-position: right center; }
     }
 
     nav {
-      position: absolute;
-      top: 0;
       width: 100%;
       background: rgba(0, 0, 0, 0.3);
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1rem 2rem;
-      backdrop-filter: blur(8px);
-      z-index: 1000;
+      backdrop-filter: var(--blur);
+      position: fixed;
+      top: 0;
+      z-index: 999;
     }
 
     .logo {
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
     }
 
     .nav-links {
       list-style: none;
       display: flex;
-      gap: 1.5rem;
+      gap: 2rem;
     }
 
     .nav-links li a {
       color: white;
       text-decoration: none;
       font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links li a:hover {
+      color: #00ffff;
     }
 
     .menu-toggle {
@@ -59,11 +75,89 @@
     }
 
     .menu-toggle span {
-      height: 2px;
-      width: 25px;
+      height: 3px;
+      width: 28px;
       background: white;
-      margin-bottom: 5px;
+      margin: 4px 0;
       border-radius: 5px;
+    }
+
+    .auth-wrapper {
+      margin-top: 100px; /* offset for navbar */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .auth-container {
+      background: var(--glass);
+      padding: 2.5rem;
+      border-radius: 20px;
+      backdrop-filter: var(--blur);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      width: 100%;
+      max-width: 450px;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-container h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+
+    .auth-container input {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+    }
+
+    .auth-container input::placeholder {
+      color: #ddd;
+    }
+
+    .auth-container button {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #00f, #0ff);
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      margin-top: 0.5rem;
+    }
+
+    .auth-container button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #0ff;
+    }
+
+    .google {
+      background: linear-gradient(45deg, #DB4437, #F4B400);
+    }
+
+    .toggle, .forgot {
+      margin-top: 1rem;
+      color: #fff;
+      text-align: center;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.95rem;
     }
 
     @media (max-width: 768px) {
@@ -85,68 +179,11 @@
       .menu-toggle {
         display: flex;
       }
-    }
 
-    .auth-container {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2rem;
-      border-radius: 15px;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .auth-container h2 {
-      color: white;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .auth-container input {
-      width: 100%;
-      padding: 0.8rem;
-      margin-bottom: 1rem;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      font-size: 1rem;
-    }
-
-    .auth-container input::placeholder {
-      color: #ddd;
-    }
-
-    .auth-container button {
-      width: 100%;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(45deg, #00f, #0ff);
-      color: white;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .auth-container button:hover {
-      transform: scale(1.05);
-    }
-
-    .google {
-      margin-top: 0.5rem;
-      background: linear-gradient(45deg, #DB4437, #F4B400);
-    }
-
-    .toggle, .forgot {
-      margin-top: 1rem;
-      color: #fff;
-      text-align: center;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 0.95rem;
+      .auth-container {
+        padding: 2rem;
+        border-radius: 16px;
+      }
     }
   </style>
 </head>
@@ -167,18 +204,19 @@
   </ul>
 </nav>
 
-<div class="auth-container">
-  <h2 id="formTitle">Login</h2>
-  <input type="text" id="username" placeholder="Username" style="display:none;" />
-  <input type="email" id="email" placeholder="Email" required />
-  <input type="password" id="password" placeholder="Password (min 6 chars)" required />
-  <button onclick="handleSubmit()" id="submitButton">Login</button>
-  <button class="google" onclick="handleGoogle()">Sign in with Google</button>
-  <div class="toggle" onclick="toggleMode()">Don't have an account? Sign up</div>
-  <div class="forgot" onclick="forgotPassword()">Forgot Password?</div>
+<div class="auth-wrapper">
+  <div class="auth-container">
+    <h2 id="formTitle">Login</h2>
+    <input type="text" id="username" placeholder="Username" style="display:none;" />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password (min 6 chars)" required />
+    <button onclick="handleSubmit()" id="submitButton">Login</button>
+    <button class="google" onclick="handleGoogle()">Sign in with Google</button>
+    <div class="toggle" onclick="toggleMode()">Don't have an account? Sign up</div>
+    <div class="forgot" onclick="forgotPassword()">Forgot Password?</div>
+  </div>
 </div>
 
-<!-- Firebase Auth Script -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
   import {
@@ -226,7 +264,7 @@
       if (isLoginMode) {
         await signInWithEmailAndPassword(auth, email, password);
         alert("Login successful!");
-        window.location.href = "index.html";
+        window.location.href = "webfirstpage.html";
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
         alert("Signup successful! You can now log in.");
@@ -238,11 +276,11 @@
   };
 
   window.handleGoogle = async function () {
+    const provider = new GoogleAuthProvider();
     try {
-      const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       alert("Google Sign-In successful!");
-      window.location.href = "webfirstpage.html";
+      window.location.href = "index.html";
     } catch (error) {
       alert("Google Sign-In Error: " + error.message);
     }
