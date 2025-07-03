@@ -1,307 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Educational Website</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduVerse - Smart Learning</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #1e1e2f, #2d2d44);
+      color: white;
+      scroll-behavior: smooth;
+    }
+    header {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    header h1 {
+      font-size: 1.7rem;
+      color: #00ffe7;
+      text-shadow: 0 0 10px #00ffe7;
+    }
+    nav, .mobile-menu {
+      display: flex;
+      gap: 20px;
+    }
+    nav a, .mobile-menu a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    nav a:hover, .mobile-menu a:hover { color: #00ffe7; }
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+    }
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: rgba(0,0,0,0.9);
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .mobile-menu.active {
+      display: flex;
+    }
 
-        body, html {
-            height: 100%;
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            overflow-x: hidden;
-            transition: background-color 0.5s;
-        }
+    .hero {
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      background: url('https://images.unsplash.com/photo-1612831817796-7652a82640c6?auto=format&fit=crop&w=1600&q=80') no-repeat center/cover;
+    }
+    .hero h2 {
+      font-size: 3rem;
+      background: linear-gradient(90deg, #00ffe7, #ff00d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .hero p { font-size: 1.2rem; margin-bottom: 20px; }
+    .btn {
+      padding: 12px 30px;
+      background: linear-gradient(90deg, #00ffe7, #ff00d4);
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #00ffe7;
+    }
 
-        /* Header */
-        header {
-            background-color: #3b3b3b;
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 600;
-        }
+    section {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+    }
+    .feature {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .feature i {
+      font-size: 2rem;
+      color: #00ffe7;
+      margin-bottom: 10px;
+    }
+    .feature h3 { color: #fff; }
+    .feature p { font-size: 0.9rem; color: #ccc; margin-top: 8px; }
 
-        /* Navigation Bar */
-        nav {
-            background-color: #222;
-            padding: 10px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    .books {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .book {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 10px;
+      flex: 1 1 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .book img {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+    .book button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: #00ffe7;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
 
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin: 0 20px;
-        }
-
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.2rem;
-            padding: 10px;
-            transition: background-color 0.3s;
-            border-radius: 5px;
-        }
-
-        nav ul li a:hover {
-            background-color: #ff6a00;
-        }
-
-        /* Course Section */
-        #courses {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            padding: 50px 20px;
-            background: #fff;
-        }
-
-        .course-item {
-            width: 30%;
-            margin: 15px 0;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .course-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .course-item h3 {
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-        }
-
-        .course-item p {
-            font-size: 1rem;
-            color: #666;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #222;
-            color: #fff;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 30px;
-        }
-
-        .footer-left {
-            flex: 1;
-            font-size: 1rem;
-        }
-
-        .footer-center {
-            flex: 1;
-        }
-
-        .footer-center .social-links a {
-            margin: 0 10px;
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.5rem;
-        }
-
-        .footer-right {
-            flex: 1;
-        }
-
-        .footer-right input[type="email"] {
-            padding: 10px;
-            width: 60%;
-            margin-right: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-        }
-
-        .footer-right button {
-            background-color: #ff6a00;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .footer-right button:hover {
-            background-color: #ee0979;
-        }
-
-        /* Pop-up Engagement */
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-        .popup-content {
-            background-color: #fff;
-            padding: 40px;
-            text-align: center;
-            width: 300px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .popup-content h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-
-        .popup-content button {
-            background-color: #ff6a00;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .popup-content button:hover {
-            background-color: #ee0979;
-        }
-
-        /* Media Queries */
-        @media (max-width: 768px) {
-            .course-item {
-                width: 100%;
-            }
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            .footer-right input[type="email"] {
-                width: 80%;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
+    form {
+      background: rgba(255,255,255,0.07);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 20px rgba(0,255,231,0.3);
+    }
+    .form-group {
+      position: relative;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+    .form-group label {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      color: #ccc;
+      font-size: 0.9rem;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+    .form-group input:focus + label,
+    .form-group textarea:focus + label,
+    .form-group input:not(:placeholder-shown) + label,
+    .form-group textarea:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 8px;
+      background: #1e1e2f;
+      padding: 0 4px;
+      font-size: 0.75rem;
+      color: #00ffe7;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+    }
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .hamburger { display: block; }
+    }
+  </style>
 </head>
 <body>
-
-    <!-- Navigation Bar -->
+  <header>
+    <h1>EduVerse</h1>
     <nav>
-        <ul>
-            <li><a href="#courses">Courses</a></li>
-            <li><a href="#signup">Sign Up</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#books">Books</a>
+      <a href="#contact">Contact</a>
     </nav>
-
-    <!-- Header Section -->
-    <header>
-        <h1>Welcome to Our Educational Portal</h1>
-        <p>Transforming knowledge with interactive learning</p>
-    </header>
-
-    <!-- Courses Section -->
-    <section id="courses">
-        <div class="course-item">
-            <h3>Web Development</h3>
-            <p>Learn the foundations of web design and development with hands-on projects.</p>
-        </div>
-        <div class="course-item">
-            <h3>Data Science</h3>
-            <p>Discover the exciting world of data analysis, machine learning, and AI.</p>
-        </div>
-        <div class="course-item">
-            <h3>UI/UX Design</h3>
-            <p>Understand the principles of user interface and user experience design.</p>
-        </div>
-    </section>
-
-    <!-- Footer Section -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-left">
-                <p>Real Hero Nadeem - All Rights Reserved &copy; 2025</p>
-            </div>
-            <div class="footer-center">
-                <div class="social-links">
-                    <a href="#" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
-                    <a href="#" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
-                    <a href="#" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="#" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                </div>
-            </div>
-            <div class="footer-right">
-                <p>Don't miss out! Sign up for exclusive updates:</p>
-                <input type="email" placeholder="Enter your email" id="newsletter">
-                <button onclick="subscribe()">Subscribe</button>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Pop-up for User Engagement -->
-    <div id="popup" class="popup-overlay">
-        <div class="popup-content">
-            <h2>Stay with us for more exciting content!</h2>
-            <button onclick="closePopup()">Stay with us</button>
-        </div>
+    <div class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#books">Books</a>
+      <a href="#contact">Contact</a>
     </div>
+  </header>
 
-    <script>
-        // Pop-up functionality to show when the user is about to leave the page
-        window.onbeforeunload = function () {
-            document.getElementById("popup").style.display = "flex";
-            return null;
-        };
+  <div class="hero" id="home">
+    <h2>Learn with Style</h2>
+    <p>Smart Courses, Instant Books & Awesome Experience</p>
+    <button class="btn">Join Now</button>
+  </div>
 
-        function closePopup() {
-            document.getElementById("popup").style.display = "none";
-        }
+  <section id="features">
+    <h2 style="text-align:center; margin-bottom: 30px;">Features</h2>
+    <div class="features">
+      <div class="feature"><i class="fas fa-video"></i><h3>HD Lectures</h3><p>Crystal clear video content.</p></div>
+      <div class="feature"><i class="fas fa-brain"></i><h3>AI Quizzes</h3><p>Smart tests powered by AI.</p></div>
+      <div class="feature"><i class="fas fa-user-graduate"></i><h3>Expert Tutors</h3><p>Top-level instructors on demand.</p></div>
+      <div class="feature"><i class="fas fa-chart-line"></i><h3>Progress Tracker</h3><p>Visualize your success.</p></div>
+      <div class="feature"><i class="fas fa-certificate"></i><h3>Certifications</h3><p>Official and verifiable.</p></div>
+      <div class="feature"><i class="fas fa-language"></i><h3>Multi-language</h3><p>Courses in 10+ languages.</p></div>
+      <div class="feature"><i class="fas fa-download"></i><h3>Offline Access</h3><p>Study anywhere, anytime.</p></div>
+      <div class="feature"><i class="fas fa-laptop-code"></i><h3>Coding Labs</h3><p>Interactive coding practice.</p></div>
+      <div class="feature"><i class="fas fa-puzzle-piece"></i><h3>Gamified Learning</h3><p>Fun and motivating modules.</p></div>
+      <div class="feature"><i class="fas fa-headset"></i><h3>24x7 Support</h3><p>We're always here to help.</p></div>
+      <!-- Add 10+ more as needed -->
+    </div>
+  </section>
 
-        function subscribe() {
-            var email = document.getElementById('newsletter').value;
-            if (email) {
-                alert('Thanks for subscribing, ' + email);
-                document.getElementById('newsletter').value = '';
-            }
-        }
-    </script>
+  <section id="books">
+    <h2 style="text-align:center; margin-bottom: 30px;">Books</h2>
+    <div class="books">
+      <div class="book">
+        <img src="https://covers.openlibrary.org/b/id/10523354-L.jpg" alt="Book 1" />
+        <p>Learn Python</p>
+        <button>Download</button>
+      </div>
+      <div class="book">
+        <img src="https://covers.openlibrary.org/b/id/11153218-L.jpg" alt="Book 2" />
+        <p>Data Structures</p>
+        <button>Open</button>
+      </div>
+    </div>
+  </section>
 
+  <section id="contact">
+    <h2 style="text-align:center; margin-bottom: 30px;">Contact Us</h2>
+    <form>
+      <div class="form-group">
+        <input type="text" required placeholder=" " />
+        <label>Name</label>
+      </div>
+      <div class="form-group">
+        <input type="email" required placeholder=" " />
+        <label>Email</label>
+      </div>
+      <div class="form-group">
+        <textarea rows="4" required placeholder=" "></textarea>
+        <label>Your Message</label>
+      </div>
+      <button class="btn" type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 EduVerse. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('active');
+    }
+  </script>
 </body>
 </html>
