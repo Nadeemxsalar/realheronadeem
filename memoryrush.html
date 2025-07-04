@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emoji Memory Rush</title>
+  <style>
+    :root {
+      --bg: #111;
+      --text: #fff;
+      --accent: #0ff;
+      --seen: #00ff88;
+      --notseen: #ff0055;
+    }
+    body.light {
+      --bg: #f0f0f0;
+      --text: #111;
+      --accent: #0077ff;
+      --seen: #00cc66;
+      --notseen: #cc0033;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      text-align: center;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      text-shadow: 0 0 10px var(--accent);
+    }
+
+    #emojiContainer {
+      font-size: 3.5rem;
+      min-height: 70px;
+      margin: 20px auto;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .button-row {
+      margin: 15px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+      font-weight: bold;
+      box-shadow: 0 0 10px var(--accent);
+      background: var(--accent);
+      color: #000;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--accent);
+    }
+
+    .seen-btn { background-color: var(--seen); color: #000; }
+    .notseen-btn { background-color: var(--notseen); color: #fff; }
+
+    #timerBar {
+      height: 8px;
+      background: lime;
+      width: 100%;
+      transition: width 1s linear;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    select {
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      padding: 10px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      box-shadow: 0 0 10px var(--accent);
+      outline: none;
+    }
+
+    #score, #leaderboard {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    #leaderboard {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Emoji Memory Rush</h1>
+  <div id="timerBar"></div>
+  <div id="score">Score: 0 | High Score: 0</div>
+
+  <div class="button-row">
+    <select id="difficulty">
+      <option value="easy">🟢 Easy</option>
+      <option value="medium" selected>🟡 Medium</option>
+      <option value="hard">🔴 Hard</option>
+    </select>
+    <select id="gameMode">
+      <option value="standard">🎮 Standard</option>
+      <option value="reverse">🔁 Reverse Memory</option>
+      <option value="sequence">📊 Sequence Match</option>
+    </select>
+  </div>
+
+  <div id="emojiContainer">Press Start</div>
+
+  <div class="button-row">
+    <button onclick="startGame()">▶️ Start</button>
+    <button onclick="toggleTheme()">🌓 Theme</button>
+  </div>
+
+  <div class="button-row">
+    <button onclick="submitAnswer(true)" class="seen-btn">✅ Seen</button>
+    <button onclick="submitAnswer(false)" class="notseen-btn">❌ Not Seen</button>
+  </div>
+
+  <div id="leaderboard"></div>
+
+  <script>
+    const allEmojis = [...'😀🥶😱🤖👻👽🐶🐱🦄🦊🐷🐸🦁🐵🍎🍌🍕🍟🍔🎂🍩⚽🏀🏈🎲🎮🚗✈️🚀🛸⏰🎁💡📱📚🎧💎🧸🔮🪄🌈⭐🔥💥'];
+
+    let score = 0;
+    let highScore = localStorage.getItem('emojiHigh') || 0;
+    let shownEmojis = [];
+    let currentEmoji = '';
+    let currentSequence = [];
+    let timer, timerSpeed = 2000;
+
+    const emojiContainer = document.getElementById('emojiContainer');
+    const scoreDisplay = document.getElementById('score');
+    const timerBar = document.getElementById('timerBar');
+    const difficultySelect = document.getElementById('difficulty');
+    const gameModeSelect = document.getElementById('gameMode');
+    const leaderboard = document.getElementById('leaderboard');
+
+    function randomEmoji() {
+      return allEmojis[Math.floor(Math.random() * allEmojis.length)];
+    }
+
+    function updateScore() {
+      scoreDisplay.textContent = `Score: ${score} | High Score: ${highScore}`;
+    }
+
+    function startGame() {
+      score = 0;
+      shownEmojis = [];
+      currentSequence = [];
+      updateDifficulty();
+      updateScore();
+      nextRound();
+    }
+
+    function updateDifficulty() {
+      const level = difficultySelect.value;
+      timerSpeed = level === 'easy' ? 3000 : level === 'medium' ? 2000 : 1200;
+    }
+
+    function nextRound() {
+      clearTimeout(timer);
+      emojiContainer.innerHTML = '';
+      shownEmojis = [];
+      currentSequence = [];
+
+      let count = Math.min(3 + Math.floor(score / 5), 6);
+      for (let i = 0; i < count; i++) {
+        const emoji = randomEmoji();
+        shownEmojis.push(emoji);
+      }
+
+      emojiContainer.textContent = shownEmojis.join(' ');
+      timerBar.style.transition = 'none';
+      timerBar.style.width = '100%';
+
+      setTimeout(() => {
+        emojiContainer.innerHTML = '';
+        showChallengeEmoji();
+      }, 1200 + 100 * count);
+    }
+
+    function showChallengeEmoji() {
+      const mode = gameModeSelect.value;
+      if (mode === 'sequence') {
+        currentSequence = [...shownEmojis];
+        emojiContainer.textContent = currentSequence.join(' ');
+      } else {
+        const isFromPrevious = Math.random() < 0.6;
+        currentEmoji = isFromPrevious ? shownEmojis[Math.floor(Math.random() * shownEmojis.length)] : randomEmoji();
+        emojiContainer.textContent = currentEmoji;
+      }
+
+      timerBar.style.transition = `width ${timerSpeed}ms linear`;
+      timerBar.style.width = '0%';
+
+      timer = setTimeout(() => gameOver(), timerSpeed);
+    }
+
+    function submitAnswer(userSaysSeen) {
+      clearTimeout(timer);
+      const mode = gameModeSelect.value;
+
+      if (mode === 'reverse') {
+        const reversed = [...shownEmojis].reverse().join('');
+        const seen = reversed.includes(currentEmoji);
+        if (userSaysSeen === seen) correct(); else gameOver();
+      }
+      else if (mode === 'sequence') {
+        const guess = prompt("Enter the sequence of emojis you saw:");
+        if (guess === currentSequence.join('')) correct(); else gameOver();
+      }
+      else {
+        const wasSeen = shownEmojis.includes(currentEmoji);
+        if (userSaysSeen === wasSeen) correct(); else gameOver();
+      }
+    }
+
+    function correct() {
+      score++;
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('emojiHigh', highScore);
+      }
+      updateScore();
+      nextRound();
+    }
+
+    function gameOver() {
+      emojiContainer.textContent = '❌ Game Over';
+      timerBar.style.width = '0%';
+      updateLeaderboard(score);
+      alert('🧠 Game Over!\nYour Score: ' + score);
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+    }
+
+    function updateLeaderboard(newScore) {
+      const scores = JSON.parse(localStorage.getItem('emojiLeaderboard') || '[]');
+      scores.push({ score: newScore, date: new Date().toLocaleString() });
+      scores.sort((a, b) => b.score - a.score);
+      localStorage.setItem('emojiLeaderboard', JSON.stringify(scores.slice(0, 5)));
+      displayLeaderboard();
+    }
+
+    function displayLeaderboard() {
+      const scores = JSON.parse(localStorage.getItem('emojiLeaderboard') || '[]');
+      leaderboard.innerHTML = '<h3>🏆 Leaderboard</h3>' + scores.map(s => `<div>${s.score} - ${s.date}</div>`).join('');
+    }
+
+    updateScore();
+    displayLeaderboard();
+  </script>
+</body>
+</html>

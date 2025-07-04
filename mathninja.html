@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Math Ninja Ultra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    #gameContainer {
+      background: #222;
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px lime;
+      position: relative;
+    }
+
+    #question {
+      font-size: 2rem;
+      margin: 20px 0;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 1.2rem;
+      width: 100px;
+      border-radius: 5px;
+      border: none;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      background: lime;
+      color: #000;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #stats {
+      margin-top: 15px;
+    }
+
+    .combo {
+      color: gold;
+      font-weight: bold;
+    }
+
+    #feedback {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      height: 30px;
+    }
+
+    .correct { color: lime; }
+    .wrong { color: red; }
+
+    #controls button {
+      margin: 5px;
+    }
+
+    @media(max-width: 500px) {
+      h1 { font-size: 1.5rem; }
+      input { width: 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧠 Math Ninja Ultra</h1>
+
+<div id="gameContainer">
+  <div id="question">Press Start</div>
+  <input type="number" id="answer" placeholder="Answer" disabled />
+  <br />
+  <button id="submitBtn" onclick="checkAnswer()" disabled>Submit</button>
+  <div id="controls">
+    <button onclick="startGame()">Start</button>
+    <button onclick="resetGame()">Reset</button>
+  </div>
+  <div id="feedback"></div>
+  <div id="stats">
+    <p>Score: <span id="score">0</span> | High Score: <span id="highScore">0</span></p>
+    <p>Accuracy: <span id="accuracy">0</span>% | Combo: <span id="combo">0</span></p>
+    <p>Wrong Attempts: <span id="wrong">0</span>/3</p>
+  </div>
+</div>
+
+<script>
+  let score = 0;
+  let totalQuestions = 0;
+  let correctAnswers = 0;
+  let combo = 0;
+  let wrongAnswers = 0;
+  let highScore = localStorage.getItem('mathHigh') || 0;
+  let currentAnswer = 0;
+
+  const questionEl = document.getElementById('question');
+  const answerInput = document.getElementById('answer');
+  const submitBtn = document.getElementById('submitBtn');
+  const scoreEl = document.getElementById('score');
+  const highScoreEl = document.getElementById('highScore');
+  const accuracyEl = document.getElementById('accuracy');
+  const feedback = document.getElementById('feedback');
+  const comboEl = document.getElementById('combo');
+  const wrongEl = document.getElementById('wrong');
+
+  highScoreEl.textContent = highScore;
+
+  function generateQuestion(level = 1) {
+    let a = Math.floor(Math.random() * (10 * level) + 1);
+    let b = Math.floor(Math.random() * (10 * level) + 1);
+    const ops = ['+', '-', '*', '/'];
+    const op = ops[Math.floor(Math.random() * ops.length)];
+    if (op === '/') a = a * b;
+    const q = `${a} ${op} ${b}`;
+    currentAnswer = eval(q);
+    questionEl.textContent = q;
+  }
+
+  function startGame() {
+    score = 0;
+    totalQuestions = 0;
+    correctAnswers = 0;
+    combo = 0;
+    wrongAnswers = 0;
+
+    scoreEl.textContent = score;
+    accuracyEl.textContent = '0';
+    comboEl.textContent = combo;
+    wrongEl.textContent = wrongAnswers;
+
+    answerInput.disabled = false;
+    submitBtn.disabled = false;
+    answerInput.focus();
+    generateQuestion();
+  }
+
+  function resetGame() {
+    startGame();
+  }
+
+  function checkAnswer() {
+    let userAns = parseFloat(answerInput.value);
+    answerInput.value = '';
+    totalQuestions++;
+
+    if (Math.abs(userAns - currentAnswer) < 0.01) {
+      score += (combo >= 3) ? 3 : 1;
+      correctAnswers++;
+      combo++;
+      feedback.innerHTML = '<span class="correct">✅ Correct!</span>';
+    } else {
+      wrongAnswers++;
+      combo = 0;
+      feedback.innerHTML = '<span class="wrong">❌ Wrong!</span>';
+      if (wrongAnswers >= 3) {
+        endGame();
+        return;
+      }
+    }
+
+    comboEl.textContent = combo;
+    wrongEl.textContent = wrongAnswers;
+    let accuracy = totalQuestions ? ((correctAnswers / totalQuestions) * 100).toFixed(1) : 0;
+    scoreEl.textContent = score;
+    accuracyEl.textContent = accuracy;
+
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem('mathHigh', highScore);
+      highScoreEl.textContent = highScore;
+    }
+
+    generateQuestion(Math.ceil(score / 5));
+  }
+
+  function endGame() {
+    answerInput.disabled = true;
+    submitBtn.disabled = true;
+    questionEl.textContent = '🛑 Game Over';
+    feedback.innerHTML = '';
+    alert(`Game Over!\nScore: ${score}\nAccuracy: ${((correctAnswers / totalQuestions) * 100).toFixed(1)}%`);
+  }
+</script>
+
+</body>
+</html>
