@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>💥 Mega Memory Match</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    :root {
+      --bg-color: linear-gradient(135deg, #1f1c2c, #928dab);
+      --text-color: #fff;
+      --card-front: #fff;
+      --card-back: #2f80ed;
+      --accent: #00f5c4;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin: 0.5rem 0;
+      text-shadow: 2px 2px 5px #000;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05);
+      padding: 10px 15px;
+      border-radius: 12px;
+    }
+    .controls > * {
+      font-size: 1rem;
+      color: #fff;
+    }
+    select, button {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #fff3;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    select:hover, button:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+    .card {
+      width: 70px;
+      height: 70px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+    .card-front {
+      background: rgba(255,255,255,0.9);
+      color: #222;
+    }
+    .card-back {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: white;
+      transform: rotateY(180deg);
+    }
+    .matched {
+      box-shadow: 0 0 20px 4px #00ffbf;
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+    .shake {
+      animation: shake 0.4s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+    }
+    #message {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    #stars { color: gold; }
+    @media (max-width: 600px) {
+      .card { width: 50px; height: 50px; }
+      .card-front, .card-back { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>💥 Mega Memory Match</h1>
+
+<div class="controls">
+  <div>🎯 Moves: <span id="moves">0</span></div>
+  <div>⏳ Time: <span id="time">0</span>s</div>
+  <div>⭐ Stars: <span id="stars">⭐⭐⭐</span></div>
+  <div>🏆 Best: <span id="best">∞</span></div>
+  <select id="difficulty" onchange="startGame()">
+    <option value="easy">🐣 Easy</option>
+    <option value="medium" selected>⚡ Medium</option>
+    <option value="hard">🔥 Hard</option>
+  </select>
+</div>
+
+<div id="message"></div>
+<div class="grid" id="grid"></div>
+
+<div class="controls">
+  <button onclick="startGame()">🔁 Restart</button>
+  <button onclick="useHint()">💡 Hint</button>
+  <button onclick="toggleMode()">🌓 Mode</button>
+</div>
+
+<audio id="match-sound" src="https://cdn.pixabay.com/audio/2022/10/30/audio_977831addc.mp3"></audio>
+<audio id="fail-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_89f9180d9a.mp3"></audio>
+
+<script>
+const emojiSet = ['🐶','🐱','🦊','🐼','🐵','🦄','🐸','🐤','🐙','🐢','🦋','🕷️','🐝','🦖','🦩','🐳','🐬','🦉','🦔','🐧','🦓','🐘','🐎'];
+let first = null, lock = false, moves = 0, matched = 0, timer = 60, interval, hintUsed = false, dark = false;
+let rows = 4, cols = 4;
+
+const grid = document.getElementById('grid');
+const movesSpan = document.getElementById('moves');
+const timeSpan = document.getElementById('time');
+const starsSpan = document.getElementById('stars');
+const bestSpan = document.getElementById('best');
+const message = document.getElementById('message');
+const difficultySelect = document.getElementById('difficulty');
+const matchSound = document.getElementById('match-sound');
+const failSound = document.getElementById('fail-sound');
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function getGridDimensions(diff) {
+  if (diff === 'easy') return [2, 4, 30];
+  if (diff === 'hard') return [4, 6, 90];
+  return [4, 4, 60];
+}
+
+function startGame() {
+  clearInterval(interval);
+  [rows, cols, timer] = getGridDimensions(difficultySelect.value);
+  const total = rows * cols;
+  const emojis = shuffle(emojiSet).slice(0, total/2);
+  const cards = shuffle([...emojis, ...emojis]);
+
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.innerHTML = '';
+  first = null; lock = false; matched = 0; moves = 0;
+  hintUsed = false;
+  movesSpan.textContent = 0;
+  starsSpan.textContent = '⭐⭐⭐';
+  timeSpan.textContent = timer;
+  message.textContent = '';
+
+  cards.forEach(e => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.emoji = e;
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="card-front">❓</div>
+        <div class="card-back">${e}</div>
+      </div>`;
+    card.addEventListener('click', () => flip(card));
+    grid.appendChild(card);
+  });
+
+  interval = setInterval(() => {
+    timer--;
+    timeSpan.textContent = timer;
+    if (timer <= 0) endGame(false);
+  }, 1000);
+}
+
+function flip(card) {
+  if (lock || card.classList.contains('flipped')) return;
+  card.classList.add('flipped');
+  if (!first) {
+    first = card;
+  } else {
+    moves++;
+    movesSpan.textContent = moves;
+    updateStars();
+    lock = true;
+    if (card.dataset.emoji === first.dataset.emoji) {
+      card.classList.add('matched');
+      first.classList.add('matched');
+      matched++;
+      matchSound.play();
+      lock = false;
+      first = null;
+      if (matched === (rows * cols / 2)) endGame(true);
+    } else {
+      failSound.play();
+      card.classList.add('shake');
+      first.classList.add('shake');
+      setTimeout(() => {
+        card.classList.remove('flipped','shake');
+        first.classList.remove('flipped','shake');
+        first = null;
+        lock = false;
+      }, 700);
+    }
+  }
+}
+
+function updateStars() {
+  let stars = '⭐⭐⭐';
+  if (moves > 18) stars = '⭐';
+  else if (moves > 12) stars = '⭐⭐';
+  starsSpan.textContent = stars;
+}
+
+function endGame(won) {
+  clearInterval(interval);
+  if (won) {
+    message.textContent = '🎉 Victory!';
+    const diff = difficultySelect.value;
+    let best = +localStorage.getItem('best-' + diff) || Infinity;
+    if (moves < best) {
+      localStorage.setItem('best-' + diff, moves);
+      best = moves;
+    }
+    bestSpan.textContent = best;
+  } else {
+    message.textContent = '💀 Time\'s Up!';
+  }
+}
+
+function useHint() {
+  if (hintUsed) return alert("Hint already used!");
+  hintUsed = true;
+  const cards = document.querySelectorAll('.card:not(.flipped)');
+  cards.forEach(c => c.classList.add('flipped'));
+  setTimeout(() => cards.forEach(c => c.classList.remove('flipped')), 1000);
+}
+
+function toggleMode() {
+  dark = !dark;
+  document.documentElement.style.setProperty('--bg-color', dark ? 'linear-gradient(135deg, #000000, #434343)' : 'linear-gradient(135deg, #1f1c2c, #928dab)');
+  document.documentElement.style.setProperty('--card-back', dark ? '#34495e' : '#2f80ed');
+}
+
+startGame();
+</script>
+</body>
+</html>
