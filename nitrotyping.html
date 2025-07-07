@@ -5,182 +5,306 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Future Typing Verse</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin:0; padding:0; }
     body {
-      margin: 0;
-      padding: 0;
+      height:100vh; display:flex; flex-direction:column;
+      align-items:center; justify-content:flex-start;
+      background: linear-gradient(135deg, #0d324d, #7f5a83);
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 20px;
+      color: #fff;
+      overflow-x: hidden;
+      transition: background 0.4s ease;
     }
 
     h1 {
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 10px;
+      margin:20px 0; font-size:2.8rem;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .controls, .stats {
+      display:flex; flex-wrap:wrap;
+      justify-content:center; gap:15px; margin:10px;
+    }
+
+    button, select {
+      padding:10px 15px; border:none;
+      border-radius:8px; cursor:pointer;
+      background: rgba(255,255,255,0.2);
+      color:#fff; backdrop-filter: blur(10px);
+      transition:0.3s;
+    }
+    button:hover, select:hover {
+      background: rgba(255,255,255,0.3);
     }
 
     .paragraph-box {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 15px;
-      border-radius: 10px;
-      max-width: 800px;
-      line-height: 1.6;
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      transition: all 0.3s ease-in-out;
-      min-height: 80px;
+      width:90%; max-width:800px;
+      background: rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:20px; padding:20px;
+      margin:15px 0;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      backdrop-filter: blur(8px);
+      transition:0.3s;
+      line-height:1.6; font-size:1.2rem;
+      min-height:120px;
     }
 
-    .highlight {
-      background-color: #ffd700;
-      color: #000;
-      padding: 2px 4px;
-      border-radius: 4px;
+    .paragraph-box span.highlight {
+      background: rgba(255,255,0,0.8);
+      color:#000;
+      padding:4px 6px; border-radius:4px;
+      animation: glow 1s ease infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 5px rgba(255,255,0,0.7); }
+      to { box-shadow: 0 0 15px rgba(255,255,0,1); }
     }
 
     input {
-      padding: 10px 15px;
-      font-size: 1.1rem;
-      width: 100%;
-      max-width: 500px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      margin-bottom: 20px;
+      width:90%; max-width:500px;
+      padding:12px 15px;
+      border:none; border-radius:8px;
+      outline:none;
+      background: rgba(255,255,255,0.1);
+      color:#fff;
+      backdrop-filter: blur(5px);
+      font-size:1rem;
+      letter-spacing:1px;
+      transition:0.3s;
     }
-
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      font-size: 1rem;
-      margin-bottom: 15px;
+    input:focus {
+      background: rgba(255,255,255,0.2);
     }
 
     .stats div {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 10px 15px;
-      border-radius: 8px;
+      padding:12px 20px;
+      border-radius:8px; font-weight:500;
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      backdrop-filter: blur(5px);
+      min-width:100px; text-align:center;
     }
 
-    @media screen and (max-width: 600px) {
-      .paragraph-box {
-        font-size: 1rem;
-      }
-      input {
-        font-size: 1rem;
-      }
-      h1 {
-        font-size: 2rem;
-      }
+    .timer-bar {
+      width:90%; max-width:800px; height:8px;
+      background: rgba(255,255,255,0.2);
+      border-radius:4px; margin-bottom:10px;
+    }
+
+    .timer-fill {
+      height:100%; background:#76e2f0; width:100%;
+      border-radius:4px; transition:width 1s linear;
+    }
+
+    @media(max-width:600px){
+      h1 { font-size:2rem; }
+      input { font-size:0.9rem; }
+      .paragraph-box { font-size:1rem; }
+    }
+
+    /* DARK MODE STYLES */
+    body.dark {
+      background: linear-gradient(135deg, #121212, #333);
+      color: #fff;
+    }
+    body.dark .paragraph-box,
+    body.dark .stats div,
+    body.dark button,
+    body.dark select,
+    body.dark input {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    body.dark input:focus {
+      background: rgba(255,255,255,0.1);
     }
   </style>
 </head>
 <body>
+
   <h1>🚀 Future Typing Verse</h1>
-  <div class="paragraph-box" id="paragraph-box">Loading...</div>
-  <input type="text" id="typing-input" placeholder="Start typing here..." autofocus />
+  <div class="controls">
+    <select id="difficulty">
+      <option value="easy">🟢 Easy</option>
+      <option value="medium">🟡 Medium</option>
+      <option value="hard">🔴 Hard</option>
+    </select>
+    <button onclick="toggleDark()">🌗 Theme</button>
+    <button onclick="pauseResume()">⏯ Pause</button>
+    <button onclick="resetGame()">🔄 Restart</button>
+  </div>
+
+  <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+  <div class="paragraph-box" id="para">Loading...</div>
+  <input id="input" placeholder="Start typing..." autocomplete="off"/>
+
   <div class="stats">
-    <div>🕒 Time: <span id="timer">60</span>s</div>
-    <div>💯 Score: <span id="score">0</span></div>
-    <div>🎯 Accuracy: <span id="accuracy">100%</span></div>
+    <div>🕒 <span id="timer">60</span>s</div>
     <div>📈 WPM: <span id="wpm">0</span></div>
+    <div>🎯 Acc: <span id="acc">100%</span></div>
+    <div>💯 Score: <span id="score">0</span></div>
+    <div>🏆 Best: <span id="best">0</span></div>
   </div>
 
   <script>
-    const paragraphs = [
-      "Dream big",
-      "The future belongs to those who believe in the beauty of their dreams",
-      "In a world driven by innovation, typing becomes a superpower. Prepare to test your speed, precision, and vision in this futuristic typing universe."
-    ];
+    const paragraphs = {
+      easy: [
+        "Zindagi ek safar hai jo kabhi seedhi raahon se to kabhi uljhe modon se guzar kar humein naye tajurbe sikhaati hai",
+        "Har din ek nayi umeed ek nayi koshish ka paighaam laata hai. Kamiyabi sirf manzil tak pahunchne ka naam nahi balki us raaste mein ki gayi mehnat seekh aur hausle ka naam hai",
+        "Jo log mushkil waqt mein bhi muskurana jaante hain, wahi asal mein zindagi jeena jaante hain. Isiliye hamesha khud par vishwas rakho aur har chunauti ko ek mauka samajhkar aage badho"
+      ],
+      medium: [
+        "Mehnat kabhi zaya nahi jaati. Jo log sapne dekhte hain aur un sapno ko pura karne ke liye din-raat mehnat karte hain",
+        "wahi log ek din kamiyabi ki bulandiyon ko chhoote hain. Har girna ek seekh hoti hai aur har nayi koshish ek nayi umeed. Zindagi mein kabhi haar mat maano kyunki har andhera ek naye savere ka paighaam hota hai"
+      ],
+      hard: [
+        "Dosti ek aisa rishta hai jo na khoon se banta hai na kisi shart se. Ye dil se banta hai bharose se chalta hai aur yaadon mein jeeta hai. Saccha dost woh hota hai jo har musibat mein aapke saath ho – na sirf hansne ke pal mein balki aansuon mein bhi. Dosti zindagi ka sabse pyaara tohfa hai jise sambhal ke rakhna chahiye",
+        "Samay sabse bada guru hota hai. Jo samay ka sadupyog karta hai wo har kshetra mein safal hota hai. Beeta hua samay kabhi wapas nahi aata isliye hamesha har pal ka moolya samajhna chahiye. Samay ki kadar na karne wale log jeevan mein pachtate hain. Isiliye har roz ek nayi shuruaat samajhkar jeena chahiye."
+      ]
+    };
 
-    let level = 0;
-    let words = [];
-    let currentIndex = 0;
-    let score = 0;
-    let typed = 0;
-    let correct = 0;
-    let startTime;
-    let timerInterval;
+    const inputEl = document.getElementById('input');
+    const paraEl = document.getElementById('para');
+    const timerEl = document.getElementById('timer');
+    const wpmEl = document.getElementById('wpm');
+    const accEl = document.getElementById('acc');
+    const scoreEl = document.getElementById('score');
+    const bestEl = document.getElementById('best');
+    const timerFill = document.getElementById('timerFill');
+    const diffSel = document.getElementById('difficulty');
 
-    const paragraphBox = document.getElementById("paragraph-box");
-    const input = document.getElementById("typing-input");
-    const timerEl = document.getElementById("timer");
-    const scoreEl = document.getElementById("score");
-    const accuracyEl = document.getElementById("accuracy");
-    const wpmEl = document.getElementById("wpm");
+    let list = [], idx = 0, words = [], ci = 0;
+    let startTime, interval, paused = false;
+    let typed = 0, correct = 0, score = 0, best = 0;
+    const DURATION = 60;
 
-    function loadParagraph() {
-      if (level >= paragraphs.length) {
-        paragraphBox.innerHTML = "✅ Game Completed!";
-        input.disabled = true;
-        clearInterval(timerInterval);
-        return;
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
       }
-      const para = paragraphs[level];
-      words = para.split(" ");
-      paragraphBox.innerHTML = words.map((word, i) => `<span id="word-${i}">${word}</span>`).join(" ");
-      highlightWord(0);
-      input.value = "";
-      currentIndex = 0;
+      return a;
     }
 
-    function highlightWord(index) {
-      document.querySelectorAll(".highlight").forEach(el => el.classList.remove("highlight"));
-      const wordEl = document.getElementById(`word-${index}`);
-      if (wordEl) wordEl.classList.add("highlight");
+    function loadList() {
+      list = shuffle([...paragraphs[diffSel.value]]);
+      idx = 0;
+    }
+
+    function loadParagraph() {
+      if (idx >= list.length) {
+        loadList();
+      }
+      words = list[idx].split(' ');
+      ci = 0;
+      inputEl.value = '';
+      paraEl.innerHTML = words.map((w, i) => `<span id="w${i}">${w}</span>`).join(' ');
+      highlightWord();
+    }
+
+    function highlightWord() {
+      paraEl.querySelectorAll('span').forEach(el => el.classList.remove('highlight'));
+      const cur = document.getElementById('w' + ci);
+      if (cur) cur.classList.add('highlight');
+    }
+
+    function updateStats() {
+      const elapsed = (Date.now() - startTime) / 1000;
+      const rem = Math.max(0, DURATION - Math.floor(elapsed));
+      timerEl.textContent = rem;
+      timerFill.style.width = ((rem / DURATION) * 100) + '%';
+
+      if (rem <= 0) {
+        endGame(); return;
+      }
+
+      const acc = typed ? Math.round(correct / typed * 100) : 100;
+      const wpm = Math.round(correct / elapsed * 60);
+
+      accEl.textContent = acc + '%';
+      wpmEl.textContent = isNaN(wpm) ? 0 : wpm;
+      scoreEl.textContent = score;
+    }
+
+    function startTimer() {
+      startTime = Date.now();
+      interval = setInterval(updateStats, 1000);
+    }
+
+    function endGame() {
+      clearInterval(interval);
+      inputEl.disabled = true;
+      best = +localStorage.best || 0;
+      if (score > best) {
+        localStorage.best = score;
+        bestEl.textContent = score;
+      }
+      paraEl.innerHTML += "<br><strong>⌛ Time's up!</strong>";
     }
 
     function startGame() {
-      startTime = Date.now();
-      timerInterval = setInterval(updateStats, 1000);
+      clearInterval(interval);
+      paused = false;
+      typed = correct = score = 0;
+      best = +localStorage.best || 0;
+      bestEl.textContent = best;
+      loadList();
       loadParagraph();
+      inputEl.disabled = false;
+      inputEl.focus();
+      startTimer();
     }
 
-    input.addEventListener("input", () => {
-      const currentWord = words[currentIndex];
-      const inputWord = input.value;
-
-      if (inputWord.endsWith(" ")) {
+    inputEl.addEventListener('input', e => {
+      if (paused) return;
+      const v = e.target.value;
+      if (v.endsWith(' ')) {
         typed++;
-        const cleanInput = inputWord.trim();
-        if (cleanInput === currentWord) {
+        if (v.trim() === words[ci]) {
           correct++;
           score += 10;
         }
-        currentIndex++;
-        input.value = "";
-        if (currentIndex >= words.length) {
-          level++;
+        ci++;
+        if (ci >= words.length) {
+          idx++;
           loadParagraph();
-        } else {
-          highlightWord(currentIndex);
-        }
+        } else highlightWord();
+        e.target.value = '';
         updateStats();
       }
     });
 
-    function updateStats() {
-      const timeElapsed = (Date.now() - startTime) / 1000;
-      const accuracy = typed ? Math.round((correct / typed) * 100) : 100;
-      const wpm = Math.round((correct / timeElapsed) * 60);
-
-      timerEl.textContent = Math.max(0, 60 - Math.floor(timeElapsed));
-      scoreEl.textContent = score;
-      accuracyEl.textContent = accuracy + "%";
-      wpmEl.textContent = isNaN(wpm) ? 0 : wpm;
+    function pauseResume() {
+      paused = !paused;
+      if (paused) {
+        clearInterval(interval);
+        paraEl.innerHTML += "<br><em>⏸ Paused</em>";
+      } else {
+        const rem = +timerEl.textContent;
+        startTime = Date.now() - (DURATION - rem) * 1000;
+        interval = setInterval(updateStats, 1000);
+        highlightWord();
+      }
     }
+
+    function resetGame() {
+      startGame();
+    }
+
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+    }
+
+    diffSel.addEventListener('change', () => {
+      loadList();
+      loadParagraph();
+    });
 
     window.onload = startGame;
   </script>
+
 </body>
 </html>
