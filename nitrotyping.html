@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Future Typing Verse</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .paragraph-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 800px;
+      line-height: 1.6;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      transition: all 0.3s ease-in-out;
+      min-height: 80px;
+    }
+
+    .highlight {
+      background-color: #ffd700;
+      color: #000;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    input {
+      padding: 10px 15px;
+      font-size: 1.1rem;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin-bottom: 20px;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+
+    .stats div {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .paragraph-box {
+        font-size: 1rem;
+      }
+      input {
+        font-size: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Future Typing Verse</h1>
+  <div class="paragraph-box" id="paragraph-box">Loading...</div>
+  <input type="text" id="typing-input" placeholder="Start typing here..." autofocus />
+  <div class="stats">
+    <div>🕒 Time: <span id="timer">60</span>s</div>
+    <div>💯 Score: <span id="score">0</span></div>
+    <div>🎯 Accuracy: <span id="accuracy">100%</span></div>
+    <div>📈 WPM: <span id="wpm">0</span></div>
+  </div>
+
+  <script>
+    const paragraphs = [
+      "Dream big",
+      "The future belongs to those who believe in the beauty of their dreams",
+      "In a world driven by innovation, typing becomes a superpower. Prepare to test your speed, precision, and vision in this futuristic typing universe."
+    ];
+
+    let level = 0;
+    let words = [];
+    let currentIndex = 0;
+    let score = 0;
+    let typed = 0;
+    let correct = 0;
+    let startTime;
+    let timerInterval;
+
+    const paragraphBox = document.getElementById("paragraph-box");
+    const input = document.getElementById("typing-input");
+    const timerEl = document.getElementById("timer");
+    const scoreEl = document.getElementById("score");
+    const accuracyEl = document.getElementById("accuracy");
+    const wpmEl = document.getElementById("wpm");
+
+    function loadParagraph() {
+      if (level >= paragraphs.length) {
+        paragraphBox.innerHTML = "✅ Game Completed!";
+        input.disabled = true;
+        clearInterval(timerInterval);
+        return;
+      }
+      const para = paragraphs[level];
+      words = para.split(" ");
+      paragraphBox.innerHTML = words.map((word, i) => `<span id="word-${i}">${word}</span>`).join(" ");
+      highlightWord(0);
+      input.value = "";
+      currentIndex = 0;
+    }
+
+    function highlightWord(index) {
+      document.querySelectorAll(".highlight").forEach(el => el.classList.remove("highlight"));
+      const wordEl = document.getElementById(`word-${index}`);
+      if (wordEl) wordEl.classList.add("highlight");
+    }
+
+    function startGame() {
+      startTime = Date.now();
+      timerInterval = setInterval(updateStats, 1000);
+      loadParagraph();
+    }
+
+    input.addEventListener("input", () => {
+      const currentWord = words[currentIndex];
+      const inputWord = input.value;
+
+      if (inputWord.endsWith(" ")) {
+        typed++;
+        const cleanInput = inputWord.trim();
+        if (cleanInput === currentWord) {
+          correct++;
+          score += 10;
+        }
+        currentIndex++;
+        input.value = "";
+        if (currentIndex >= words.length) {
+          level++;
+          loadParagraph();
+        } else {
+          highlightWord(currentIndex);
+        }
+        updateStats();
+      }
+    });
+
+    function updateStats() {
+      const timeElapsed = (Date.now() - startTime) / 1000;
+      const accuracy = typed ? Math.round((correct / typed) * 100) : 100;
+      const wpm = Math.round((correct / timeElapsed) * 60);
+
+      timerEl.textContent = Math.max(0, 60 - Math.floor(timeElapsed));
+      scoreEl.textContent = score;
+      accuracyEl.textContent = accuracy + "%";
+      wpmEl.textContent = isNaN(wpm) ? 0 : wpm;
+    }
+
+    window.onload = startGame;
+  </script>
+</body>
+</html>
