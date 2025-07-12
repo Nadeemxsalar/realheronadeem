@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>College Attendance System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    :root {
+      --main-bg: #1e1e2f;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --accent: #00ffff;
+      --text: #ffffff;
+      --hover: #00cccc;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-blur: blur(12px);
+    }
+
+    body.light {
+      --main-bg: #f0f0f4;
+      --card-bg: #ffffffdd;
+      --accent: #0077ff;
+      --text: #000000;
+      --hover: #0055cc;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--main-bg);
+      color: var(--text);
+      transition: background 0.4s, color 0.4s;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      background: var(--glass-bg);
+      padding: 10px 16px;
+      border-bottom: 1px solid #ffffff22;
+      animation: slideDown 0.5s ease-in-out;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .navbar h1 {
+      font-size: 20px;
+      color: var(--accent);
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-buttons button {
+      background: transparent;
+      border: none;
+      font-size: 22px;
+      color: var(--accent);
+      padding: 6px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-buttons button:hover {
+      transform: scale(1.3);
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .section {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 12px #00ffff30;
+      animation: fadeInUp 0.5s ease-in-out;
+    }
+
+    input, select, button {
+      padding: 12px;
+      margin: 10px 0;
+      width: 100%;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      background: #ffffff10;
+      color: inherit;
+    }
+
+    button {
+      background: var(--accent);
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: var(--hover);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff10;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ffffff33;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background: #00ffff20;
+    }
+
+    .present {
+      background-color: #00ff0030;
+    }
+
+    .absent {
+      background-color: #ff000030;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: black;
+      padding: 10px 20px;
+      border-radius: 6px;
+      display: none;
+      z-index: 999;
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes slideUp {
+      from {transform: translateY(100px);}
+      to {transform: translateY(0);}
+    }
+
+    @keyframes slideDown {
+      from {transform: translateY(-100%);}
+      to {transform: translateY(0);}
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 5px;
+      }
+
+      .navbar h1 {
+        font-size: 16px;
+      }
+
+      .nav-buttons button {
+        font-size: 18px;
+        padding: 5px;
+      }
+
+      .container {
+        padding: 12px;
+      }
+    }
+select {
+  padding: 12px;
+  margin: 10px 0;
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  background-color: #1e1e2f;
+  color: var(--text);
+}
+
+body.light select {
+  background-color: #fff;
+  color: #000;
+}
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="navbar">
+    <h1>📘 Attendance</h1>
+    <div class="nav-buttons">
+      <button onclick="toggleTheme()" title="Toggle Theme">🌗</button>
+      <button onclick="resetData()" title="Reset All">🗑️</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <h2>1️⃣ Add Subject</h2>
+    <input type="text" id="subjectInput" placeholder="e.g. Java, OS">
+    <button onclick="addSubject()">Add Subject</button>
+    <select id="subjectSelect">
+      <option value="">-- Select Subject --</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <h2>2️⃣ Add Student</h2>
+    <input type="text" id="studentInput" placeholder="Enter student name">
+    <button onclick="addStudent()">Add Student</button>
+  </div>
+
+  <div class="section">
+    <h2>3️⃣ Mark Attendance</h2>
+    <input type="date" id="attendanceDate">
+    <button onclick="markAttendance()">Start Marking</button>
+    <div id="attendanceForm"></div>
+  </div>
+
+  <div class="section">
+    <h2>4️⃣ View & Download Attendance</h2>
+    <button onclick="generateTable()">Show Attendance</button>
+    <button onclick="downloadCSV()">Download CSV</button>
+    <div id="attendanceTable"></div>
+  </div>
+
+</div>
+
+<div id="toast">Saved ✅</div>
+
+<script>
+  let data = JSON.parse(localStorage.getItem("attendanceData")) || {
+    students: [],
+    subjects: {}
+  };
+
+  const THEME_KEY = 'attendance-theme';
+
+  function showToast(msg = "Saved ✅") {
+    const toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.display = "block";
+    setTimeout(() => toast.style.display = "none", 3000);
+  }
+
+  function saveData() {
+    localStorage.setItem("attendanceData", JSON.stringify(data));
+  }
+
+  function resetData() {
+    const password = prompt("Enter admin password to reset:");
+    if (password === "admin123") {
+      localStorage.clear();
+      location.reload();
+    } else {
+      alert("❌ Incorrect password!");
+    }
+  }
+
+  function addSubject() {
+    const subject = document.getElementById("subjectInput").value.trim();
+    if (!subject) return alert("Enter subject name");
+    if (!data.subjects[subject]) {
+      data.subjects[subject] = { attendance: {} };
+      saveData();
+      updateSubjectSelect();
+      showToast("Subject Added ✅");
+    } else {
+      alert("Subject already exists");
+    }
+    document.getElementById("subjectInput").value = "";
+  }
+
+  function updateSubjectSelect() {
+    const select = document.getElementById("subjectSelect");
+    select.innerHTML = '<option value="">-- Select Subject --</option>';
+    Object.keys(data.subjects).forEach(subject => {
+      const option = document.createElement("option");
+      option.value = subject;
+      option.textContent = subject;
+      select.appendChild(option);
+    });
+  }
+  updateSubjectSelect();
+
+  function addStudent() {
+    const name = document.getElementById("studentInput").value.trim();
+    if (!name) return alert("Enter student name");
+    if (!data.students.includes(name)) {
+      data.students.push(name);
+      saveData();
+      showToast("Student Added ✅");
+    } else {
+      alert("Student already exists");
+    }
+    document.getElementById("studentInput").value = "";
+  }
+
+  function markAttendance() {
+    const subject = document.getElementById("subjectSelect").value;
+    const date = document.getElementById("attendanceDate").value;
+    const form = document.getElementById("attendanceForm");
+
+    if (!subject || !date) return alert("Select subject and date");
+
+    form.innerHTML = `<h4>Marking for ${subject} on ${date}</h4>`;
+    data.students.forEach(name => {
+      const label = document.createElement("label");
+      label.style.display = "block";
+      label.innerHTML = `<input type="checkbox" id="chk_${name}"> ${name}`;
+      form.appendChild(label);
+    });
+
+    const saveBtn = document.createElement("button");
+    saveBtn.textContent = "Save Attendance";
+    saveBtn.onclick = () => {
+      if (!data.subjects[subject].attendance[date]) {
+        data.subjects[subject].attendance[date] = {};
+      }
+      data.students.forEach(name => {
+        const chk = document.getElementById("chk_" + name).checked;
+        data.subjects[subject].attendance[date][name] = chk ? "Present" : "Absent";
+      });
+      saveData();
+      showToast();
+      form.innerHTML = "";
+    };
+    form.appendChild(saveBtn);
+  }
+
+  function generateTable() {
+    const subject = document.getElementById("subjectSelect").value;
+    if (!subject) return alert("Select a subject");
+
+    const div = document.getElementById("attendanceTable");
+    const students = data.students;
+    const attendance = data.subjects[subject].attendance;
+    const dates = Object.keys(attendance);
+    if (!dates.length) return div.innerHTML = "<p>No data yet.</p>";
+
+    let table = `<table><tr><th>Student</th>`;
+    dates.forEach(d => table += `<th>${d}</th>`);
+    table += "</tr>";
+
+    students.forEach(s => {
+      table += `<tr><td>${s}</td>`;
+      dates.forEach(d => {
+        const status = attendance[d][s] || "-";
+        const cls = status === "Present" ? "present" : status === "Absent" ? "absent" : "";
+        table += `<td class="${cls}">${status}</td>`;
+      });
+      table += "</tr>";
+    });
+    table += "</table>";
+
+    div.innerHTML = `<div style="overflow-x:auto">${table}</div>`;
+  }
+
+  function downloadCSV() {
+    const subject = document.getElementById("subjectSelect").value;
+    if (!subject) return alert("Select a subject");
+
+    const students = data.students;
+    const attendance = data.subjects[subject].attendance;
+    const dates = Object.keys(attendance);
+    if (!dates.length) return alert("No data");
+
+    let csv = "Student," + dates.join(",") + "\n";
+    students.forEach(s => {
+      const row = [s];
+      dates.forEach(d => row.push(attendance[d][s] || "-"));
+      csv += row.join(",") + "\n";
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${subject}_attendance.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  (function () {
+    const theme = localStorage.getItem(THEME_KEY);
+    if (theme === "light") document.body.classList.add("light");
+  })();
+
+  function toggleTheme() {
+    document.body.classList.toggle("light");
+    const theme = document.body.classList.contains("light") ? "light" : "dark";
+    localStorage.setItem("attendance-theme", theme);
+  }
+</script>
+
+</body>
+</html>
