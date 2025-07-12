@@ -83,42 +83,31 @@
     }
 
     .title {
-      font-size: clamp(16px, 2.5vw, 32px);
+      font-size: clamp(14px, 2vw, 28px);
       font-weight: bold;
       color: #1a1a1a;
       margin-bottom: 0.5em;
     }
 
     .subtitle {
-      font-size: clamp(14px, 1.8vw, 24px);
+      font-size: clamp(12px, 1.5vw, 20px);
       color: #444;
       margin-bottom: 1em;
     }
 
     .name {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(20px, 3vw, 38px);
-      color: #fff;
-      background: rgba(255,255,255,0.15);
-      padding: 8px 20px;
-      border-radius: 12px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 15px rgba(0, 255, 170, 0.6);
-      animation: glow 2s infinite alternate;
+      font-size: clamp(20px, 2.8vw, 34px);
+      color: #00796b;
       margin-bottom: 1em;
     }
 
-    @keyframes glow {
-      from { box-shadow: 0 0 10px rgba(0, 255, 170, 0.4); }
-      to { box-shadow: 0 0 20px rgba(0, 255, 170, 1); }
-    }
-
     .message {
-      font-size: clamp(12px, 1.5vw, 18px);
+      font-size: clamp(10px, 1.3vw, 16px);
       color: #333;
       margin-bottom: 2em;
       max-width: 90%;
-      line-height: 1.5;
+      line-height: 1.4;
     }
 
     .row {
@@ -126,7 +115,7 @@
       justify-content: space-between;
       width: 100%;
       max-width: 90%;
-      font-size: clamp(12px, 1vw, 16px);
+      font-size: clamp(10px, 1vw, 14px);
       color: #222;
     }
 
@@ -173,7 +162,7 @@
         This certificate is issued to acknowledge your excellence.
       </div>
       <div class="row">
-        <div class="date">Date: 12 July 2025</div>
+        <div class="date" id="dateField">Date: </div>
         <div class="signature">Issued by: Real Hero Nadeem</div>
       </div>
     </div>
@@ -187,7 +176,16 @@
         alert("Please enter a name");
         return;
       }
+
+      const today = new Date();
+      const formattedDate = today.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+
       document.getElementById("nameOutput").innerText = name;
+      document.getElementById("dateField").innerText = "Date: " + formattedDate;
       document.getElementById("capture").style.display = "block";
     }
 
@@ -197,6 +195,7 @@
         alert("Generate certificate first!");
         return;
       }
+
       html2canvas(cert).then(canvas => {
         const link = document.createElement("a");
         link.download = "Certificate.png";
