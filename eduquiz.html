@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Advanced Educational Quiz Web App" />
+  <title>EduQuiz Pro</title>
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    /* SAME STYLES AS PREVIOUS ANSWER */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    :root {
+      --bg-gradient: linear-gradient(145deg, #d8e3fc, #f6f9ff);
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --blur: blur(15px);
+      --primary-color: #4f46e5;
+      --text-color: #1e1e2f;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --card-border: rgba(255, 255, 255, 0.3);
+      --shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    }
+
+    body.dark {
+      --bg-gradient: linear-gradient(145deg, #0f0f1f, #1a1a2f);
+      --text-color: #f1f1f1;
+      --card-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      backdrop-filter: var(--blur);
+      background: var(--glass-bg);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-color);
+      position: relative;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+
+    .toggle-theme {
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+
+    .main-container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .quiz-card:hover {
+      transform: scale(1.02);
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .option {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 1rem;
+      border-radius: 0.8rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .option:hover {
+      background: var(--primary-color);
+      color: #fff;
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      border-radius: 5px;
+      background: #ccc;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: var(--primary-color);
+      transition: width 0.5s ease;
+    }
+
+    .timer {
+      margin-top: 0.5rem;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .btn {
+      background: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 2rem;
+      align-self: center;
+    }
+
+    .btn:hover {
+      background: var(--primary-color);
+      color: #fff;
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .results {
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+    }
+
+    @media (max-width: 768px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 4rem;
+        right: 2rem;
+        background: var(--glass-bg);
+        padding: 1rem;
+        border-radius: 1rem;
+      }
+
+      nav.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+        font-size: 2rem;
+        cursor: pointer;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .hamburger {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>EduQuiz Pro</h2>
+    <i class="ri-menu-line hamburger" onclick="toggleMenu()"></i>
+    <nav id="navbar">
+      <a href="#quiz" class="active">Quiz</a>
+      <a href="#about">About</a>
+      <a href="#help">Help</a>
+    </nav>
+    <i class="ri-moon-clear-line toggle-theme" onclick="toggleTheme()" title="Toggle Theme"></i>
+  </header>
+
+  <div class="main-container">
+    <div class="quiz-card" id="quiz">
+      <div class="question" id="question">Loading question...</div>
+      <div class="options" id="options"></div>
+      <div class="progress-bar"><div class="progress" id="progress"></div></div>
+      <div class="timer" id="timer">Time left: 10s</div>
+    </div>
+    <button class="btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+    <div class="results" id="results"></div>
+    <button class="btn" id="continueBtn" style="display:none;" onclick="startNewQuiz()">Next Quiz</button>
+  </div>
+
+  <canvas class="confetti" id="confetti-canvas"></canvas>
+
+  <script>
+    const questionBank = [
+      { q: "Capital of France?", options: ["Paris", "London", "Berlin", "Madrid"], correct: 0 },
+      { q: "Largest planet?", options: ["Mars", "Earth", "Jupiter", "Saturn"], correct: 2 },
+      { q: "5 + 7 = ?", options: ["10", "11", "12", "13"], correct: 2 },
+      { q: "Sun rises from?", options: ["West", "North", "East", "South"], correct: 2 },
+      { q: "Color of sky?", options: ["Blue", "Red", "Yellow", "Pink"], correct: 0 },
+      { q: "H2O is?", options: ["Salt", "Acid", "Water", "Oil"], correct: 2 },
+      { q: "2 x 3 = ?", options: ["5", "6", "7", "8"], correct: 1 },
+      { q: "HTML stands for?", options: ["Cascading Sheet", "Markup Lang", "JavaScript", "None"], correct: 1 },
+      { q: "Fastest land animal?", options: ["Tiger", "Elephant", "Cheetah", "Horse"], correct: 2 },
+      { q: "Human brain weight?", options: ["1kg", "1.4kg", "2kg", "0.5kg"], correct: 1 },
+      // Add more here...
+    ];
+
+    let quizQuestions = [];
+    let current = 0;
+    let score = 0;
+    let totalAsked = 0;
+    let timer;
+    let timeLeft = 10;
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    function toggleMenu() {
+      document.getElementById("navbar").classList.toggle("show");
+    }
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function startNewQuiz() {
+      quizQuestions = shuffle([...questionBank]).slice(0, 5);
+      current = 0;
+      document.getElementById("results").innerHTML = "";
+      document.getElementById("quiz").style.display = "block";
+      document.getElementById("nextBtn").style.display = "block";
+      document.getElementById("continueBtn").style.display = "none";
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      timeLeft = 10;
+      document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          nextQuestion();
+        }
+      }, 1000);
+
+      const q = quizQuestions[current];
+      document.getElementById("question").textContent = q.q;
+      document.getElementById("options").innerHTML = q.options.map((opt, i) =>
+        `<div class="option" onclick="checkAnswer(${i})">${opt}</div>`
+      ).join("");
+
+      document.getElementById("progress").style.width = `${(current / quizQuestions.length) * 100}%`;
+    }
+
+    function checkAnswer(selected) {
+      const q = quizQuestions[current];
+      if (selected === q.correct) score++;
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      current++;
+      totalAsked++;
+      if (current >= quizQuestions.length) {
+        clearInterval(timer);
+        showScore();
+      } else {
+        loadQuestion();
+      }
+    }
+
+    function showScore() {
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("nextBtn").style.display = "none";
+      document.getElementById("results").innerHTML = `🎉 You answered ${score} / ${totalAsked} correctly.`;
+      document.getElementById("continueBtn").style.display = "block";
+      if ((score / totalAsked) >= 0.8) launchConfetti();
+    }
+
+    function launchConfetti() {
+      const canvas = document.getElementById("confetti-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const confetti = Array.from({ length: 100 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 50 + 10,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confetti.forEach(c => {
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+          ctx.fillStyle = c.color;
+          ctx.fill();
+        });
+        update();
+        requestAnimationFrame(draw);
+      }
+
+      function update() {
+        confetti.forEach(c => {
+          c.y += Math.sin(c.d / 10);
+          c.x += Math.sin(c.d / 15);
+          if (c.y > canvas.height) c.y = -10;
+        });
+      }
+
+      draw();
+      setTimeout(() => { canvas.width = 0; canvas.height = 0; }, 4000);
+    }
+
+    window.onload = startNewQuiz;
+  </script>
+</body>
+</html>
