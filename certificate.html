@@ -6,148 +6,162 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      background: #f0f0f0;
+      background: #e0f2f1;
       font-family: 'Poppins', sans-serif;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
+      min-height: 100vh;
+    }
+
+    .controls {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
     }
 
     input {
-      padding: 10px;
+      padding: 12px 15px;
       font-size: 16px;
-      width: 90%;
-      max-width: 300px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     button {
-      padding: 10px 20px;
-      background-color: #00796b;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #00796b, #004d40);
       color: white;
       border: none;
-      border-radius: 6px;
-      margin: 5px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #004d40, #00332c);
     }
 
     .certificate-container {
       position: relative;
       width: 100%;
       max-width: 1000px;
-      margin: 30px auto;
       aspect-ratio: 3 / 2;
-      background-image: url('photoc.png'); /* ✅ Updated path */
+      background-image: url('photoc.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     .text-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
+      padding: 5%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
       pointer-events: none;
     }
 
-    .text-overlay .title {
-      position: absolute;
-      top: 17%;
-      width: 100%;
-      font-size: 2.5vw;
+    .title {
+      font-size: clamp(16px, 2.5vw, 32px);
       font-weight: bold;
       color: #1a1a1a;
-      text-align: center;
+      margin-bottom: 0.5em;
     }
 
-    .text-overlay .subtitle {
-      position: absolute;
-      top: 26%;
-      width: 100%;
-      font-size: 1.5vw;
+    .subtitle {
+      font-size: clamp(14px, 1.8vw, 24px);
       color: #444;
-      text-align: center;
+      margin-bottom: 1em;
     }
 
-    .text-overlay .name {
-      position: absolute;
-      top: 35%;
-      width: 100%;
+    .name {
       font-family: 'Great Vibes', cursive;
-      font-size: 3vw;
-      color: #00796b;
-      text-align: center;
+      font-size: clamp(20px, 3vw, 38px);
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      padding: 8px 20px;
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 15px rgba(0, 255, 170, 0.6);
+      animation: glow 2s infinite alternate;
+      margin-bottom: 1em;
     }
 
-    .text-overlay .message {
-      position: absolute;
-      top: 45%;
-      width: 80%;
-      left: 10%;
-      font-size: 1.3vw;
+    @keyframes glow {
+      from { box-shadow: 0 0 10px rgba(0, 255, 170, 0.4); }
+      to { box-shadow: 0 0 20px rgba(0, 255, 170, 1); }
+    }
+
+    .message {
+      font-size: clamp(12px, 1.5vw, 18px);
       color: #333;
-      text-align: center;
+      margin-bottom: 2em;
+      max-width: 90%;
       line-height: 1.5;
     }
 
-    .text-overlay .date {
-      position: absolute;
-      bottom: 13%;
-      left: 10%;
-      font-size: 1.1vw;
-      width: 35%;
-      border-top: 1px solid #444;
-      padding-top: 5px;
-      text-align: center;
+    .row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 90%;
+      font-size: clamp(12px, 1vw, 16px);
+      color: #222;
     }
 
-    .text-overlay .signature {
-      position: absolute;
-      bottom: 13%;
-      right: 10%;
-      font-size: 1.1vw;
-      width: 35%;
-      border-top: 1px solid #444;
+    .date, .signature {
+      width: 45%;
       padding-top: 5px;
-      text-align: center;
+      border-top: 1px solid #444;
+      background-color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(4px);
     }
 
     @media (max-width: 600px) {
-      .text-overlay .title {
-        font-size: 20px;
+      .text-overlay {
+        padding: 8%;
       }
 
-      .text-overlay .subtitle {
-        font-size: 16px;
+      .row {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
       }
 
-      .text-overlay .name {
-        font-size: 24px;
-      }
-
-      .text-overlay .message {
-        font-size: 14px;
-      }
-
-      .text-overlay .date,
-      .text-overlay .signature {
-        font-size: 12px;
-        width: 45%;
+      .date, .signature {
+        width: 80%;
       }
     }
   </style>
 </head>
 <body>
 
-  <input type="text" id="nameInput" placeholder="Enter your name" />
-  <br>
-  <button onclick="generate()">Generate Certificate</button>
-  <button onclick="download()">Download</button>
+  <div class="controls">
+    <input type="text" id="nameInput" placeholder="Enter your name" />
+    <button onclick="generate()">Generate Certificate</button>
+    <button onclick="download()">Download</button>
+  </div>
 
   <div class="certificate-container" id="capture" style="display: none;">
     <div class="text-overlay">
@@ -158,8 +172,10 @@
         For outstanding performance and dedication.<br>
         This certificate is issued to acknowledge your excellence.
       </div>
-      <div class="date">Date: 12 July 2025</div>
-      <div class="signature">Issued by: Real Hero Nadeem</div>
+      <div class="row">
+        <div class="date">Date: 12 July 2025</div>
+        <div class="signature">Issued by: Real Hero Nadeem</div>
+      </div>
     </div>
   </div>
 
