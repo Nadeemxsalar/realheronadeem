@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Certificate Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f0f0f0;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 90%;
+      max-width: 300px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .certificate-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 30px auto;
+      aspect-ratio: 3 / 2;
+      background-image: url('C:\Users\Dell\Downloads\photoc.png'); /* ✅ Updated path */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .text-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .text-overlay .title {
+      position: absolute;
+      top: 17%;
+      width: 100%;
+      font-size: 2.5vw;
+      font-weight: bold;
+      color: #1a1a1a;
+      text-align: center;
+    }
+
+    .text-overlay .subtitle {
+      position: absolute;
+      top: 26%;
+      width: 100%;
+      font-size: 1.5vw;
+      color: #444;
+      text-align: center;
+    }
+
+    .text-overlay .name {
+      position: absolute;
+      top: 35%;
+      width: 100%;
+      font-family: 'Great Vibes', cursive;
+      font-size: 3vw;
+      color: #00796b;
+      text-align: center;
+    }
+
+    .text-overlay .message {
+      position: absolute;
+      top: 45%;
+      width: 80%;
+      left: 10%;
+      font-size: 1.3vw;
+      color: #333;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .text-overlay .date {
+      position: absolute;
+      bottom: 13%;
+      left: 10%;
+      font-size: 1.1vw;
+      width: 35%;
+      border-top: 1px solid #444;
+      padding-top: 5px;
+      text-align: center;
+    }
+
+    .text-overlay .signature {
+      position: absolute;
+      bottom: 13%;
+      right: 10%;
+      font-size: 1.1vw;
+      width: 35%;
+      border-top: 1px solid #444;
+      padding-top: 5px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .text-overlay .title {
+        font-size: 20px;
+      }
+
+      .text-overlay .subtitle {
+        font-size: 16px;
+      }
+
+      .text-overlay .name {
+        font-size: 24px;
+      }
+
+      .text-overlay .message {
+        font-size: 14px;
+      }
+
+      .text-overlay .date,
+      .text-overlay .signature {
+        font-size: 12px;
+        width: 45%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <input type="text" id="nameInput" placeholder="Enter your name" />
+  <br>
+  <button onclick="generate()">Generate Certificate</button>
+  <button onclick="download()">Download</button>
+
+  <div class="certificate-container" id="capture" style="display: none;">
+    <div class="text-overlay">
+      <div class="title">CERTIFICATE OF EXCELLENCE</div>
+      <div class="subtitle">This certificate is proudly presented to</div>
+      <div class="name" id="nameOutput">Your Name</div>
+      <div class="message">
+        For outstanding performance and dedication.<br>
+        This certificate is issued to acknowledge your excellence.
+      </div>
+      <div class="date">Date: 12 July 2025</div>
+      <div class="signature">Issued by: Real Hero Nadeem</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    function generate() {
+      const name = document.getElementById("nameInput").value.trim();
+      if (!name) {
+        alert("Please enter a name");
+        return;
+      }
+      document.getElementById("nameOutput").innerText = name;
+      document.getElementById("capture").style.display = "block";
+    }
+
+    function download() {
+      const cert = document.getElementById("capture");
+      if (cert.style.display === "none") {
+        alert("Generate certificate first!");
+        return;
+      }
+      html2canvas(cert).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "Certificate.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+  </script>
+
+</body>
+</html>
