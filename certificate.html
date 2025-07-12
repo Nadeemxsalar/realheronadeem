@@ -40,11 +40,10 @@
       max-width: 1000px;
       margin: 30px auto;
       aspect-ratio: 3 / 2;
-      background-image: url('photoc.png');
+      background-image: url('photoc.png'); /* ✅ Updated path */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     .text-overlay {
@@ -81,28 +80,13 @@
       width: 100%;
       font-family: 'Great Vibes', cursive;
       font-size: 3vw;
-      color: #fff;
+      color: #00796b;
       text-align: center;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 15px;
-      padding: 10px;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 0 15px rgba(0, 255, 170, 0.6);
-      animation: glow 2s infinite alternate;
-    }
-
-    @keyframes glow {
-      from {
-        box-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
-      }
-      to {
-        box-shadow: 0 0 20px rgba(0, 255, 170, 1);
-      }
     }
 
     .text-overlay .message {
       position: absolute;
-      top: 48%;
+      top: 45%;
       width: 80%;
       left: 10%;
       font-size: 1.3vw;
@@ -113,26 +97,24 @@
 
     .text-overlay .date {
       position: absolute;
-      bottom: 20%; /* moved up */
+      bottom: 13%;
       left: 10%;
       font-size: 1.1vw;
       width: 35%;
       border-top: 1px solid #444;
       padding-top: 5px;
       text-align: center;
-      background-color: rgba(255, 255, 255, 0.6);
     }
 
     .text-overlay .signature {
       position: absolute;
-      bottom: 20%; /* moved up */
+      bottom: 13%;
       right: 10%;
       font-size: 1.1vw;
       width: 35%;
       border-top: 1px solid #444;
       padding-top: 5px;
       text-align: center;
-      background-color: rgba(255, 255, 255, 0.6);
     }
 
     @media (max-width: 600px) {
@@ -156,7 +138,6 @@
       .text-overlay .signature {
         font-size: 12px;
         width: 45%;
-        bottom: 22%;
       }
     }
   </style>
