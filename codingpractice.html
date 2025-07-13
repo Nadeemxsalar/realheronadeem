@@ -59,6 +59,15 @@
         box-shadow: 0 0 15px #0ff, 0 0 25px #0ff, 0 0 35px #0ff;
       }
     }
+@keyframes glowAnim1 {
+  0% {
+    box-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00;
+  }
+  100% {
+    box-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00;
+  }
+}
+
 
     #glowButton:hover {
       background-color: #0ff;
@@ -93,6 +102,9 @@
       cursor: pointer;
       max-width: 200px;
       margin: auto;
+      transition: 0.3s ease-in-out;
+      box-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+      animation: glowAnim1 1.5s infinite alternate;
     }
 
     .preview {
