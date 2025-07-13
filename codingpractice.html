@@ -48,7 +48,9 @@
       border-radius: 30px;
       transition: 0.3s ease-in-out;
       box-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
-      animation: glowAnim 1.5s infinite alternate;
+      animation: glowAnim 1.5s ease-in-out infinite alternate;
+      will-change: transform, box-shadow;
+      transform: translateZ(0);
     }
 
     @keyframes glowAnim {
@@ -59,15 +61,15 @@
         box-shadow: 0 0 15px #0ff, 0 0 25px #0ff, 0 0 35px #0ff;
       }
     }
-@keyframes glowAnim1 {
-  0% {
-    box-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00;
-  }
-  100% {
-    box-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00;
-  }
-}
 
+    @keyframes glowAnim1 {
+      0% {
+        box-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00;
+      }
+      100% {
+        box-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00;
+      }
+    }
 
     #glowButton:hover {
       background-color: #0ff;
@@ -104,7 +106,9 @@
       margin: auto;
       transition: 0.3s ease-in-out;
       box-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
-      animation: glowAnim1 1.5s infinite alternate;
+      animation: glowAnim1 1.5s ease-in-out infinite alternate;
+      will-change: transform, box-shadow;
+      transform: translateZ(0);
     }
 
     .preview {
@@ -137,13 +141,14 @@
   <h4>Html, CSS, JS are connected</h4>
 
   <!-- Anchor buttons centered and responsive -->
- <br>
-    <div class="nav-buttons">
+  <br>
+  <div class="nav-buttons">
     <a href="#htmlcode" id="glowButton">Html</a>
     <a href="#csscode" id="glowButton">Css</a>
     <a href="#jscode" id="glowButton">JavaScript</a>
   </div>
-<br>
+  <br>
+
   <div class="container">
     <div id="htmlcode">
       <label>HTML Code</label>
