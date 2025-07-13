@@ -2,74 +2,62 @@
 <html lang="en">
 <head>  
   <meta charset="UTF-8" />  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
-  <title>AI Customer Care Chatbot</title>  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />  
+  <title>AI Chatbot - Real Hero Institute</title>  
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">  
   <script src="https://unpkg.com/lucide@latest"></script>  
   <style>  
-    :root {  
-      --bg: radial-gradient(circle at center, #1f1c2c, #928dab);  
-      --glass: rgba(255, 255, 255, 0.1);  
-      --text: white;  
-      --input-bg: rgba(255, 255, 255, 0.15);  
+    :root {
+      --bg: linear-gradient(to bottom right, #1f1c2c, #928dab);
+      --glass: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+      --input-bg: rgba(255, 255, 255, 0.15);
     }
+
     .light-mode {
-      --bg: linear-gradient(to top, #f2f2f2, #e6f7ff);  
-      --glass: rgba(255, 255, 255, 0.9);  
-      --text: #000;  
-      --input-bg: rgba(0, 0, 0, 0.05);  
+      --bg: linear-gradient(to top, #f9f9f9, #dceeff);
+      --glass: rgba(255, 255, 255, 0.9);
+      --text: #000000;
+      --input-bg: rgba(0, 0, 0, 0.05);
     }
 
     * {
-      margin: 0;
-      padding: 0;
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
     }
 
     html, body {
+      margin: 0;
+      padding: 0;
       height: 100%;
+      background: var(--bg);
+      transition: background 0.4s ease;
     }
 
     body {
-      background: var(--bg);
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: auto;
-      padding: 10px;
-      transition: background 0.4s;
     }
 
     .chat-container {
       width: 100%;
-      max-width: 420px;
-      height: 100%;
-      max-height: 80vh;
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      border-radius: 25px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      max-width: 480px;
+      height: 100vh;
       display: flex;
       flex-direction: column;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: 0;
+      box-shadow: 0 0 25px rgba(0,0,0,0.3);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      animation: fadeIn 1s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
     }
 
     .chat-header {
-      background: linear-gradient(to right, #00c6ff, #0072ff);
-      color: white;
       padding: 15px 20px;
-      font-size: 18px;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: #fff;
       font-weight: 600;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -79,10 +67,8 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      font-size: 14px;
-      font-weight: 500;
-      color: white;
       cursor: pointer;
+      font-size: 14px;
     }
 
     .light-mode .toggle-wrapper {
@@ -92,78 +78,71 @@
     .chat-box {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 15px;
       color: var(--text);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
+      scroll-behavior: smooth;
     }
 
     .input-area {
       display: flex;
-      flex-direction: row;
       align-items: center;
       padding: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
-      border-bottom-left-radius: 25px;
-      border-bottom-right-radius: 25px;
+      gap: 10px;
     }
 
     input[type="text"] {
       flex: 1;
-      padding: 10px;
-      border: none;
-      outline: none;
-      font-size: 16px;
+      padding: 10px 12px;
+      font-size: 15px;
       background: var(--input-bg);
       color: var(--text);
+      border: none;
       border-radius: 10px;
-      margin-right: 10px;
+      outline: none;
     }
+     input[type="text"]::placeholder {
+  color: var(--text);
+  opacity: 0.7;
+  transition: color 0.3s ease;
+}
 
     button {
       padding: 10px 15px;
       background: #00ffff;
-      border: none;
       color: #000;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
+      border: none;
+      font-weight: 600;
       border-radius: 10px;
-      transition: background 0.3s;
-      box-shadow: 0 0 10px #00ffff, 0 0 25px #00ffff inset;
-      flex-shrink: 0;
-    }
-
-    .quick-buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .quick-buttons button {
-      background: #fff;
-      color: #333;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 15px;
-      border: 0.1px dotted;
       cursor: pointer;
-      white-space: nowrap;
+      box-shadow: 0 0 10px #00ffff;
+      transition: background 0.3s ease;
     }
 
     .message {
-      margin-bottom: 20px;
+      max-width: 80%;
+      margin-bottom: 15px;
       padding: 10px 15px;
       border-radius: 15px;
-      max-width: 80%;
-      word-wrap: break-word;
-      animation: slideIn 0.4s ease;
-      display: inline-block;
       position: relative;
+      word-wrap: break-word;
+      animation: slideIn 0.3s ease;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #00ffff;
+      color: #000;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: var(--input-bg);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     .timestamp {
@@ -174,32 +153,17 @@
       opacity: 0.6;
     }
 
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .user {
-      background: #00ffff;
-      color: #000;
-      align-self: flex-end;
-      box-shadow: 0 0 12px #00ffff;
-    }
-
-    .bot {
-      background: var(--input-bg);
-      color: var(--text);
-      align-self: flex-start;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 0 15px #00ffff50;
-    }
-
     .typing-indicator {
       color: #ccc;
       font-style: italic;
       font-size: 14px;
-      margin: 5px 0;
+      margin-top: 5px;
       animation: blink 1s infinite;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes blink {
@@ -208,23 +172,12 @@
       100% { opacity: 0.2; }
     }
 
-    @media (max-width: 500px) {
-      .chat-container {
-        height: 95vh;
-        max-width: 100%;
+    @media (max-width: 480px) {
+      .chat-header {
+        font-size: 16px;
       }
-
-      .input-area {
-        flex-direction: column;
-        gap: 10px;
-      }
-
       input[type="text"] {
-        margin-right: 0;
-      }
-
-      button {
-        width: 100%;
+        font-size: 14px;
       }
     }
   </style>  
@@ -234,19 +187,19 @@
     <div class="chat-header">  
       <span>🤖 Real Hero Assistant</span>  
       <div class="toggle-wrapper" onclick="toggleTheme()">
-        <span id="theme-text"> Dark Mode  </span>
-        <i data-lucide="sun" id="theme-icon" style="margin-left: 5px;"></i>
+        <span id="theme-text">Dark Mode</span>
+        <i data-lucide="sun" id="theme-icon"></i>
       </div>
     </div>  
     <div class="chat-box" id="chat-box"></div>  
     <div class="input-area">  
-      <input type="text" id="user-input" placeholder="Ask me anything..." />  
+      <input type="text" id="user-input" placeholder="Ask anything..." />
       <button onclick="sendMessage()">Send</button>  
     </div>  
   </div>  
 
-  <script>  
-    lucide.createIcons();  
+  <script>
+    lucide.createIcons();
 
     function toggleTheme() {
       const body = document.body;
@@ -257,95 +210,80 @@
 
       const isLight = body.classList.contains("light-mode");
       icon.setAttribute("data-lucide", isLight ? "moon" : "sun");
-      text.textContent = isLight ? "☀️" : "🌙";
+      text.textContent = isLight ? "Light" : "Dark";
 
       lucide.createIcons();
     }
 
-    function getCurrentTime() {  
-      const now = new Date();  
-      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });  
-    }  
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
 
-    function sendMessage() {  
-      const input = document.getElementById('user-input');  
-      const message = input.value.trim();  
-      if (message === '') return;  
+    function sendMessage() {
+      const input = document.getElementById("user-input");
+      const message = input.value.trim();
+      if (!message) return;
 
-      appendMessage('You', message, 'user');  
-      input.value = '';  
-      showTyping();  
-      setTimeout(() => botReply(message), 1000);  
-    }  
+      appendMessage("You", message, "user");
+      input.value = "";
+      showTyping();
 
-    function appendMessage(sender, message, className) {  
-      const chatBox = document.getElementById('chat-box');  
-      const messageElement = document.createElement('div');  
-      messageElement.classList.add('message', className);  
-      messageElement.innerHTML = `<strong>${sender}:</strong> ${message}<div class="timestamp">${getCurrentTime()}</div>`;  
-      chatBox.appendChild(messageElement);  
-      chatBox.scrollTop = chatBox.scrollHeight;  
-    }  
+      setTimeout(() => botReply(message), 1000);
+    }
 
-    function showTyping() {  
-      const chatBox = document.getElementById('chat-box');  
-      const typing = document.createElement('div');  
-      typing.id = 'typing';  
-      typing.classList.add('typing-indicator');  
-      typing.innerText = 'Bot is typing...';  
-      chatBox.appendChild(typing);  
-      chatBox.scrollTop = chatBox.scrollHeight;  
-    }  
+    function appendMessage(sender, message, className) {
+      const chatBox = document.getElementById("chat-box");
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message", className);
+      msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}<div class="timestamp">${getCurrentTime()}</div>`;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-    function hideTyping() {  
-      const typing = document.getElementById('typing');  
-      if (typing) typing.remove();  
-    }  
+    function showTyping() {
+      const chatBox = document.getElementById("chat-box");
+      const typing = document.createElement("div");
+      typing.classList.add("typing-indicator");
+      typing.id = "typing";
+      typing.innerText = "Bot is typing...";
+      chatBox.appendChild(typing);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-    function botReply(userMsg) {  
-      const msg = userMsg.toLowerCase();  
-      let reply = "I'm not sure I understand that. Can you rephrase?";  
+    function hideTyping() {
+      const typing = document.getElementById("typing");
+      if (typing) typing.remove();
+    }
 
-     if (msg.includes("hello") || msg.includes("hi")) {
-        reply = "Hi there! 👋 Welcome to Real Hero Institute. How can I assist you with your course or certificate today?";
-      } else if (msg.includes("course") || msg.includes("classes") || msg.includes("subject")) {
-        reply = "We offer a wide range of computer science and programming courses like C++, Python, Web Development, and more. Would you like to see the full list?";
-      } else if (msg.includes("certificate") || msg.includes("download certificate")) {
-        reply = "You can download your certificate from the certificate section. Just enter your name and hit download. Want me to take you there?";
-      } else if (msg.includes("problem") || msg.includes("issue") || msg.includes("error")) {
-        reply = "Sorry you're facing an issue. Please describe it clearly, and I’ll help you fix it right away.";
-      } else if (msg.includes("refund")) {
-        reply = "Refunds are not applicable as all materials are free. But feel free to tell me your concern.";
+    function botReply(msg) {
+      msg = msg.toLowerCase();
+      let reply = "Sorry, I didn’t understand that. Can you try rephrasing it?";
+
+      if (msg.includes("hello") || msg.includes("hi")) {
+        reply = "Hi! 👋 How can I help you today with your course or certificate?";
+      } else if (msg.includes("course")) {
+        reply = "We offer C++, Python, Web Development, and many more. Want details?";
+      } else if (msg.includes("certificate")) {
+        reply = "You can download your certificate by entering your name in the certificate section.";
+      } else if (msg.includes("problem") || msg.includes("issue")) {
+        reply = "Oh! Please describe your problem and I’ll try to help.";
       } else if (msg.includes("thank")) {
-        reply = "You're always welcome! 😊 Let me know if you want help with anything else related to your learning.";
-      } else if (msg.includes("contact") || msg.includes("support")) {
-        reply = "You can reach out to our support via the contact form on our website or email us directly at support@realheronadeem.in.";
-      } else if (msg.includes("bye") || msg.includes("exit")) {
-        reply = "Thank you for visiting Real Hero Institute! 👋 Keep learning and stay updated!";
-      } else if (msg.includes("admission") || msg.includes("enroll")) {
-        reply = "To enroll in a course, simply go to the Courses page and click 'Join Now'. Need help picking a course?";
-      } else if (msg.includes("project") || msg.includes("code")) {
-        reply = "We provide mini and major project ideas for BCA and MCA students. Do you want frontend, backend or full-stack projects?";
-      } else if (msg.includes("website name") || msg.includes("real hero")) {
-        reply = "This website is created by Real Hero Nadeem — a BCA student, university topper, and YouTuber. 💻📚"
+        reply = "You’re most welcome! 😊";
+      } else if (msg.includes("bye")) {
+        reply = "Goodbye! 👋 Stay curious and keep learning!";
       }
 
-      hideTyping();  
-      appendMessage('Bot', reply + renderQuickButtons(), 'bot');  
-    }  
-
-    function renderQuickButtons() {  
-      return `<div class='quick-buttons'>  
-        <button onclick="sendQuick('Yes')">Yes</button>  
-        <button onclick="sendQuick('No')">No</button>  
-        <button onclick="sendQuick('More Info')">More Info</button>  
-      </div>`;  
-    }  
-
-    function sendQuick(msg) {  
-      document.getElementById('user-input').value = msg;  
-      sendMessage();  
+      hideTyping();
+      appendMessage("Bot", reply, "bot");
     }
+
+    document.getElementById("user-input").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
   </script>
 </body>
 </html>
