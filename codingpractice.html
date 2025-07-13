@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodingLap Editor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: cyan;
+      text-shadow: 0 0 10px cyan;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      background: rgba(0,0,0,0.8);
+      color: #0ff;
+      border: 1px solid #0ff3;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 1rem;
+    }
+    .run-button {
+      padding: 10px;
+      background: cyan;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      max-width: 200px;
+      margin: auto;
+    }
+    .preview {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+    }
+    .output {
+      background: #111;
+      color: #0f0;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      min-height: 60px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+h4{
+text-align:center;
+color:lightgreen;
+
+}
+  </style>
+</head>
+<body>
+  <h1>CodingLap Live Editor</h1>
+<h4> Html ,Css, js are connected </h4>
+
+  <div class="container">
+     <br>
+    <label>HTML Code</label>
+    <textarea id="htmlCode">&lt;h1&gt;Hello World&lt;/h1&gt;</textarea>
+
+    <label>CSS Code</label>
+    <textarea id="cssCode">body { background-color: lightblue; }</textarea>
+
+    <label>JavaScript Code</label>
+    <textarea id="jsCode">console.log("Welcome to CodingLap");</textarea>
+    <button class="run-button" onclick="runCode()">▶️ Run Code</button>
+
+    <div class="preview">
+      <iframe id="outputFrame"></iframe>
+    </div>
+
+    <div class="output" id="jsOutput"></div>
+  </div>
+
+  <script>
+    function runCode() {
+      const html = document.getElementById("htmlCode").value;
+      const css = document.getElementById("cssCode").value;
+      const js = document.getElementById("jsCode").value;
+      const outputFrame = document.getElementById("outputFrame");
+      const jsOutput = document.getElementById("jsOutput");
+
+      jsOutput.textContent = "";
+
+      const fullCode = `<!DOCTYPE html>
+        <html>
+        <head>
+          <style>${css}</style>
+        </head>
+        <body>
+          ${html}
+          <script>
+          try {
+            ${js}
+          } catch (e) {
+            parent.document.getElementById('jsOutput').textContent = '❌ Error: ' + e.message;
+          }
+          <\/script>
+        </body>
+        </html>`;
+
+      outputFrame.srcdoc = fullCode;
+    }
+
+    runCode();
+  </script>
+</body>
+</html>
