@@ -2,7 +2,7 @@
 <html lang="en">
 <head>  
   <meta charset="UTF-8" />  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
   <title>AI Chatbot - Real Hero Institute</title>  
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">  
   <script src="https://unpkg.com/lucide@latest"></script>  
@@ -43,17 +43,18 @@
     .chat-container {
       width: 100%;
       max-width: 480px;
-      height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       background: var(--glass);
       backdrop-filter: blur(20px);
-      border-radius: 0;
       box-shadow: 0 0 25px rgba(0,0,0,0.3);
       border: 1px solid rgba(255, 255, 255, 0.15);
+      overflow: hidden;
     }
 
     .chat-header {
+      flex-shrink: 0;
       padding: 15px 20px;
       background: linear-gradient(to right, #00c6ff, #0072ff);
       color: #fff;
@@ -86,6 +87,7 @@
     }
 
     .input-area {
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       padding: 10px;
@@ -104,11 +106,12 @@
       border-radius: 10px;
       outline: none;
     }
-     input[type="text"]::placeholder {
-  color: var(--text);
-  opacity: 0.7;
-  transition: color 0.3s ease;
-}
+
+    input[type="text"]::placeholder {
+      color: var(--text);
+      opacity: 0.7;
+      transition: color 0.3s ease;
+    }
 
     button {
       padding: 10px 15px;
