@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StudyMate - Stay & Study</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body {
+      background: linear-gradient(120deg, #e0c3fc, #8ec5fc);
+      color: #222;
+      padding: 20px;
+      transition: background 0.3s ease;
+    }
+    body.dark { background: #121212; color: #eee; }
+
+    header, nav { display: flex; justify-content: space-between; align-items: center; }
+    nav { margin: 10px 0 20px; }
+    nav a { text-decoration: none; color: inherit; margin-right: 15px; font-weight: bold; }
+
+    h1 { font-size: 2rem; }
+    #themeToggle {
+      background: #fff; border: none; font-size: 1.2rem;
+      cursor: pointer; padding: 10px; border-radius: 50%;
+    }
+
+    .marquee {
+      background: rgba(0, 0, 0, 0.1); padding: 8px;
+      margin-bottom: 10px; font-weight: bold;
+      color: #222; border-radius: 8px;
+    }
+
+    .quote {
+      font-style: italic; text-align: center;
+      margin: 10px 0; font-size: 1.1rem;
+    }
+
+    .greeting {
+      text-align: center;
+      font-weight: bold;
+      margin: 15px 0;
+      font-size: 1.3rem;
+    }
+
+    .search input {
+      width: 100%; padding: 12px; margin: 10px 0;
+      border: none; border-radius: 12px; font-size: 1rem;
+    }
+
+    .subjects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 20px; border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h2 { margin-bottom: 10px; }
+    .card button {
+      margin: 5px 5px 0 0; padding: 10px 14px;
+      border: none; border-radius: 10px;
+      cursor: pointer; background: #fff; font-weight: bold;
+    }
+
+    .status {
+      display: inline-block; padding: 5px 10px;
+      border-radius: 20px; font-size: 12px;
+      font-weight: bold; margin-top: 10px;
+    }
+
+    .done { background-color: #8ef5a6; color: #065f46; }
+    .pending { background-color: #fca5a5; color: #7f1d1d; }
+
+    .floating-help {
+      position: fixed; bottom: 20px; right: 20px;
+      background: #00bcd4; color: white;
+      padding: 12px 16px; border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      cursor: pointer; font-size: 20px;
+      z-index: 1000;
+    }
+
+    footer { text-align: center; margin-top: 40px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📚 StudyMate</h1>
+    <button id="themeToggle">🌙</button>
+  </header>
+
+  <div class="marquee">
+    <marquee scrollamount="5">🔥 Keep going! You’re doing great – mark subjects as done and earn 🎯 points!</marquee>
+  </div>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Subjects</a>
+    <a href="#">Progress</a>
+  </nav>
+
+  <div class="greeting" id="greetingText">Welcome...</div>
+  <div class="quote" id="quoteBox">“Loading inspirational quote...”</div>
+
+  <section class="search">
+    <input type="text" id="searchBar" placeholder="Search subjects, topics..." />
+  </section>
+
+  <section class="subjects" id="subjectContainer"></section>
+
+  <div class="floating-help" onclick="alert('Need help? Contact: admin@studymate.com')">❔</div>
+
+  <footer>
+    <p>© 2025 StudyMate | Your score: <span id="score">0</span> 🎯</p>
+  </footer>
+
+  <script>
+    const subjects = [
+      { name: "Mathematics", pdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", id: "math" },
+      { name: "Computer Science", pdf: "https://www.africau.edu/images/default/sample.pdf", id: "cs" },
+      { name: "English", pdf: "https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf", id: "eng" },
+      { name: "Operating System", pdf: "https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf", id: "os" },
+      { name: "Data Structures", pdf: "https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf", id: "ds" }
+    ];
+
+    const quotes = [
+      "“Push yourself, because no one else is going to do it for you.”",
+      "“Success doesn’t just find you. You have to go out and get it.”",
+      "“Great things never come from comfort zones.”",
+      "“Don’t wish for it. Work for it.”",
+      "“Dream it. Believe it. Build it.”"
+    ];
+
+    const container = document.getElementById("subjectContainer");
+    let score = localStorage.getItem("score") || 0;
+
+    subjects.forEach(subject => {
+      const status = localStorage.getItem(subject.id) === "done" ? "done" : "pending";
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h2>${subject.name}</h2>
+        <button onclick="download('${subject.pdf}')">📥 Download</button>
+        <button onclick="markDone('${subject.id}', this)">✅ Mark as Done</button>
+        <div class="status ${status}">${status === "done" ? "Completed 🔵" : "Pending 🔴"}</div>
+      `;
+      container.appendChild(card);
+    });
+
+    function download(link) {
+      window.open(link, '_blank');
+    }
+
+    function markDone(id, btn) {
+      if (localStorage.getItem(id) !== "done") {
+        localStorage.setItem(id, "done");
+        score = parseInt(score) + 10;
+        localStorage.setItem("score", score);
+        document.getElementById("score").innerText = score;
+      }
+      const statusEl = btn.parentElement.querySelector(".status");
+      statusEl.textContent = "Completed 🔵";
+      statusEl.className = "status done";
+    }
+
+    document.getElementById("searchBar").addEventListener("input", function () {
+      const keyword = this.value.toLowerCase();
+      document.querySelectorAll(".card").forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(keyword)
+          ? "block"
+          : "none";
+      });
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    // Quote of the Day
+    document.getElementById("quoteBox").innerText =
+      quotes[Math.floor(Math.random() * quotes.length)];
+
+    // Dynamic Centered Greeting
+    const hours = new Date().getHours();
+    let greet = "Welcome!";
+    if (hours < 12) greet = "🌞 Good Morning!";
+    else if (hours < 18) greet = "🌤️ Good Afternoon!";
+    else greet = "🌙 Good Evening!";
+    document.getElementById("greetingText").innerText = greet;
+
+    // Show current score
+    document.getElementById("score").innerText = score;
+  </script>
+</body>
+</html>
