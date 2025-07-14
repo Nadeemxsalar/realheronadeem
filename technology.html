@@ -6,13 +6,7 @@
   <title>HackElite</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * {margin:0; padding:0; box-sizing:border-box;}
     body, html {
       height: 100%;
       font-family: 'Share Tech Mono', monospace;
@@ -20,7 +14,6 @@
       color: #00ffcc;
       overflow-x: hidden;
     }
-
     header {
       display: flex;
       justify-content: space-between;
@@ -31,19 +24,15 @@
       width: 100%;
       z-index: 10;
     }
-
     header h1 {
       color: #0ff;
       text-shadow: 0 0 5px #0ff;
     }
-
     section {
       position: relative;
       z-index: 1;
       padding: 10vh 5vw 5vh;
-      min-height: auto;
     }
-
     .section-title {
       font-size: 2rem;
       color: #0ff;
@@ -51,14 +40,12 @@
       border-left: 4px solid #0ff;
       padding-left: 10px;
     }
-
     .matrix-canvas {
       position: fixed;
       z-index: 0;
       top: 0;
       left: 0;
     }
-
     .card {
       background: rgba(0,0,0,0.6);
       border: 1px solid #0f0;
@@ -66,16 +53,13 @@
       border-radius: 8px;
       box-shadow: 0 0 15px #0f08;
     }
-
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
     }
-
-    .btn-group a {
-      margin-right: 10px;
-      margin-bottom: 10px;
+    .btn-group a, .tools button {
+      margin: 10px 10px 10px 0;
       padding: 10px 15px;
       border: 1px solid #0f0;
       color: #0f0;
@@ -83,14 +67,14 @@
       border-radius: 5px;
       display: inline-block;
       transition: 0.3s;
+      background: transparent;
+      cursor: pointer;
     }
-
-    .btn-group a:hover {
+    .btn-group a:hover, .tools button:hover {
       background: #0f0;
       color: #000;
       box-shadow: 0 0 10px #0f0;
     }
-
     input, textarea {
       width: 100%;
       background: black;
@@ -99,138 +83,120 @@
       padding: 10px;
       margin: 5px 0 15px 0;
     }
-
-    .news-feed li {
-      margin-bottom: 10px;
-    }
-
-    .tools button {
-      background: transparent;
-      border: 1px solid #0f0;
-      color: #0f0;
-      padding: 8px 15px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-
-    .tools button:hover {
-      background: #0f0;
-      color: black;
-    }
-
-    .vertical-links {
-      display: flex;
-      flex-direction: column;
-    }
+    .vertical-links {display: flex; flex-direction: column;}
+    .news-feed li {margin-bottom: 10px;}
   </style>
 </head>
 <body>
   <canvas class="matrix-canvas"></canvas>
+  <header><h1>HackElite</h1></header>
 
-  <header>
-    <h1>HackElite</h1>
-  </header>
-
-  <!-- [1] System Info -->
-  <section>
-    <div class="section-title">🧠 System Info</div>
+  <!-- Sections -->
+  <section><div class="section-title">🧠 System Info</div>
     <div class="card-grid">
-      <div class="card">
-        <p>🖥️ <strong>CPU Usage:</strong> <span id="cpu">42%</span></p>
-      </div>
-      <div class="card">
-        <p>💾 <strong>RAM Usage:</strong> <span id="ram">3.2 GB / 8 GB</span></p>
-      </div>
-      <div class="card">
-        <p>🌐 <strong>IP Address:</strong> <span id="ip">192.168.0.101</span></p>
-      </div>
-      <div class="card">
-        <p>📡 <strong>Status:</strong> <span style="color: lime;">Connected</span></p>
-      </div>
+      <div class="card"><p>🖥️ <strong>CPU:</strong> <span id="cpu">42%</span></p></div>
+      <div class="card"><p>💾 <strong>RAM:</strong> <span id="ram">3.2 GB / 8 GB</span></p></div>
+      <div class="card"><p>🌐 <strong>IP:</strong> <span id="ip">Fetching...</span></p></div>
+      <div class="card"><p>📡 <strong>Status:</strong> <span style="color:lime">Connected</span></p></div>
     </div>
   </section>
 
-  <!-- [2] Tools -->
-  <section>
-    <div class="section-title">🛠️ Hacker Tools</div>
+  <section><div class="section-title">🛠️ Hacker Tools</div>
     <div class="card tools">
-      <label>Hash Generator:</label>
-      <input type="text" id="hashInput" placeholder="Enter text..." />
-      <button onclick="generateHash()">Generate SHA-256</button>
+      <label>1. Hash Generator:</label>
+      <input id="hashInput"><button onclick="generateHash()">Generate SHA-256</button>
       <p><strong>Hash:</strong> <span id="hashOutput"></span></p>
 
-      <label>Password Strength Checker:</label>
-      <input type="text" id="passInput" placeholder="Enter password..." />
-      <button onclick="checkStrength()">Check</button>
+      <label>2. Password Strength:</label>
+      <input id="passInput"><button onclick="checkStrength()">Check</button>
       <p><strong>Strength:</strong> <span id="strengthOutput"></span></p>
 
-      <label>Port Scan Simulator:</label>
-      <input type="text" placeholder="Target IP (mock)" />
-      <button>Scan Ports</button>
-      <p>Open Ports: 22 (SSH), 80 (HTTP), 443 (HTTPS)</p>
+      <label>3. Port Scanner:</label>
+      <input placeholder="Target IP"><button>Scan</button>
+      <p>Open: 22, 80, 443</p>
+
+      <label>4. Base64 Encoder:</label>
+      <input id="b64Input"><button onclick="base64Encode()">Encode</button>
+      <p><span id="b64Output"></span></p>
+
+      <label>5. Subdomain Finder (Demo):</label>
+      <input placeholder="example.com"><button>Find</button>
+      <p>sub1.example.com, sub2.example.com</p>
+
+      <label>6. Whois Lookup:</label>
+      <input id="whoisDomain" placeholder="example.com">
+      <button onclick="mockWhois()">Lookup</button>
+      <p><span id="whoisOutput"></span></p>
+
+      <label>7. IP Lookup:</label>
+      <input id="lookupIP" placeholder="8.8.8.8">
+      <button onclick="mockIPLookup()">Lookup</button>
+      <p><span id="ipLookupOutput"></span></p>
+
+      <label>8. URL Encoder:</label>
+      <input id="urlInput"><button onclick="urlEncode()">Encode</button>
+      <p><span id="urlOutput"></span></p>
+
+      <label>9. JS Obfuscator (basic):</label>
+      <textarea id="jsCode" rows="3" placeholder="console.log('Hello');"></textarea>
+      <button onclick="obfuscateJS()">Obfuscate</button>
+      <p><span id="jsOutput"></span></p>
+
+      <label>10. Random MAC Address:</label>
+      <button onclick="generateMAC()">Generate</button>
+      <p><span id="macOutput"></span></p>
     </div>
   </section>
 
-  <!-- [3] Cyber Intelligence Feed -->
-  <section>
-    <div class="section-title">📰 Cyber Intelligence Feed</div>
+  <section><div class="section-title">📰 Cyber Intelligence Feed</div>
     <div class="card">
       <ul class="news-feed">
-        <li>🕵️‍♂️ Anonymous leaks 4TB from private server of XCorp</li>
-        <li>💣 New zero-day found in IoT routers globally</li>
-        <li>🚨 Massive credential dump hits underground markets</li>
-        <li>🧠 AI-generated malware bypassing AVs detected</li>
-        <li>🔍 Feds crack major dark web crypto laundering ring</li>
+        <li>🕵️ Anonymous leaks 4TB from XCorp</li>
+        <li>💣 Zero-day in IoT routers discovered</li>
+        <li>🚨 Massive credential dump hits darknet</li>
+        <li>🧠 AI-malware evades detection</li>
       </ul>
     </div>
   </section>
 
-  <!-- [4] Contributions -->
-  <section>
-    <div class="section-title">💻 Contributions</div>
+  <section><div class="section-title">💻 Contributions</div>
     <div class="card btn-group vertical-links">
-      <a href="https://github.com/your-profile" target="_blank">GitHub: Real-time Recon Tool</a>
-      <a href="#">Research: AI in Offensive Security (PaperLink)</a>
-      <a href="#">Open Source: ProxyChain Sniffer Module</a>
+      <a href="#">Recon Tool</a>
+      <a href="#">AI + Security Research</a>
+      <a href="#">ProxyChain Sniffer</a>
     </div>
   </section>
 
-  <!-- [5] Join Community -->
-  <section>
-    <div class="section-title">👥 Join The HackElite</div>
+  <section><div class="section-title">👥 Join Us</div>
     <div class="card btn-group">
-      <a href="https://t.me/yourchannel" target="_blank">Telegram</a>
-      <a href="https://discord.gg/yourlink" target="_blank">Discord</a>
-      <a href="https://github.com/your-profile" target="_blank">GitHub</a>
+      <a href="#">Telegram</a>
+      <a href="#">Discord</a>
+      <a href="#">GitHub</a>
     </div>
   </section>
 
-  <!-- Matrix BG Script -->
+  <!-- Scripts -->
   <script>
     const canvas = document.querySelector('.matrix-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     const cols = Math.floor(canvas.width / 20);
     const ypos = Array(cols).fill(0);
-
     function matrix() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#0f0';
       ctx.font = '15pt monospace';
-
       ypos.forEach((y, i) => {
         const text = String.fromCharCode(0x30A0 + Math.random() * 96);
-        const x = i * 20;
-        ctx.fillText(text, x, y);
+        ctx.fillText(text, i * 20, y);
         ypos[i] = y > canvas.height + Math.random() * 100 ? 0 : y + 20;
       });
     }
     setInterval(matrix, 50);
+    window.onresize = () => {canvas.width = window.innerWidth; canvas.height = window.innerHeight;};
 
-    // [Hash Generator]
     async function generateHash() {
       const input = document.getElementById('hashInput').value;
       const msgUint8 = new TextEncoder().encode(input);
@@ -240,22 +206,50 @@
       document.getElementById('hashOutput').textContent = hashHex;
     }
 
-    // [Password Strength Checker]
     function checkStrength() {
       const pass = document.getElementById('passInput').value;
       let strength = 'Weak';
-      if (pass.length > 12 && /[A-Z]/.test(pass) && /[0-9]/.test(pass) && /[^a-zA-Z0-9]/.test(pass)) {
-        strength = 'Strong';
-      } else if (pass.length > 8) {
-        strength = 'Medium';
-      }
+      if (pass.length > 12 && /[A-Z]/.test(pass) && /[0-9]/.test(pass) && /[^a-zA-Z0-9]/.test(pass)) strength = 'Strong';
+      else if (pass.length > 8) strength = 'Medium';
       document.getElementById('strengthOutput').textContent = strength;
     }
 
-    window.onresize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
+    function base64Encode() {
+      const text = document.getElementById('b64Input').value;
+      document.getElementById('b64Output').textContent = btoa(text);
+    }
+
+    function mockWhois() {
+      const domain = document.getElementById('whoisDomain').value;
+      document.getElementById('whoisOutput').textContent = `Registrar: MOCK, Created: 2020-01-01`;
+    }
+
+    function mockIPLookup() {
+      const ip = document.getElementById('lookupIP').value;
+      document.getElementById('ipLookupOutput').textContent = `Location: US, ISP: ExampleNet`;
+    }
+
+    function urlEncode() {
+      const val = document.getElementById('urlInput').value;
+      document.getElementById('urlOutput').textContent = encodeURIComponent(val);
+    }
+
+    function obfuscateJS() {
+      const code = document.getElementById('jsCode').value;
+      const output = btoa(code);
+      document.getElementById('jsOutput').textContent = output;
+    }
+
+    function generateMAC() {
+      let mac = Array(6).fill(0).map(()=>Math.floor(Math.random()*256).toString(16).padStart(2,'0')).join(":");
+      document.getElementById('macOutput').textContent = mac;
+    }
+
+    // Auto fetch IP (client-side only)
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => document.getElementById('ip').textContent = data.ip)
+      .catch(() => document.getElementById('ip').textContent = 'Unavailable');
   </script>
 </body>
 </html>
