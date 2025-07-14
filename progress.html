@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Premium Progress Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      transition: background 0.5s ease;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      color: #000;
+    }
+
+    body.dark-mode {
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: #fff;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      color: #fff;
+    }
+
+    .nav-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      margin: 4px 0;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-links.active {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 1rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    body:not(.dark-mode) .card {
+      background: rgba(255, 255, 255, 0.5);
+      color: #000;
+    }
+
+    canvas {
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        width: 100%;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav-title">📊 Progress Tracker</div>
+    <div class="hamburger" onclick="toggleHamburger()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-links" id="navLinks">
+        <a href="#">Dashboard</a>
+        <a href="#">Reports</a>
+        <a href="#">Settings</a>
+      </div>
+      <button class="toggle-btn" onclick="toggleMode()">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card"><h2>Attendance</h2><canvas id="attendanceChart"></canvas></div>
+    <div class="card"><h2>Marks Overview</h2><canvas id="marksChart"></canvas></div>
+    <div class="card"><h2>Subject-wise Performance</h2><canvas id="subjectChart"></canvas></div>
+    <div class="card"><h2>Yearly Growth</h2><canvas id="growthChart"></canvas></div>
+    <div class="card"><h2>Class Comparison</h2><canvas id="comparisonChart"></canvas></div>
+    <div class="card"><h2>Goal Tracking</h2><canvas id="goalChart"></canvas></div>
+    <div class="card"><h2>Assignment Score</h2><canvas id="assignmentChart"></canvas></div>
+    <div class="card"><h2>Monthly Progress</h2><canvas id="monthlyChart"></canvas></div>
+    <div class="card"><h2>Discipline Record</h2><canvas id="disciplineChart"></canvas></div>
+    <div class="card"><h2>Extra Curricular</h2><canvas id="extraChart"></canvas></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function toggleHamburger() {
+      document.getElementById('navLinks').classList.toggle('active');
+    }
+
+    const chartConfigs = [
+      { id: 'attendanceChart', type: 'pie' },
+      { id: 'marksChart', type: 'bar' },
+      { id: 'subjectChart', type: 'radar' },
+      { id: 'growthChart', type: 'line' },
+      { id: 'comparisonChart', type: 'bar' },
+      { id: 'goalChart', type: 'doughnut' },
+      { id: 'assignmentChart', type: 'polarArea' },
+      { id: 'monthlyChart', type: 'line' },
+      { id: 'disciplineChart', type: 'bar' },
+      { id: 'extraChart', type: 'radar' }
+    ];
+
+    const chartInstances = {};
+
+    function createOrUpdateCharts() {
+      chartConfigs.forEach(({ id, type }) => {
+        const data = Array.from({ length: 5 }, () => Math.floor(Math.random() * 100));
+
+        if (chartInstances[id]) {
+          chartInstances[id].data.datasets[0].data = data;
+          chartInstances[id].update();
+        } else {
+          chartInstances[id] = new Chart(document.getElementById(id), {
+            type,
+            data: {
+              labels: ['A', 'B', 'C', 'D', 'E'],
+              datasets: [{
+                label: id,
+                data,
+                backgroundColor: [
+                  '#ff7675', '#74b9ff', '#55efc4', '#fdcb6e', '#a29bfe'
+                ],
+                borderColor: '#2d3436',
+                borderWidth: 1,
+                fill: true
+              }]
+            },
+            options: {
+              responsive: true,
+              animation: false,
+              scales: type === 'bar' || type === 'line' ? { y: { beginAtZero: true } } : {}
+            }
+          });
+        }
+      });
+    }
+
+    setInterval(createOrUpdateCharts, 2000); // Update charts every 2 seconds
+  </script>
+</body>
+</html>
