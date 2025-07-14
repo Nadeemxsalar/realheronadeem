@@ -37,61 +37,11 @@
       text-shadow: 0 0 5px #0ff;
     }
 
-    nav a {
-      margin-left: 2rem;
-      color: #0f0;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #ff0;
-      text-shadow: 0 0 5px #ff0;
-    }
-
-    .matrix-canvas {
-      position: fixed;
-      z-index: 0;
-      top: 0;
-      left: 0;
-    }
-
     section {
       position: relative;
       z-index: 1;
-      padding: 10vh 5vw;
-      min-height: 100vh;
-    }
-
-    .hero h2 {
-      font-size: 3rem;
-      color: #0f0;
-      text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-      animation: glitch 1.5s infinite;
-    }
-
-    .hero p {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: #ffffffcc;
-    }
-
-    .btn {
-      margin-top: 30px;
-      padding: 12px 25px;
-      border: 2px solid #0f0;
-      background: transparent;
-      color: #0f0;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #0f0;
-      color: #000;
-      box-shadow: 0 0 10px #0f0;
+      padding: 10vh 5vw 5vh;
+      min-height: auto;
     }
 
     .section-title {
@@ -102,62 +52,75 @@
       padding-left: 10px;
     }
 
-    .project-list li {
-      margin: 10px 0;
-      list-style: square;
-      color: #fff;
-    }
-
-    footer {
-      background: #000;
-      padding: 20px;
-      text-align: center;
-      color: #0f0;
-      border-top: 1px solid #0f0;
-    }
-
-    @keyframes glitch {
-      0% { text-shadow: 0 0 5px #0f0; }
-      20% { text-shadow: -2px 0 red, 2px 0 blue; }
-      40% { text-shadow: -1px -1px lime, 1px 1px cyan; }
-      60% { text-shadow: 0 0 5px #0f0; }
-      80% { text-shadow: 2px 0 magenta, -2px 0 yellow; }
-      100% { text-shadow: 0 0 5px #0f0; }
-    }
-
-    #terminal {
+    .matrix-canvas {
       position: fixed;
-      bottom: 0;
+      z-index: 0;
+      top: 0;
       left: 0;
+    }
+
+    .card {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #0f0;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #0f08;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .btn-group a {
+      margin-right: 10px;
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      border: 1px solid #0f0;
+      color: #0f0;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      transition: 0.3s;
+    }
+
+    .btn-group a:hover {
+      background: #0f0;
+      color: #000;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    input, textarea {
       width: 100%;
-      max-height: 40vh;
-      background: #111;
-      border-top: 2px solid #0f0;
+      background: black;
+      border: 1px solid #0f0;
+      color: #0f0;
       padding: 10px;
-      display: none;
-      color: #0f0;
-      font-size: 14px;
-      overflow-y: auto;
+      margin: 5px 0 15px 0;
     }
 
-    #terminalInput {
+    .news-feed li {
+      margin-bottom: 10px;
+    }
+
+    .tools button {
       background: transparent;
-      color: #0f0;
-      border: none;
-      width: 100%;
-      outline: none;
-    }
-
-    .open-terminal {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      background: #000;
-      border: 2px solid #0f0;
+      border: 1px solid #0f0;
       color: #0f0;
       padding: 8px 15px;
-      border-radius: 5px;
+      margin-top: 10px;
       cursor: pointer;
+    }
+
+    .tools button:hover {
+      background: #0f0;
+      color: black;
+    }
+
+    .vertical-links {
+      display: flex;
+      flex-direction: column;
     }
   </style>
 </head>
@@ -166,79 +129,84 @@
 
   <header>
     <h1>HackElite</h1>
-    <nav>
-      <a href="#hero">Home</a>
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
   </header>
 
-  <section class="hero" id="hero">
-    <h2>Welcome to HackElite</h2>
-    <p>Experience the cutting edge of tech in a hacker's universe.</p>
-    <button class="btn" onclick="toggleTerminal()">Open Terminal</button>
+  <!-- [1] System Info -->
+  <section>
+    <div class="section-title">🧠 System Info</div>
+    <div class="card-grid">
+      <div class="card">
+        <p>🖥️ <strong>CPU Usage:</strong> <span id="cpu">42%</span></p>
+      </div>
+      <div class="card">
+        <p>💾 <strong>RAM Usage:</strong> <span id="ram">3.2 GB / 8 GB</span></p>
+      </div>
+      <div class="card">
+        <p>🌐 <strong>IP Address:</strong> <span id="ip">192.168.0.101</span></p>
+      </div>
+      <div class="card">
+        <p>📡 <strong>Status:</strong> <span style="color: lime;">Connected</span></p>
+      </div>
+    </div>
   </section>
 
-  <section id="about">
-    <div class="section-title">About Us</div>
-    <p>HackElite is a digital tech lab, coding ideas into real-world innovations with AI, Cybersecurity, Blockchain and more.</p>
+  <!-- [2] Tools -->
+  <section>
+    <div class="section-title">🛠️ Hacker Tools</div>
+    <div class="card tools">
+      <label>Hash Generator:</label>
+      <input type="text" id="hashInput" placeholder="Enter text..." />
+      <button onclick="generateHash()">Generate SHA-256</button>
+      <p><strong>Hash:</strong> <span id="hashOutput"></span></p>
+
+      <label>Password Strength Checker:</label>
+      <input type="text" id="passInput" placeholder="Enter password..." />
+      <button onclick="checkStrength()">Check</button>
+      <p><strong>Strength:</strong> <span id="strengthOutput"></span></p>
+
+      <label>Port Scan Simulator:</label>
+      <input type="text" placeholder="Target IP (mock)" />
+      <button>Scan Ports</button>
+      <p>Open Ports: 22 (SSH), 80 (HTTP), 443 (HTTPS)</p>
+    </div>
   </section>
 
-  <section id="projects">
-    <div class="section-title">Projects</div>
-    <ul class="project-list">
-      <li>💻 AI Chatbot Assistant</li>
-      <li>🛡️ Cyber Defense Scanner</li>
-      <li>🌐 Web3 Crypto Explorer</li>
-      <li>📱 Mobile Tech Tools</li>
-    </ul>
+  <!-- [3] Cyber Intelligence Feed -->
+  <section>
+    <div class="section-title">📰 Cyber Intelligence Feed</div>
+    <div class="card">
+      <ul class="news-feed">
+        <li>🕵️‍♂️ Anonymous leaks 4TB from private server of XCorp</li>
+        <li>💣 New zero-day found in IoT routers globally</li>
+        <li>🚨 Massive credential dump hits underground markets</li>
+        <li>🧠 AI-generated malware bypassing AVs detected</li>
+        <li>🔍 Feds crack major dark web crypto laundering ring</li>
+      </ul>
+    </div>
   </section>
 
-  <section id="contact">
-    <div class="section-title">Contact</div>
-    <p>Email: nadeemrealhero@gmail.com</p>
-    <p>Twitter: @realheronadeem</p>
+  <!-- [4] Contributions -->
+  <section>
+    <div class="section-title">💻 Contributions</div>
+    <div class="card btn-group vertical-links">
+      <a href="https://github.com/your-profile" target="_blank">GitHub: Real-time Recon Tool</a>
+      <a href="#">Research: AI in Offensive Security (PaperLink)</a>
+      <a href="#">Open Source: ProxyChain Sniffer Module</a>
+    </div>
   </section>
 
-  <footer>© 2025 HackVerse Inc. | Digital Futures Engineered</footer>
+  <!-- [5] Join Community -->
+  <section>
+    <div class="section-title">👥 Join The HackElite</div>
+    <div class="card btn-group">
+      <a href="https://t.me/yourchannel" target="_blank">Telegram</a>
+      <a href="https://discord.gg/yourlink" target="_blank">Discord</a>
+      <a href="https://github.com/your-profile" target="_blank">GitHub</a>
+    </div>
+  </section>
 
-  <div id="terminal">
-    <div>> Welcome to HackVerse Terminal. Type 'help' to begin.</div>
-    <input type="text" id="terminalInput" onkeydown="handleTerminal(event)">
-  </div>
-
-  <button class="open-terminal" onclick="toggleTerminal()">⌨️ Terminal</button>
-
+  <!-- Matrix BG Script -->
   <script>
-    // Terminal toggle
-    function toggleTerminal() {
-      const terminal = document.getElementById("terminal");
-      terminal.style.display = terminal.style.display === "block" ? "none" : "block";
-      document.getElementById("terminalInput").focus();
-    }
-
-    // Terminal commands
-    function handleTerminal(e) {
-      if (e.key === "Enter") {
-        const input = e.target.value.toLowerCase();
-        const terminal = document.getElementById("terminal");
-        const response = document.createElement("div");
-
-        if (input === "help") response.textContent = "> Commands: about, contact, clear";
-        else if (input === "about") response.textContent = "> HackVerse is your tech base.";
-        else if (input === "contact") response.textContent = "> Email: hack@verse.tech";
-        else if (input === "clear") terminal.innerHTML = '';
-        else response.textContent = "> Unknown command. Try 'help'.";
-
-        if (input !== "clear") terminal.appendChild(response);
-
-        e.target.value = "";
-        terminal.scrollTop = terminal.scrollHeight;
-      }
-    }
-
-    // Matrix Effect
     const canvas = document.querySelector('.matrix-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -260,8 +228,30 @@
         ypos[i] = y > canvas.height + Math.random() * 100 ? 0 : y + 20;
       });
     }
-
     setInterval(matrix, 50);
+
+    // [Hash Generator]
+    async function generateHash() {
+      const input = document.getElementById('hashInput').value;
+      const msgUint8 = new TextEncoder().encode(input);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      document.getElementById('hashOutput').textContent = hashHex;
+    }
+
+    // [Password Strength Checker]
+    function checkStrength() {
+      const pass = document.getElementById('passInput').value;
+      let strength = 'Weak';
+      if (pass.length > 12 && /[A-Z]/.test(pass) && /[0-9]/.test(pass) && /[^a-zA-Z0-9]/.test(pass)) {
+        strength = 'Strong';
+      } else if (pass.length > 8) {
+        strength = 'Medium';
+      }
+      document.getElementById('strengthOutput').textContent = strength;
+    }
+
     window.onresize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
