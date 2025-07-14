@@ -140,31 +140,30 @@
   <h1>CodingLap Live Editor</h1>
   <h4>Html, CSS, JS are connected</h4>
 
-  <!-- Anchor buttons centered and responsive -->
-  <br>
+  <!-- Anchor buttons -->
   <div class="nav-buttons">
     <a href="#htmlcode" id="glowButton">Html</a>
     <a href="#csscode" id="glowButton">Css</a>
     <a href="#jscode" id="glowButton">JavaScript</a>
+    <a href="#" id="glowButton" onclick="clearAll()">🗑️ Clear All</a>
   </div>
-  <br>
 
   <div class="container">
     <div id="htmlcode">
       <label>HTML Code</label>
-      <textarea id="htmlCode">&lt;h1&gt;Hello World&lt;/h1&gt;</textarea>
+      <textarea id="htmlCode"></textarea>
     </div>
     <button class="run-button" onclick="runCode()">▶️ Run Code</button>
 
     <div id="csscode">
       <label>CSS Code</label>
-      <textarea id="cssCode">body { background-color: light; }</textarea>
+      <textarea id="cssCode"></textarea>
     </div>
     <button class="run-button" onclick="runCode()">▶️ Run Code</button>
 
     <div id="jscode">
       <label>JavaScript Code</label>
-      <textarea id="jsCode">console.log("Welcome to CodingLap");</textarea>
+      <textarea id="jsCode"></textarea>
     </div>
     <button class="run-button" onclick="runCode()">▶️ Run Code</button>
 
@@ -176,12 +175,30 @@
   </div>
 
   <script>
+    const htmlBox = document.getElementById("htmlCode");
+    const cssBox = document.getElementById("cssCode");
+    const jsBox = document.getElementById("jsCode");
+
+    const defaultHTML = "<h1>Hello World</h1>";
+    const defaultCSS = "body { background-color: lightgray; }";
+    const defaultJS = "console.log('Welcome to CodingLap');";
+
+    // Load from localStorage or use defaults
+    htmlBox.value = localStorage.getItem("htmlCode") || defaultHTML;
+    cssBox.value = localStorage.getItem("cssCode") || defaultCSS;
+    jsBox.value = localStorage.getItem("jsCode") || defaultJS;
+
     function runCode() {
-      const html = document.getElementById("htmlCode").value;
-      const css = document.getElementById("cssCode").value;
-      const js = document.getElementById("jsCode").value;
+      const html = htmlBox.value;
+      const css = cssBox.value;
+      const js = jsBox.value;
       const outputFrame = document.getElementById("outputFrame");
       const jsOutput = document.getElementById("jsOutput");
+
+      // Save to localStorage
+      localStorage.setItem("htmlCode", html);
+      localStorage.setItem("cssCode", css);
+      localStorage.setItem("jsCode", js);
 
       jsOutput.textContent = "";
 
@@ -193,16 +210,27 @@
         <body>
           ${html}
           <script>
-          try {
-            ${js}
-          } catch (e) {
-            parent.document.getElementById('jsOutput').textContent = '❌ Error: ' + e.message;
-          }
+            try {
+              ${js}
+            } catch (e) {
+              parent.document.getElementById('jsOutput').textContent = '❌ Error: ' + e.message;
+            }
           <\/script>
         </body>
         </html>`;
 
       outputFrame.srcdoc = fullCode;
+    }
+
+    function clearAll() {
+      localStorage.removeItem("htmlCode");
+      localStorage.removeItem("cssCode");
+      localStorage.removeItem("jsCode");
+      htmlBox.value = defaultHTML;
+      cssBox.value = defaultCSS;
+      jsBox.value = defaultJS;
+      runCode();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     runCode();
