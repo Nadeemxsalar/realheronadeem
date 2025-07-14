@@ -122,6 +122,24 @@
       width: 100%;
     }
 
+    button {
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 5px;
+      background: #0984e3;
+      color: white;
+      cursor: pointer;
+    }
+
+    input, textarea {
+      margin-top: 0.5rem;
+      width: 100%;
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
     @media (max-width: 768px) {
       .nav-links {
         display: none;
@@ -165,6 +183,88 @@
     <div class="card"><h2>Monthly Progress</h2><canvas id="monthlyChart"></canvas></div>
     <div class="card"><h2>Discipline Record</h2><canvas id="disciplineChart"></canvas></div>
     <div class="card"><h2>Extra Curricular</h2><canvas id="extraChart"></canvas></div>
+
+    <!-- Extra Student Features -->
+
+    <div class="card">
+      <h2>📋 To-Do List</h2>
+      <input id="todoInput" type="text" placeholder="Add task..." />
+      <button onclick="addTodo()">Add</button>
+      <ul id="todoList"></ul>
+    </div>
+
+    <div class="card">
+      <h2>📆 Upcoming Deadlines</h2>
+      <ul>
+        <li>Math Assignment – July 18</li>
+        <li>Science Project – July 22</li>
+        <li>English Essay – July 25</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📝 Notes</h2>
+      <textarea rows="5" placeholder="Write your notes here..."></textarea>
+    </div>
+
+    <div class="card">
+      <h2>⏳ Pomodoro Timer</h2>
+      <p id="pomodoroTime">25:00</p>
+      <button onclick="startPomodoro()">Start</button>
+      <button onclick="resetPomodoro()">Reset</button>
+    </div>
+
+    <div class="card">
+      <h2>💡 Daily Motivation</h2>
+      <p id="quote">"Loading..."</p>
+    </div>
+
+    <div class="card">
+      <h2>👤 Profile</h2>
+      <p>Name: Nadeem</p>
+      <p>Class: BCA</p>
+      <p>Roll No: 12482</p>
+    </div>
+
+    <div class="card">
+      <h2>📄 Reports</h2>
+      <button onclick="downloadReport()">Download Report</button>
+    </div>
+
+    <div class="card">
+      <h2>⏰ Live Clock</h2>
+      <p id="clock"></p>
+    </div>
+
+    <div class="card">
+      <h2>📊 Grade Calculator</h2>
+      <input type="number" id="grade1" placeholder="Enter marks 1" />
+      <input type="number" id="grade2" placeholder="Enter marks 2" />
+      <button onclick="calcGrade()">Calculate Average</button>
+      <p id="gradeResult"></p>
+    </div>
+
+    <div class="card">
+  <h2>📚 Study Resources</h2>
+  <ul style="list-style: none; padding-left: 0;">
+    <li>
+      <a href="https://www.khanacademy.org" target="_blank" style="text-decoration: none; color: inherit; display: block; margin: 0.4rem 0; padding: 0.4rem; border-radius: 8px; transition: 0.3s;" onmouseover="this.style.background='#dfe6e9'" onmouseout="this.style.background='transparent'">🎓 Khan Academy</a>
+    </li>
+    <li>
+      <a href="https://www.coursera.org" target="_blank" style="text-decoration: none; color: inherit; display: block; margin: 0.4rem 0; padding: 0.4rem; border-radius: 8px; transition: 0.3s;" onmouseover="this.style.background='#dfe6e9'" onmouseout="this.style.background='transparent'">🧠 Coursera</a>
+    </li>
+    <li>
+      <a href="https://www.youtube.com" target="_blank" style="text-decoration: none; color: inherit; display: block; margin: 0.4rem 0; padding: 0.4rem; border-radius: 8px; transition: 0.3s;" onmouseover="this.style.background='#dfe6e9'" onmouseout="this.style.background='transparent'">🎥 YouTube Tutorials</a>
+    </li>
+    <li>
+      <a href="https://www.geeksforgeeks.org" target="_blank" style="text-decoration: none; color: inherit; display: block; margin: 0.4rem 0; padding: 0.4rem; border-radius: 8px; transition: 0.3s;" onmouseover="this.style.background='#dfe6e9'" onmouseout="this.style.background='transparent'">👨‍💻 GeeksForGeeks</a>
+    </li>
+    <li>
+      <a href="https://www.w3schools.com" target="_blank" style="text-decoration: none; color: inherit; display: block; margin: 0.4rem 0; padding: 0.4rem; border-radius: 8px; transition: 0.3s;" onmouseover="this.style.background='#dfe6e9'" onmouseout="this.style.background='transparent'">🌐 W3Schools</a>
+    </li>
+  </ul>
+</div>
+
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -195,7 +295,6 @@
     function createOrUpdateCharts() {
       chartConfigs.forEach(({ id, type }) => {
         const data = Array.from({ length: 5 }, () => Math.floor(Math.random() * 100));
-
         if (chartInstances[id]) {
           chartInstances[id].data.datasets[0].data = data;
           chartInstances[id].update();
@@ -207,9 +306,7 @@
               datasets: [{
                 label: id,
                 data,
-                backgroundColor: [
-                  '#ff7675', '#74b9ff', '#55efc4', '#fdcb6e', '#a29bfe'
-                ],
+                backgroundColor: ['#ff7675', '#74b9ff', '#55efc4', '#fdcb6e', '#a29bfe'],
                 borderColor: '#2d3436',
                 borderWidth: 1,
                 fill: true
@@ -225,7 +322,81 @@
       });
     }
 
-    setInterval(createOrUpdateCharts, 2000); // Update charts every 2 seconds
+    setInterval(createOrUpdateCharts, 2000);
+
+    // To-Do List
+    function addTodo() {
+      const input = document.getElementById('todoInput');
+      const text = input.value.trim();
+      if (text) {
+        const li = document.createElement('li');
+        li.textContent = text;
+        li.onclick = () => li.remove();
+        document.getElementById('todoList').appendChild(li);
+        input.value = '';
+      }
+    }
+
+    // Pomodoro Timer
+    let pomodoroInterval, timeLeft = 1500;
+    function startPomodoro() {
+      clearInterval(pomodoroInterval);
+      pomodoroInterval = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(pomodoroInterval);
+          alert("Time's up!");
+          timeLeft = 1500;
+        } else {
+          timeLeft--;
+          document.getElementById('pomodoroTime').textContent =
+            `${Math.floor(timeLeft/60).toString().padStart(2, '0')}:${(timeLeft%60).toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+    function resetPomodoro() {
+      clearInterval(pomodoroInterval);
+      timeLeft = 1500;
+      document.getElementById('pomodoroTime').textContent = '25:00';
+    }
+
+    // Motivation Quote
+    const quotes = [
+      "Believe in yourself.",
+      "Push harder than yesterday.",
+      "Every expert was once a beginner.",
+      "Dream big, work hard.",
+      "Success is no accident."
+    ];
+    document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+    // Live Clock
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString();
+    }, 1000);
+
+    // Download Report
+    function downloadReport() {
+      const blob = new Blob(["This is your performance report."], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'report.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Grade Calculator
+    function calcGrade() {
+      const g1 = parseFloat(document.getElementById('grade1').value);
+      const g2 = parseFloat(document.getElementById('grade2').value);
+      if (!isNaN(g1) && !isNaN(g2)) {
+        const avg = ((g1 + g2) / 2).toFixed(2);
+        document.getElementById('gradeResult').textContent = `Average Marks: ${avg}`;
+      } else {
+        document.getElementById('gradeResult').textContent = 'Enter valid marks.';
+      }
+    }
   </script>
 </body>
 </html>
