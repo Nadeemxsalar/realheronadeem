@@ -1,322 +1,1672 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EK Health</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealCare Hub - Your Comprehensive Health Partner</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1c1c1c);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      overflow-x: hidden;
-    }
+    <style>
+        /* CSS starts here */
 
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
+        /* Variables for a cleaner, modern palette */
+        :root {
+            /* Light Mode Defaults */
+            --primary-blue: #007bff;        /* Core accent for CTAs, links */
+            --secondary-green: #28a745;     /* Success, positive actions */
+            --text-dark: #333333;           /* Dark body text */
+            --text-light: #f8f9fa;          /* Light text on dark backgrounds */
+            --background-light: #ffffff;    /* Main light background */
+            --background-dark: #2c3e50;     /* Dark section/footer background */
+            --card-background: #f1f5f9;     /* Light grey for feature cards */
+            --border-color: #e0e0e0;        /* Subtle borders */
+            --header-background: #0056b3;  /* Darker blue for header */
+            --shadow-light: rgba(0, 0, 0, 0.08); /* Light shadow for depth */
+            --shadow-medium: rgba(0, 0, 0, 0.15); /* Medium shadow */
+            --hero-gradient-start: #e0f2f7; /* Hero soft blue gradient */
+            --hero-gradient-end: #c1e4eb;
 
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(10px);
-      color: white;
-      padding: 1rem 2rem;
-      z-index: 999;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+            /* Dark Mode Variables (will be overridden by .dark-mode class) */
+            --dm-primary-blue: #66b3ff;     /* Lighter blue for dark mode */
+            --dm-secondary-green: #6fda7a;  /* Lighter green for dark mode */
+            --dm-text-dark: #e0e0e0;        /* Light text on dark backgrounds */
+            --dm-text-light: #222222;       /* Dark text on light backgrounds (not used directly for body) */
+            --dm-background-light: #1a1a2e; /* Dark background */
+            --dm-background-dark: #0f0f1d;  /* Even darker background */
+            --dm-card-background: #252a40;  /* Darker card background */
+            --dm-border-color: #3a3f5a;     /* Dark mode borders */
+            --dm-shadow-light: rgba(0, 0, 0, 0.3);
+            --dm-shadow-medium: rgba(0, 0, 0, 0.5);
+            --dm-hero-gradient-start: #1a1a2e;
+            --dm-hero-gradient-end: #0f0f1d;
 
-    header h1 {
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
+            --border-radius: 8px;
+            --transition-speed: 0.3s ease-in-out;
+            --global-transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
 
-    nav a {
-      margin: 0 1rem;
-      color: #fff;
-      text-decoration: none;
-    }
+        /* Dark Mode Styling */
+        body.dark-mode {
+            background-color: var(--dm-background-light);
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .navbar {
+            background-color: var(--dm-background-light);
+            box-shadow: 0 2px 10px var(--dm-shadow-light);
+            border-bottom: 1px solid var(--dm-border-color);
+        }
+        body.dark-mode .logo {
+            color: var(--dm-primary-blue);
+        }
+        body.dark-mode .nav-links ul li a {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .nav-links ul li a::after {
+            background-color: var(--dm-primary-blue);
+        }
+        body.dark-mode .hamburger .bar {
+            background-color: var(--dm-text-dark);
+        }
+        body.dark-mode .hero-section {
+            background: linear-gradient(to right, var(--dm-hero-gradient-start), var(--dm-hero-gradient-end));
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode p {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode h2 { color: var(--dm-primary-blue); }
 
-    nav a:hover {
-      color: #00f0ff;
-    }
+        body.dark-mode .btn {
+            background-color: var(--dm-primary-blue);
+            color: var(--dm-text-light);
+            box-shadow: 0 4px 10px var(--dm-shadow-light);
+        }
+        body.dark-mode .btn:hover {
+            background-color: var(--dm-secondary-green);
+            box-shadow: 0 6px 15px var(--dm-shadow-medium);
+        }
+        body.dark-mode .btn-outline {
+            border: 2px solid var(--dm-primary-blue);
+            color: var(--dm-primary-blue);
+        }
+        body.dark-mode .btn-outline:hover {
+            background-color: var(--dm-primary-blue);
+            color: var(--dm-text-light);
+        }
 
-    section {
-      padding: 6rem 2rem;
-      max-width: 1100px;
-      margin: auto;
-    }
+        body.dark-mode .section-light {
+            background-color: var(--dm-background-light);
+        }
+        body.dark-mode .section-dark {
+            background-color: var(--dm-background-dark);
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .section-dark h2 {
+            color: var(--dm-secondary-green);
+        }
 
-    .hero {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
+        body.dark-mode .feature-card {
+            background-color: var(--dm-card-background);
+            box-shadow: 0 5px 15px var(--dm-shadow-light);
+            border: 1px solid var(--dm-border-color);
+        }
+        body.dark-mode .feature-card:hover {
+            box-shadow: 0 8px 20px var(--dm-shadow-medium);
+        }
+        body.dark-mode .feature-card .icon {
+            color: var(--dm-primary-blue);
+        }
+        body.dark-mode .feature-card h3 {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .feature-card p {
+            color: rgba(224, 224, 224, 0.8);
+        }
 
-    .hero h2 {
-      font-size: 3.2rem;
-      background: linear-gradient(to right, #00f0ff, #1ed6ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        body.dark-mode .symptom-checker-section label {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .symptom-checker-section textarea {
+            border: 1px solid var(--dm-border-color);
+            background-color: var(--dm-card-background);
+            color: var(--dm-text-dark);
+            box-shadow: inset 0 1px 3px var(--dm-shadow-light);
+        }
+        body.dark-mode .symptom-checker-section textarea::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+        body.dark-mode .symptom-checker-section textarea:focus {
+            border-color: var(--dm-primary-blue);
+            box-shadow: 0 0 0 3px rgba(102, 179, 255, 0.25);
+        }
+        body.dark-mode .symptom-checker-section .result-box {
+            background-color: var(--dm-card-background);
+            color: var(--dm-text-dark);
+            border: 1px solid var(--dm-border-color);
+            box-shadow: inset 0 1px 3px var(--dm-shadow-light);
+        }
+        body.dark-mode .symptom-checker-section .result-box li::before {
+            color: var(--dm-secondary-green);
+        }
+        body.dark-mode .symptom-checker-section .result-box strong {
+            color: var(--dm-primary-blue);
+        }
+        body.dark-mode .symptom-checker-section .result-box span {
+            color: rgba(224, 224, 224, 0.7);
+        }
+        body.dark-mode .symptom-checker-section .disclaimer {
+            color: #ccc;
+            border: 1px dashed var(--dm-border-color);
+        }
 
-    .hero p {
-      font-size: 1.3rem;
-      margin-top: 1rem;
-    }
+        body.dark-mode .hospital-management-section {
+            background-color: var(--dm-background-dark);
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .hospital-management-section h2, body.dark-mode .hospital-management-section h3, body.dark-mode .hospital-management-section p {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .hospital-management-section .integration-point {
+            background-color: rgba(255, 255, 255, 0.08); /* Slightly transparent white for content on dark bg */
+            border: 1px solid var(--dm-border-color);
+        }
+        body.dark-mode .hospital-management-section .integration-point h3 {
+            color: var(--dm-primary-blue);
+        }
+        body.dark-mode .hospital-management-section .integration-point li {
+            color: rgba(224, 224, 224, 0.9);
+        }
 
-    .card, .form, .quiz-box {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1.5rem;
-      border-radius: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-      transition: transform 0.3s;
-    }
+        body.dark-mode .contact-form {
+            background-color: var(--dm-card-background);
+            box-shadow: 0 5px 15px var(--dm-shadow-light);
+        }
+        body.dark-mode .contact-form label {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .contact-form input, body.dark-mode .contact-form textarea {
+            border: 1px solid var(--dm-border-color);
+            background-color: var(--dm-background-light);
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .contact-form input:focus, body.dark-mode .contact-form textarea:focus {
+            border-color: var(--dm-primary-blue);
+            box-shadow: 0 0 0 3px rgba(102, 179, 255, 0.25);
+        }
 
-    .card:hover {
-      transform: scale(1.05);
-    }
+        body.dark-mode .footer {
+            background-color: var(--dm-background-dark);
+            color: var(--dm-text-dark);
+            border-top: 1px solid var(--dm-border-color);
+        }
+        body.dark-mode .footer .social-links a {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .footer .social-links a:hover {
+            color: var(--dm-primary-blue);
+        }
 
-    .form input, .form textarea, .form select {
-      width: 100%;
-      padding: 1rem;
-      margin: 0.75rem 0;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-    }
+        /* Basic Resets & Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    ::placeholder {
-      color: #ccc;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .form button, .quiz-box button {
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(to right, #00f0ff, #1ed6ff);
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px #00f0ff;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--global-transition); /* Apply global transition */
+        }
 
-    .form button:hover, .quiz-box button:hover {
-      transform: scale(1.05);
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    .appointment-item {
-      padding: 1rem;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.15);
-      margin: 0.5rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        /* Headings */
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 0.8em;
+            color: var(--text-dark);
+            transition: color var(--transition-speed);
+        }
 
-    .appointment-item button {
-      background: crimson;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      cursor: pointer;
-    }
+        h1 { font-size: 3em; line-height: 1.2; }
+        h2 { font-size: 2.2em; text-align: center; margin-bottom: 1.5em; color: var(--primary-blue); }
+        h3 { font-size: 1.6em; }
+        h4 { font-size: 1.3em; }
 
-    canvas {
-      background: #fff;
-      border-radius: 15px;
-      padding: 1rem;
-    }
+        p {
+            margin-bottom: 1em;
+            transition: color var(--transition-speed);
+        }
 
-    footer {
-      text-align: center;
-      padding: 2rem;
-      background: rgba(0,0,0,0.8);
-      margin-top: 2rem;
-    }
-  </style>
+        a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        a:hover {
+            color: var(--secondary-green);
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary-blue);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed), color var(--transition-speed);
+            box-shadow: 0 4px 10px var(--shadow-light);
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--shadow-medium);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--text-light);
+            box-shadow: 0 6px 15px var(--shadow-medium);
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background-color: var(--background-light);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--shadow-light);
+            transition: var(--global-transition);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-blue);
+            transition: color var(--transition-speed);
+        }
+
+        .nav-links ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links ul li {
+            margin-left: 30px;
+        }
+
+        .nav-links ul li a {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95em;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color var(--transition-speed);
+        }
+
+        .nav-links ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-blue);
+            left: 0;
+            bottom: 0;
+            transition: width var(--transition-speed), background-color var(--transition-speed);
+        }
+
+        .nav-links ul li a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none; /* Hidden on desktop */
+            flex-direction: column;
+            cursor: pointer;
+            width: 25px;
+            height: 18px;
+            justify-content: space-between;
+        }
+
+        .hamburger .bar {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-dark);
+            border-radius: 1px;
+            transition: var(--transition-speed), background-color var(--transition-speed);
+        }
+
+        .hamburger.active .bar:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .bar:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--text-dark);
+            margin-left: 20px;
+            transition: color var(--transition-speed);
+        }
+        .theme-toggle:hover {
+            color: var(--primary-blue);
+        }
+        body.dark-mode .theme-toggle {
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .theme-toggle:hover {
+            color: var(--dm-primary-blue);
+        }
+
+
+        /* --- Hero Section --- */
+        .hero-section {
+            background: linear-gradient(to right, var(--hero-gradient-start), var(--hero-gradient-end));
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            padding: 50px 0;
+            transition: var(--global-transition);
+        }
+
+        .hero-section h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            color: var(--primary-blue);
+        }
+
+        .hero-section p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--text-dark);
+        }
+
+        /* --- Sections General Styling --- */
+        section {
+            padding: 80px 0;
+            text-align: center;
+            transition: var(--global-transition);
+        }
+
+        .section-dark {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+        }
+
+        .section-dark h2, .section-dark h3, .section-dark p {
+            color: var(--text-light);
+        }
+        .section-dark h2 { color: var(--secondary-green); }
+
+
+        /* --- Features Grid --- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            transition: var(--global-transition), transform var(--transition-speed), box-shadow var(--transition-speed);
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5em;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            transition: color var(--transition-speed);
+        }
+
+        .feature-card h3 {
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* --- Symptom Checker Section --- */
+        .symptom-checker-section .container {
+            max-width: 800px;
+        }
+
+        .symptom-checker-section .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .symptom-checker-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: color var(--transition-speed);
+        }
+
+        .symptom-checker-section textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            font-size: 1em;
+            resize: vertical;
+            min-height: 120px;
+            transition: var(--global-transition), border-color var(--transition-speed), box-shadow var(--transition-speed);
+            box-shadow: inset 0 1px 3px var(--shadow-light);
+        }
+
+        .symptom-checker-section textarea::placeholder {
+            color: #888;
+        }
+
+        .symptom-checker-section textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
+        .symptom-checker-section .result-box {
+            margin-top: 30px;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            min-height: 100px;
+            text-align: left;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 1px 3px var(--shadow-light);
+            overflow: auto;
+            transition: var(--global-transition);
+        }
+
+        .symptom-checker-section .result-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .symptom-checker-section .result-box li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .symptom-checker-section .result-box li::before {
+            content: "\f00c"; /* Checkmark icon */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: var(--secondary-green);
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        .symptom-checker-section .error-message {
+            color: #dc3545; /* Red for errors */
+            font-weight: 500;
+        }
+
+        .symptom-checker-section .disclaimer {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            transition: var(--global-transition);
+        }
+
+        /* --- Simulated Backend Feature Styles --- */
+        .simulated-feature {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 40px;
+            text-align: left;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border: 1px solid var(--border-color);
+            transition: var(--global-transition);
+        }
+
+        .simulated-feature h3 {
+            margin-bottom: 20px;
+            color: var(--primary-blue);
+        }
+
+        .simulated-feature .form-group {
+            margin-bottom: 15px;
+        }
+
+        .simulated-feature .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: color var(--transition-speed);
+        }
+
+        .simulated-feature input[type="text"],
+        .simulated-feature input[type="email"],
+        .simulated-feature input[type="date"],
+        .simulated-feature input[type="time"],
+        .simulated-feature input[type="number"],
+        .simulated-feature select {
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            font-size: 0.95em;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+            transition: var(--global-transition), border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        .simulated-feature input:focus,
+        .simulated-feature select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
+        .simulated-feature .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            text-align: center;
+            background-color: #e9ecef; /* Light grey */
+            color: #333;
+            transition: var(--global-transition);
+        }
+        .simulated-feature .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .simulated-feature .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        body.dark-mode .simulated-feature .status-message {
+            background-color: var(--dm-background-dark);
+            color: var(--dm-text-dark);
+        }
+        body.dark-mode .simulated-feature .status-message.success {
+            background-color: #2e6b37;
+            color: #d4edda;
+        }
+        body.dark-mode .simulated-feature .status-message.error {
+            background-color: #8c2a33;
+            color: #f8d7da;
+        }
+
+        /* --- Hospital Management Section (Conceptual) --- */
+        .hospital-management-section {
+            background-color: var(--primary-blue); /* Distinct background */
+            color: var(--text-light);
+            padding: 80px 0;
+            text-align: center;
+            transition: var(--global-transition);
+        }
+        .hospital-management-section h2, .hospital-management-section h3, .hospital-management-section p {
+            color: var(--text-light);
+        }
+        .hospital-management-section .integration-point {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 40px;
+            display: inline-block;
+            max-width: 700px;
+            text-align: left;
+            transition: var(--global-transition);
+        }
+        .hospital-management-section .integration-point h3 {
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+        .hospital-management-section .integration-point ul {
+            list-style: disc;
+            margin-left: 25px;
+            color: var(--text-light);
+        }
+        .hospital-management-section .integration-point li {
+            margin-bottom: 8px;
+        }
+
+        /* --- Contact Form --- */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+            padding: 30px;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px var(--shadow-light);
+            transition: var(--global-transition);
+        }
+        .contact-form .input-group {
+            margin-bottom: 20px;
+        }
+        .contact-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: color var(--transition-speed);
+        }
+        .contact-form input[type="text"],
+        .contact-form input[type="email"],
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            font-size: 1em;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+            transition: var(--global-transition), border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+        .contact-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .contact-form .btn {
+            width: auto;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            padding: 30px 0;
+            text-align: center;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--global-transition);
+        }
+
+        .footer .social-links {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .footer .social-links a {
+            margin: 0 12px;
+            font-size: 1.5em;
+            color: var(--text-light);
+            transition: color var(--transition-speed);
+        }
+
+        .footer .social-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* --- Responsive Design --- */
+
+        /* For tablets and smaller desktops */
+        @media (max-width: 992px) {
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 1.8em; }
+            .navbar .nav-links ul li {
+                margin-left: 20px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            section {
+                padding: 60px 0;
+            }
+        }
+
+        /* For smaller tablets and large phones */
+        @media (max-width: 768px) {
+            .navbar .container {
+                padding: 0 15px;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 70px; /* Adjust based on navbar height */
+                left: 0;
+                background-color: var(--background-light); /* Light mode */
+                border-top: 1px solid var(--border-color);
+                box-shadow: 0 5px 15px var(--shadow-light);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.5s ease-in-out, background-color var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
+            }
+            body.dark-mode .nav-links { /* Dark mode specific */
+                background-color: var(--dm-background-light);
+                border-top: 1px solid var(--dm-border-color);
+                box-shadow: 0 5px 15px var(--dm-shadow-light);
+            }
+
+
+            .nav-links.active {
+                display: flex;
+                max-height: 500px; /* Adjust as needed */
+                padding: 20px 0;
+            }
+
+            .nav-links ul {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-links ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .nav-links ul li a {
+                color: var(--text-dark); /* Ensure text is dark on light background */
+            }
+            body.dark-mode .nav-links ul li a {
+                color: var(--dm-text-dark); /* Ensure text is light on dark background */
+            }
+
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-section h1 {
+                font-size: 2em;
+            }
+            .hero-section p {
+                font-size: 1em;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+            .feature-card {
+                padding: 20px;
+            }
+            .symptom-checker-section textarea {
+                min-height: 100px;
+            }
+        }
+
+        /* For smaller phones */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.5em; }
+            .logo { font-size: 1.5em; }
+            .feature-card .icon {
+                font-size: 2em;
+            }
+            .symptom-checker-section .disclaimer {
+                padding: 10px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>EK Health</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#appointment">Appointment</a>
-      <a href="#bmi">BMI</a>
-      <a href="#stats">Stats</a>
-      <a href="#quiz">Quiz</a>
-    </nav>
-  </header>
-  <section class="hero">
-    <h2>Your Health, Our Priority</h2>
-    <p>Empowering wellness through science, care, and technology.</p>
-  </section>
-  <section id="about">
-    <h2>About Us</h2>
-    <p>We provide top-tier healthcare services that prioritize patient wellness and innovation. Our mission is to guide you to a healthier life.</p>
-  </section>
-  <section id="services">
-    <h2>Our Services</h2>
-    <div class="card"><h3>Diet Plans</h3><p>Customized meal plans for weight loss, diabetes, and more.</p></div><br>
-    <div class="card"><h3>Fitness Programs</h3><p>Home & gym workout schedules with live trainer access.</p></div><br>
-    <div class="card"><h3>Therapy & Counseling</h3><p>Mental health support with licensed therapists online.</p></div>
-  </section>
-  <section id="appointment">
-    <h2>Book an Appointment</h2>
-    <div class="form">
-      <input type="text" id="name" placeholder="Full Name" required>
-      <input type="email" id="email" placeholder="Email Address" required>
-      <input type="date" id="date" required>
-      <textarea id="message" placeholder="Reason for Appointment"></textarea>
-      <button onclick="addAppointment()">Submit</button>
-    </div>
-    <div id="appointmentsList" style="margin-top: 2rem;"></div>
-  </section>
-  <section id="bmi">
-    <h2>Calculate Your BMI</h2>
-    <div class="form">
-      <input type="number" id="weight" placeholder="Weight in kg">
-      <input type="number" id="height" placeholder="Height in cm">
-      <button onclick="calculateBMI()">Calculate</button>
-      <p id="bmiResult"></p>
-    </div>
-  </section>
-  <section id="stats">
-    <h2>Health Statistics</h2>
-    <canvas id="statsChart" width="400" height="200"></canvas>
-  </section>
-  <section id="quiz">
-    <h2>Mental Health Quiz</h2>
-    <div class="quiz-box">
-      <p>How often do you feel stressed?</p>
-      <select id="stressLevel">
-        <option value="">Select</option>
-        <option value="1">Rarely</option>
-        <option value="2">Sometimes</option>
-        <option value="3">Often</option>
-        <option value="4">Always</option>
-      </select>
-      <button onclick="checkStress()">Submit</button>
-      <p id="stressResult"></p>
-    </div>
-  </section>
-  <footer>
-    &copy; 2025 EK Health. All rights reserved.
-  </footer>
-  <script>
-    function addAppointment() {
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const date = document.getElementById("date").value;
-      const message = document.getElementById("message").value;
-      if (!name || !email || !date || !message) {
-        alert("Please fill all fields.");
-        return;
-      }
-      const appointment = { name, email, date, message };
-      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-      appointments.push(appointment);
-      localStorage.setItem("appointments", JSON.stringify(appointments));
-      renderAppointments();
-      document.querySelectorAll(".form input, .form textarea").forEach(e => e.value = '');
-    }
+    <header class="navbar">
+        <div class="container">
+            <a href="#" class="logo">HealCare Hub</a>
+            <nav class="nav-links" id="navLinks">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Our Services</a></li>
+                    <li><a href="#symptom-checker">Symptom Checker</a></li>
+                    <li><a href="#booking">Book Appointment</a></li>
+                    <li><a href="#pharmacy">Online Pharmacy</a></li>
+                    <li><a href="#labs">Lab Services</a></li>
+                    <li><a href="#records">My Records</a></li>
+                    <li><a href="#hospital-mgmt">Hospital Integration</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark and light mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </header>
 
-    function renderAppointments() {
-      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-      const appointmentsList = document.getElementById("appointmentsList");
-      appointmentsList.innerHTML = "<h3>Your Appointments:</h3>";
-      appointments.forEach((apt, index) => {
-        appointmentsList.innerHTML += `
-          <div class="appointment-item">
-            <div><strong>${apt.name}</strong> on <em>${apt.date}</em><br/>${apt.message}</div>
-            <button onclick="deleteAppointment(${index})">Delete</button>
-          </div>
-        `;
-      });
-    }
+    <main>
+        <section id="home" class="hero-section">
+            <div class="container">
+                <h1>Your Health, Simplified. <br>Your Care, Connected.</h1>
+                <p>HealCare Hub provides comprehensive digital health solutions, connecting you to doctors, pharmacies, and your health records, seamlessly.</p>
+                <button class="btn">Get Started</button>
+                <button class="btn btn-outline" style="margin-left: 20px;">Learn More</button>
+            </div>
+        </section>
 
-    function deleteAppointment(index) {
-      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-      appointments.splice(index, 1);
-      localStorage.setItem("appointments", JSON.stringify(appointments));
-      renderAppointments();
-    }
+        <section id="services" class="section-light">
+            <div class="container">
+                <h2>Our Key Health Services</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-user-md icon"></i>
+                        <h3>Online Doctor Consultations</h3>
+                        <p>Connect with certified doctors via secure video calls or chat for medical advice and prescriptions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-pills icon"></i>
+                        <h3>Medicine Delivery</h3>
+                        <p>Order your prescriptions and over-the-counter medicines online for quick home delivery.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-flask icon"></i>
+                        <h3>Home Lab Sample Collection</h3>
+                        <p>Book lab tests, and our phlebotomists will collect samples from your home at your convenience.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-notes-medical icon"></i>
+                        <h3>Digital Health Records</h3>
+                        <p>Securely store and access all your medical reports, prescriptions, and health history in one place.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-calendar-check icon"></i>
+                        <h3>Appointment Booking</h3>
+                        <p>Easily schedule appointments with doctors, specialists, and clinics in your area.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line icon"></i>
+                        <h3>Health Progress Tracking</h3>
+                        <p>Monitor your vital signs, fitness goals, and health trends with intuitive charts and reports.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-heartbeat icon"></i>
+                        <h3>Preventive Health Programs</h3>
+                        <p>Access personalized wellness plans, diet charts, and exercise routines for a healthier lifestyle.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-hand-holding-medical icon"></i>
+                        <h3>Emergency First Aid Guide</h3>
+                        <p>Quick, easy-to-understand instructions for common medical emergencies.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-medkit icon"></i>
+                        <h3>First Aid Kit Essentials</h3>
+                        <p>Recommendations and direct links to purchase essential items for your home first aid kit.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-baby icon"></i>
+                        <h3>Maternity & Child Care</h3>
+                        <p>Resources and support for expecting parents and guidance on child health and development.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-tooth icon"></i>
+                        <h3>Dental Care Information</h3>
+                        <p>Articles and tips for maintaining oral hygiene and finding dental professionals.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-brain icon"></i>
+                        <h3>Mental Wellness Resources</h3>
+                        <p>Access to guided meditations, self-help articles, and professional counseling options.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-book-medical icon"></i>
+                        <h3>Medical Encyclopedia</h3>
+                        <p>A searchable database of medical conditions, symptoms, and treatments for quick reference.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-hospital-user icon"></i>
+                        <h3>Patient Feedback & Reviews</h3>
+                        <p>Share your experiences with doctors and clinics to help others make informed decisions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-thermometer-half icon"></i>
+                        <h3>Health Articles & Tips</h3>
+                        <p>Regularly updated articles on common health topics, healthy living, and latest medical news.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-bell icon"></i>
+                        <h3>Vaccination Reminders</h3>
+                        <p>Set personalized reminders for childhood vaccinations and other crucial immunizations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cut icon"></i>
+                        <h3>Post-Surgical Care Guides</h3>
+                        <p>Detailed instructions and advice for patient recovery after various surgical procedures.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-wheelchair icon"></i>
+                        <h3>Elderly Care Resources</h3>
+                        <p>Information and support services for senior citizens and their caregivers.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-phone-alt icon"></i>
+                        <h3>24/7 Support Helpline</h3>
+                        <p>Access to a dedicated support team for any queries or technical assistance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-allergies icon"></i>
+                        <h3>Allergy Management Tools</h3>
+                        <p>Track allergens, get exposure alerts, and find management strategies for allergies.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-user-nurse icon"></i>
+                        <h3>Home Nursing Services</h3>
+                        <p>Connect with qualified nurses for home-based medical care and assistance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-stethoscope icon"></i>
+                        <h3>Specialist Referrals</h3>
+                        <p>Get recommendations and referrals to top specialists based on your health needs.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-briefcase-medical icon"></i>
+                        <h3>Health Insurance Information</h3>
+                        <p>Understand your policy, find coverage details, and connect with insurance providers.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-hand-sparkles icon"></i>
+                        <h3>Hygiene Best Practices</h3>
+                        <p>Guides on maintaining personal hygiene and sanitation to prevent illnesses.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-heart-circle-check icon"></i>
+                        <h3>Chronic Disease Support</h3>
+                        <p>Tools and resources for managing long-term conditions like diabetes, hypertension, etc.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-spa icon"></i>
+                        <h3>Alternative Therapies Guide</h3>
+                        <p>Explore information on yoga, Ayurveda, homeopathy, and other holistic approaches.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-lungs icon"></i>
+                        <h3>Respiratory Health Education</h3>
+                        <p>Resources on lung health, common respiratory issues, and breathing exercises.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-hands-clapping icon"></i>
+                        <h3>Community Health Events</h3>
+                        <p>Find and participate in local health camps, workshops, and awareness programs.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-user-secret icon"></i>
+                        <h3>Data Privacy & Security</h3>
+                        <p>Commitment to protecting your sensitive health information with advanced encryption.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-microchip icon"></i>
+                        <h3>AI-Powered Health Insights</h3>
+                        <p>Utilize AI for personalized health recommendations based on your data trends.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-map-marker-alt icon"></i>
+                        <h3>Nearest Clinic/Hospital Finder</h3>
+                        <p>Locate the closest medical facilities, including hospitals, clinics, and pharmacies.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-comments icon"></i>
+                        <h3>Health Q&A Forum</h3>
+                        <p>Ask health-related questions to a community of users and experts.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-walking icon"></i>
+                        <h3>Rehabilitation Guides</h3>
+                        <p>Information and exercises for physical rehabilitation after injury or surgery.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-utensils icon"></i>
+                        <h3>Healthy Recipes Database</h3>
+                        <p>Access a collection of nutritious and easy-to-prepare recipes for various dietary needs.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-award icon"></i>
+                        <h3>Wellness Challenges & Rewards</h3>
+                        <p>Participate in health challenges and earn rewards for achieving wellness goals.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    function calculateBMI() {
-      const w = parseFloat(document.getElementById("weight").value);
-      const h = parseFloat(document.getElementById("height").value) / 100;
-      if (!w || !h) return alert("Please enter valid weight and height.");
-      const bmi = w / (h * h);
-      let status = "";
-      if (bmi < 18.5) status = "Underweight";
-      else if (bmi < 24.9) status = "Normal";
-      else if (bmi < 29.9) status = "Overweight";
-      else status = "Obese";
-      document.getElementById("bmiResult").textContent = `Your BMI is ${bmi.toFixed(2)} (${status})`;
-    }
+        <section id="symptom-checker" class="section-light">
+            <div class="container">
+                <h2>Intelligent Symptom Checker & Home Remedy Guide</h2>
+                <p>Describe your symptoms accurately to get an initial assessment and suggestions for common, safe, over-the-counter remedies.</p>
+                <div class="input-group">
+                    <label for="symptoms">Tell us what you're feeling (e.g., "Sore throat and mild fever", "Body aches and fatigue", "Rash on arm"):</label>
+                    <textarea id="symptoms" placeholder="Enter your symptoms here..."></textarea>
+                </div>
+                <button id="checkSymptomsBtn" class="btn">Get Suggestions</button>
+                <div id="medicineResult" class="result-box">
+                    <p>Your suggestions will appear here. Please provide as much detail as possible for better results.</p>
+                </div>
+                <p class="disclaimer">
+                    <i class="fas fa-exclamation-triangle"></i> **Disclaimer:** This tool provides general, informational suggestions for common ailments and is **NOT a substitute for professional medical advice, diagnosis, or treatment.** Always consult a qualified healthcare professional for any health concerns or before making any decisions related to your health or treatment.
+                </p>
+            </div>
+        </section>
 
-    function checkStress() {
-      const level = document.getElementById("stressLevel").value;
-      let result = "";
-      if (level == 1) result = "You are doing great!";
-      else if (level == 2) result = "Take short breaks during work.";
-      else if (level == 3) result = "Try breathing exercises daily.";
-      else if (level == 4) result = "Consider talking to a professional.";
-      else result = "Please select a level.";
-      document.getElementById("stressResult").textContent = result;
-    }
+        <section id="booking" class="section-light">
+            <div class="container">
+                <h2>Book Your Online Doctor Consultation</h2>
+                <div class="simulated-feature">
+                    <h3>Simulated Consultation Booking</h3>
+                    <div class="form-group">
+                        <label for="doctorSpecialty">Select Specialty:</label>
+                        <select id="doctorSpecialty">
+                            <option value="">-- Choose --</option>
+                            <option value="General Physician">General Physician</option>
+                            <option value="Pediatrician">Pediatrician</option>
+                            <option value="Dermatologist">Dermatologist</option>
+                            <option value="Cardiologist">Cardiologist</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="consultationDate">Preferred Date:</label>
+                        <input type="date" id="consultationDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="consultationTime">Preferred Time:</label>
+                        <input type="time" id="consultationTime">
+                    </div>
+                    <button class="btn" id="bookConsultationBtn">Book Consultation</button>
+                    <div class="status-message" id="consultationStatus"></div>
+                </div>
+            </div>
+        </section>
 
-    function drawChart() {
-      const ctx = document.getElementById('statsChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Appointments', 'New Patients', 'Therapies', 'Diets'],
-          datasets: [{
-            label: 'Stats',
-            data: [12, 19, 7, 15],
-            backgroundColor: ['#00f0ff', '#1ed6ff', '#00f0ff', '#1ed6ff']
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true }
-          }
-        }
-      });
-    }
+        <section id="pharmacy" class="section-light">
+            <div class="container">
+                <h2>Online Pharmacy & Medicine Delivery</h2>
+                <div class="simulated-feature">
+                    <h3>Simulated Medicine Order</h3>
+                    <div class="form-group">
+                        <label for="medicineName">Medicine Name:</label>
+                        <input type="text" id="medicineName" placeholder="e.g., Paracetamol, Amoxicillin">
+                    </div>
+                    <div class="form-group">
+                        <label for="medicineQuantity">Quantity:</label>
+                        <input type="number" id="medicineQuantity" value="1" min="1">
+                    </div>
+                    <button class="btn" id="addToCartBtn">Add to Cart</button>
+                    <button class="btn btn-outline" id="placeOrderBtn" style="margin-left: 10px;">Place Order</button>
+                    <div class="status-message" id="pharmacyStatus"></div>
+                    <div id="cartItems" style="margin-top: 20px; text-align: center; font-style: italic;">
+                        <p>No items in cart.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    window.onload = () => {
-      renderAppointments();
-      drawChart();
-    };
-  </script>
+        <section id="labs" class="section-light">
+            <div class="container">
+                <h2>Book Home Lab Sample Collection</h2>
+                <div class="simulated-feature">
+                    <h3>Simulated Lab Test Booking</h3>
+                    <div class="form-group">
+                        <label for="testName">Select Test:</label>
+                        <select id="testName">
+                            <option value="">-- Choose --</option>
+                            <option value="Complete Blood Count (CBC)">Complete Blood Count (CBC)</option>
+                            <option value="Thyroid Profile">Thyroid Profile</option>
+                            <option value="Diabetic Profile (HbA1c)">Diabetic Profile (HbA1c)</option>
+                            <option value="Liver Function Test (LFT)">Liver Function Test (LFT)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="collectionDate">Preferred Collection Date:</label>
+                        <input type="date" id="collectionDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="collectionTime">Preferred Collection Time:</label>
+                        <input type="time" id="collectionTime">
+                    </div>
+                    <button class="btn" id="bookLabTestBtn">Book Lab Test</button>
+                    <div class="status-message" id="labStatus"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="records" class="section-light">
+            <div class="container">
+                <h2>My Digital Health Records</h2>
+                <div class="simulated-feature">
+                    <h3>Simulated Patient Records Access</h3>
+                    <button class="btn" id="loadRecordsBtn">Load My Records</button>
+                    <div class="status-message" id="recordsStatus">Click 'Load My Records' to see simulated data.</div>
+                    <div id="patientRecordsDisplay" style="margin-top: 20px; text-align: left;">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="hospital-mgmt" class="hospital-management-section">
+            <div class="container">
+                <h2>Seamless Hospital Management Integration</h2>
+                <p>HealCare Hub provides a conceptual framework for integrating with modern Hospital Management Systems (HMS) to streamline patient care and operations.</p>
+                <div class="integration-point">
+                    <h3>How We Envision Integration:</h3>
+                    <ul>
+                        <li>**Unified Patient Records:** Connect patient data from our platform to HMS for a complete view.</li>
+                        <li>**Online Appointment Synchronization:** Real-time booking and cancellation updates between HealCare Hub and hospital calendars.</li>
+                        <li>**Lab & Radiology Integration:** Direct sharing of test results from hospital labs to patient's digital records.</li>
+                        <li>**Pharmacy Management:** Integration with hospital pharmacies for seamless prescription fulfillment.</li>
+                        <li>**Billing & Insurance:** Streamlined billing and insurance claim processing.</li>
+                        <li>**Doctor & Staff Scheduling:** Tools for hospital administrators to manage staff rotas and appointments.</li>
+                        <li>**Inventory Management:** Track medical supplies and equipment within the hospital ecosystem.</li>
+                        <li>**Telemedicine Platform:** Secure video consultations directly linked to patient HMS records.</li>
+                        <li>**Discharge & Follow-up Planning:** Automated reminders and resources for post-discharge care.</li>
+                    </ul>
+                    <p style="margin-top: 20px;">*Note: This section outlines **conceptual integration points**. A full HMS requires dedicated enterprise software development.*</p>
+                    <button class="btn btn-outline" style="margin-top: 25px; style="color:white">Contact for Enterprise Solutions</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section-light">
+            <div class="container">
+                <h2>Get in Touch with HealCare Hub</h2>
+                <p>Have questions, feedback, or need support? Our team is ready to assist you.</p>
+                <form class="contact-form">
+                    <div class="input-group">
+                        <label for="contact-name">Your Name</label>
+                        <input type="text" id="contact-name" placeholder="Enter Your Name " required>
+                    </div>
+                    <div class="input-group">
+                        <label for="contact-email">Your Email</label>
+                        <input type="email" id="contact-email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="contact-message">Your Message</label>
+                        <textarea id="contact-message" placeholder="Type your message here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 HealCare Hub. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <p><small>Committed to a healthier tomorrow.</small></p>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript starts here
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Theme Toggle Functionality ---
+            const themeToggleBtn = document.getElementById('themeToggle');
+            const body = document.body;
+
+            // Check for saved theme preference or system preference
+            const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+            const currentTheme = localStorage.getItem("theme");
+
+            if (currentTheme === "dark") {
+                body.classList.add("dark-mode");
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Sun icon for dark mode
+            } else if (currentTheme === "light") {
+                body.classList.remove("dark-mode");
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Moon icon for light mode
+            } else if (prefersDarkScheme.matches) {
+                body.classList.add("dark-mode");
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Sun icon if system prefers dark
+            } else {
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Default moon icon
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem("theme", "dark");
+                    themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    localStorage.setItem("theme", "light");
+                    themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
+
+            // --- Hamburger Menu Functionality (Responsive) ---
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    hamburger.classList.toggle('active');
+                });
+
+                // Close menu when a link is clicked (for smooth navigation on mobile)
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        hamburger.classList.remove('active');
+                    });
+                });
+            }
+
+            // --- Symptom Checker Functionality ---
+            const symptomsTextarea = document.getElementById('symptoms');
+            const checkSymptomsBtn = document.getElementById('checkSymptomsBtn');
+            const medicineResultDiv = document.getElementById('medicineResult');
+
+            const medicalKnowledgeBase = {
+                "headache": {
+                    "medicines": ["Paracetamol (Acetaminophen)", "Ibuprofen", "Rest and Hydration"],
+                    "advice": "Often caused by stress or dehydration. If severe or persistent, consult a doctor."
+                },
+                "fever": {
+                    "medicines": ["Paracetamol (Acetaminophen)", "Ibuprofen", "Lukewarm Sponging", "Drink Plenty of Fluids (water, ORS)"],
+                    "advice": "A common sign of infection. Monitor temperature. If very high (>103°F/39.4°C) or accompanied by severe symptoms, seek urgent medical attention."
+                },
+                "sore throat": {
+                    "medicines": ["Warm Salty Water Gargle", "Honey Lemon Tea", "Throat Lozenges"],
+                    "advice": "Commonly viral. If severe pain, difficulty swallowing, or white spots, consult a doctor."
+                },
+                "cough": {
+                    "medicines": ["Cough Syrup (e.g., Dextromethorphan)", "Honey", "Steam Inhalation"],
+                    "advice": "Persistent coughs or those with difficulty breathing require medical evaluation."
+                },
+                "cold": {
+                    "medicines": ["Nasal Decongestant", "Antihistamine", "Vitamin C", "Rest", "Fluids"],
+                    "advice": "Viral infection, symptoms usually resolve within a week. If worsening, might be a secondary infection."
+                },
+                "stomach ache": {
+                    "medicines": ["Antacid", "Ginger Tea", "BRAT Diet"],
+                    "advice": "If severe, persistent, or accompanied by fever/vomiting, seek medical help."
+                },
+                "diarrhea": {
+                    "medicines": ["Oral Rehydration Salts (ORS)", "Loperamide (short-term)", "Probiotics"],
+                    "advice": "Risk of dehydration. If severe, bloody, or prolonged, see a doctor."
+                },
+                "muscle pain": {
+                    "medicines": ["Topical Pain Reliever", "Hot/Cold Compress", "Rest"],
+                    "advice": "If pain is severe, sudden, or lasts long, consult a doctor."
+                },
+                "rash": {
+                    "medicines": ["Calamine Lotion", "Hydrocortisone Cream (OTC)", "Cool Compress"],
+                    "advice": "If rash spreads rapidly, is painful, or has blisters, see a doctor."
+                },
+                "fatigue": {
+                    "medicines": ["Rest", "Balanced Diet", "Hydration", "Moderate Exercise"],
+                    "advice": "Chronic fatigue can have many causes; consult a doctor for diagnosis."
+                },
+                "nausea": {
+                    "medicines": ["Ginger (tea or candies)", "Plain Crackers", "Small, Frequent Meals"],
+                    "advice": "If persistent or accompanied by other severe symptoms, seek medical advice."
+                }
+            };
+
+            if (checkSymptomsBtn && symptomsTextarea && medicineResultDiv) {
+                checkSymptomsBtn.addEventListener('click', () => {
+                    const userSymptomsInput = symptomsTextarea.value.toLowerCase().trim();
+                    medicineResultDiv.innerHTML = '<p>Analyzing symptoms, please wait...</p>';
+
+                    if (userSymptomsInput === "") {
+                        medicineResultDiv.innerHTML = '<p class="error-message"><i class="fas fa-exclamation-circle"></i> Please describe your symptoms to get suggestions.</p>';
+                        return;
+                    }
+
+                    const keywords = userSymptomsInput.split(/\W+/).filter(word => word.length > 2);
+                    let foundSuggestions = [];
+                    let symptomsMatched = new Set();
+
+                    keywords.forEach(keyword => {
+                        for (const symptomKey in medicalKnowledgeBase) {
+                            if (symptomKey.includes(keyword) && !symptomsMatched.has(symptomKey)) {
+                                foundSuggestions.push({
+                                    symptom: symptomKey,
+                                    data: medicalKnowledgeBase[symptomKey]
+                                });
+                                symptomsMatched.add(symptomKey);
+                            }
+                        }
+                    });
+
+                    setTimeout(() => {
+                        if (foundSuggestions.length === 0) {
+                            medicineResultDiv.innerHTML = `
+                                <p><i class="fas fa-search-minus"></i> No immediate normal medicine or home remedy suggestions found for your specific symptoms.</p>
+                                <p style="margin-top: 10px;">It's highly recommended to <strong style="color: var(--primary-blue);">consult a doctor or a qualified healthcare professional</strong> for an accurate diagnosis and personalized treatment plan.</p>
+                                <p style="font-size: 0.85em; color: #777; margin-top: 15px;">Consider refining your symptom description or adding more details. Your health is important!</p>
+                            `;
+                        } else {
+                            let resultHTML = '<p style="font-weight: 600; color: var(--primary-blue); font-size: 1.1em;"><i class="fas fa-lightbulb"></i> Possible Home & Over-the-Counter Medicine Suggestions:</p><ul>';
+                            foundSuggestions.forEach(item => {
+                                resultHTML += `
+                                    <li>
+                                        <strong style="color: var(--primary-blue);">${item.symptom.charAt(0).toUpperCase() + item.symptom.slice(1)}:</strong> ${item.data.medicines.join(', ')}
+                                        <br><span style="font-size: 0.9em; color: #555;"><i class="fas fa-info-circle"></i> **Advice:** ${item.data.advice}</span>
+                                    </li>
+                                `;
+                            });
+                            resultHTML += '</ul><p style="margin-top: 20px;"><strong style="color: #dc3545;">Important:</strong> These are general suggestions and not a substitute for professional medical advice. Always consult a healthcare professional if symptoms persist or worsen.</p>';
+                            medicineResultDiv.innerHTML = resultHTML;
+                        }
+                    }, 1000);
+                });
+            }
+
+            // --- Simulated Backend Features ---
+
+            // 1. Online Doctor Consultation Booking
+            const bookConsultationBtn = document.getElementById('bookConsultationBtn');
+            const doctorSpecialty = document.getElementById('doctorSpecialty');
+            const consultationDate = document.getElementById('consultationDate');
+            const consultationTime = document.getElementById('consultationTime');
+            const consultationStatus = document.getElementById('consultationStatus');
+
+            if (bookConsultationBtn) {
+                bookConsultationBtn.addEventListener('click', () => {
+                    const specialty = doctorSpecialty.value;
+                    const date = consultationDate.value;
+                    const time = consultationTime.value;
+
+                    if (!specialty || !date || !time) {
+                        consultationStatus.className = 'status-message error';
+                        consultationStatus.textContent = 'Please fill in all consultation details.';
+                        return;
+                    }
+
+                    consultationStatus.className = 'status-message';
+                    consultationStatus.textContent = 'Booking your consultation, please wait...';
+
+                    setTimeout(() => {
+                        const success = Math.random() > 0.2; // 80% success rate
+                        if (success) {
+                            consultationStatus.className = 'status-message success';
+                            consultationStatus.innerHTML = `<i class="fas fa-check-circle"></i> Your consultation with a **${specialty}** on **${date}** at **${time}** has been successfully booked! You will receive a confirmation shortly.`;
+                        } else {
+                            consultationStatus.className = 'status-message error';
+                            consultationStatus.innerHTML = `<i class="fas fa-times-circle"></i> Booking failed. The selected slot might be unavailable or a technical issue occurred. Please try again.`;
+                        }
+                    }, 1500);
+                });
+            }
+
+            // 2. Online Pharmacy & Medicine Delivery
+            let cart = [];
+            const medicineNameInput = document.getElementById('medicineName');
+            const medicineQuantityInput = document.getElementById('medicineQuantity');
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            const pharmacyStatus = document.getElementById('pharmacyStatus');
+            const cartItemsDisplay = document.getElementById('cartItems');
+
+            const updateCartDisplay = () => {
+                if (cart.length === 0) {
+                    cartItemsDisplay.innerHTML = '<p>No items in cart.</p>';
+                    placeOrderBtn.disabled = true; // Disable place order if cart is empty
+                } else {
+                    placeOrderBtn.disabled = false; // Enable place order if cart has items
+                    let itemsHtml = '<h4>Items in Cart:</h4><ul>';
+                    cart.forEach(item => {
+                        itemsHtml += `<li>${item.name} (x${item.quantity})</li>`;
+                    });
+                    itemsHtml += '</ul>';
+                    cartItemsDisplay.innerHTML = itemsHtml;
+                }
+            };
+
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', () => {
+                    const name = medicineNameInput.value.trim();
+                    const quantity = parseInt(medicineQuantityInput.value);
+
+                    if (!name || quantity <= 0) {
+                        pharmacyStatus.className = 'status-message error';
+                        pharmacyStatus.textContent = 'Please enter a valid medicine name and quantity.';
+                        return;
+                    }
+
+                    pharmacyStatus.className = 'status-message';
+                    pharmacyStatus.textContent = `Adding ${name} to cart...`;
+
+                    setTimeout(() => {
+                        const existingItemIndex = cart.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
+                        if (existingItemIndex > -1) {
+                            cart[existingItemIndex].quantity += quantity;
+                        } else {
+                            cart.push({ name, quantity });
+                        }
+                        pharmacyStatus.className = 'status-message success';
+                        pharmacyStatus.textContent = `${name} (x${quantity}) added to cart!`;
+                        medicineNameInput.value = '';
+                        medicineQuantityInput.value = '1';
+                        updateCartDisplay();
+                    }, 800);
+                });
+            }
+
+            if (placeOrderBtn) {
+                placeOrderBtn.addEventListener('click', () => {
+                    if (cart.length === 0) {
+                        pharmacyStatus.className = 'status-message error';
+                        pharmacyStatus.textContent = 'Your cart is empty. Add medicines before placing an order.';
+                        return;
+                    }
+
+                    pharmacyStatus.className = 'status-message';
+                    pharmacyStatus.textContent = 'Placing your order, please wait...';
+                    placeOrderBtn.disabled = true; // Prevent multiple clicks
+
+                    setTimeout(() => {
+                        const success = Math.random() > 0.1; // 90% success rate
+                        if (success) {
+                            const orderSummary = cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
+                            pharmacyStatus.className = 'status-message success';
+                            pharmacyStatus.innerHTML = `<i class="fas fa-check-circle"></i> Order for **${orderSummary}** successfully placed! Estimated delivery: 2-3 business days.`;
+                            cart = []; // Clear cart
+                            updateCartDisplay();
+                        } else {
+                            pharmacyStatus.className = 'status-message error';
+                            pharmacyStatus.innerHTML = `<i class="fas fa-times-circle"></i> Order placement failed. Please review your cart or contact support.`;
+                        }
+                        placeOrderBtn.disabled = false;
+                    }, 2000);
+                });
+            }
+            updateCartDisplay(); // Initial call to set button state
+
+            // 3. Home Lab Sample Collection
+            const bookLabTestBtn = document.getElementById('bookLabTestBtn');
+            const testNameSelect = document.getElementById('testName');
+            const collectionDateInput = document.getElementById('collectionDate');
+            const collectionTimeInput = document.getElementById('collectionTime');
+            const labStatusDiv = document.getElementById('labStatus');
+
+            if (bookLabTestBtn) {
+                bookLabTestBtn.addEventListener('click', () => {
+                    const test = testNameSelect.value;
+                    const date = collectionDateInput.value;
+                    const time = collectionTimeInput.value;
+
+                    if (!test || !date || !time) {
+                        labStatusDiv.className = 'status-message error';
+                        labStatusDiv.textContent = 'Please select a test and preferred date/time.';
+                        return;
+                    }
+
+                    labStatusDiv.className = 'status-message';
+                    labStatusDiv.textContent = 'Booking your lab test, please wait...';
+
+                    setTimeout(() => {
+                        const success = Math.random() > 0.2; // 80% success rate
+                        if (success) {
+                            labStatusDiv.className = 'status-message success';
+                            labStatusDiv.innerHTML = `<i class="fas fa-check-circle"></i> Your booking for **${test}** on **${date}** at **${time}** has been confirmed. Our phlebotomist will contact you.`;
+                        } else {
+                            labStatusDiv.className = 'status-message error';
+                            labStatusDiv.innerHTML = `<i class="fas fa-times-circle"></i> Lab test booking failed. Please check details or try another slot.`;
+                        }
+                    }, 1800);
+                });
+            }
+
+            // 4. Digital Health Records
+            const loadRecordsBtn = document.getElementById('loadRecordsBtn');
+            const recordsStatusDiv = document.getElementById('recordsStatus');
+            const patientRecordsDisplay = document.getElementById('patientRecordsDisplay');
+
+            const simulatedRecords = {
+                name: "John Doe",
+                dob: "1990-05-15",
+                bloodGroup: "A+",
+                allergies: ["Penicillin", "Dust Mites"],
+                conditions: ["Type 2 Diabetes (Managed)", "Seasonal Allergies"],
+                pastVisits: [
+                    { date: "2024-03-10", doctor: "Dr. Sharma (General Phys.)", diagnosis: "Common Cold", prescription: "Antibiotics, Cough Syrup" },
+                    { date: "2023-11-22", doctor: "Dr. Gupta (Dermatologist)", diagnosis: "Mild Eczema Flare-up", prescription: "Topical Cream" }
+                ],
+                labResults: [
+                    { date: "2024-02-01", test: "CBC", result: "Normal" },
+                    { date: "2023-09-15", test: "HbA1c", result: "6.5% (High)" }
+                ]
+            };
+
+            if (loadRecordsBtn) {
+                loadRecordsBtn.addEventListener('click', () => {
+                    recordsStatusDiv.className = 'status-message';
+                    recordsStatusDiv.textContent = 'Loading your health records...';
+                    patientRecordsDisplay.innerHTML = ''; // Clear previous display
+
+                    setTimeout(() => {
+                        recordsStatusDiv.className = 'status-message success';
+                        recordsStatusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Records loaded successfully!';
+
+                        let recordsHtml = `
+                            <h4>Patient Information:</h4>
+                            <p><strong>Name:</strong> ${simulatedRecords.name}</p>
+                            <p><strong>Date of Birth:</strong> ${simulatedRecords.dob}</p>
+                            <p><strong>Blood Group:</strong> ${simulatedRecords.bloodGroup}</p>
+                            <p><strong>Allergies:</strong> ${simulatedRecords.allergies.join(', ')}</p>
+                            <p><strong>Chronic Conditions:</strong> ${simulatedRecords.conditions.join(', ')}</p>
+
+                            <h4 style="margin-top: 25px;">Past Consultations:</h4>
+                            <ul>
+                                ${simulatedRecords.pastVisits.map(visit => `
+                                    <li>**Date:** ${visit.date} - **Doctor:** ${visit.doctor}</li>
+                                    <li>**Diagnosis:** ${visit.diagnosis}</li>
+                                    <li>**Prescription:** ${visit.prescription}</li>
+                                    <br>
+                                `).join('')}
+                            </ul>
+
+                            <h4 style="margin-top: 25px;">Lab Results:</h4>
+                            <ul>
+                                ${simulatedRecords.labResults.map(lab => `
+                                    <li>**Date:** ${lab.date} - **Test:** ${lab.test} - **Result:** ${lab.result}</li>
+                                    <br>
+                                `).join('')}
+                            </ul>
+                            <p style="margin-top: 20px; font-style: italic; font-size: 0.9em; color: #777;">*Note: This is simulated data for demonstration purposes.*</p>
+                        `;
+                        patientRecordsDisplay.innerHTML = recordsHtml;
+                    }, 2000);
+                });
+            }
+
+            // --- Smooth Scrolling for Navigation ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // --- Simple Form Submission Placeholder (Contact Form) ---
+            const contactForm = document.querySelector('.contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('Thank you for your message! We will get back to you soon. (This is a demo. No actual email is sent.)');
+                    contactForm.reset();
+                });
+            }
+        });
+        // JavaScript ends here
+    </script>
 </body>
 </html>
