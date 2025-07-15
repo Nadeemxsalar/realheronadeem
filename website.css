@@ -185,11 +185,11 @@
   }
     
 }
-    @keyframes rgbPulse {
-  0% { box-shadow: 0 0 20px red; }
-  33% { box-shadow: 0 0 20px green; }
-  66% { box-shadow: 0 0 20px blue; }
-  100% { box-shadow: 0 0 20px red; }
+   @keyframes rgbPulse {
+  0% { filter: drop-shadow(0 0 20px red); } /* Glow with drop-shadow */
+  33% { filter: drop-shadow(0 0 20px green); } /* Glow with drop-shadow */
+  66% { filter: drop-shadow(0 0 20px blue); } /* Glow with drop-shadow */
+  100% { filter: drop-shadow(0 0 20px red); } /* Glow with drop-shadow */
 }
 
     nav {
