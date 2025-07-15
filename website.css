@@ -67,7 +67,7 @@
 
     .card {
       margin-top:2%; 
-      background: white;
+     background: rgba(255, 255, 255, 0.9);
       width: 300px;
       padding: 25px;
       border-radius: 15px;
