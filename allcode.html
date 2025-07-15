@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Real Hero Nadeem - Categories</title>
+  <link rel="stylesheet" href="website.css">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <script src="website.js"></script>
+  <style>
+    /* Background Video */
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      /* Optimization: Prepare the video for animation */
+      will-change: transform, opacity;
+    }
+
+    /* Overlay for dark effect */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(120deg, #e0c3fc, #8ec5fc);
+      color: #333;
+      padding-top: 60px;
+      scroll-behavior: smooth;
+      backface-visibility: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      color: #fff;
+      margin-top:5%;
+      background-color:orange;
+      padding: 2rem 2rem;
+      border-radius:30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      
+      /* Optimization: Use more performant animations and hardware acceleration */
+      animation: changecolor 10s ease infinite, zoomGlow 2s ease infinite alternate;
+      transform: translateZ(0); /* Promotes to its own layer */
+      will-change: transform, filter; /* Hint to the browser */
+    }
+
+    .container {
+      margin-top:3%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    .card {
+      margin-top:2%;
+      background: rgba(255, 255, 255, 0.9); /* Slightly more opaque for readability */
+      width: 300px;
+      padding: 25px;
+      border-radius: 15px;
+      transition: transform 0.3s ease, filter 0.3s ease; /* Animate filter instead of box-shadow */
+      cursor: pointer;
+      position: relative;
+      overflow:hidden;
+      scroll-margin-top: 100px;
+      flex-wrap: wrap;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      /* Optimization: Use hardware acceleration and more performant animation */
+      animation: rgbPulse 2s infinite;
+      transform: translateZ(0); /* Promotes to its own layer */
+      will-change: transform, filter; /* Hint to the browser */
+    }
+
+    .card a{
+      text-decoration:none;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.2), transparent);
+      transform: skewY(-10deg);
+      transition: 0.5s;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .card p {
+      color:black;
+    }
+
+    .card:hover::before {
+      top: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) translateZ(0); /* Keep on own layer on hover */
+    }
+
+    .card h2 {
+      color: #4a00e0;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    footer {
+      margin-top: 80px;
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 30px 10px;
+      border-radius: 10px;
+    }
+
+    footer a {
+      color: #8ec5fc;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes changecolor {
+      0%{ background-color: blue; color:white;}
+      25%{ background-color: orange; color:white}
+      50%{ background-color: red;color:white }
+      75%{ background-color: white;color:black }
+      100%{ background-color: green; color:white; }
+    }
+
+    /* Optimization: Animate filter:drop-shadow instead of box-shadow for performance */
+    @keyframes zoomGlow {
+      0%{
+        transform: scale(0.9);
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+      }
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.8));
+      }
+    }
+
+    /* Optimization: Animate filter:drop-shadow instead of box-shadow for performance */
+    @keyframes rgbPulse {
+      0% { filter: drop-shadow(0 0 20px red); }
+      33% { filter: drop-shadow(0 0 20px green); }
+      66% { filter: drop-shadow(0 0 20px blue); }
+      100% { filter: drop-shadow(0 0 20px red); }
+    }
+
+    nav {
+      background: rgba(8, 14, 25, 0.908);
+      padding: 1rem 2rem;
+      border-radius: 0%;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-right:5%;
+    }
+
+    .brand {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .toggle {
+      font-size: 1.8rem;
+      color: white;
+      display: none;
+      cursor: pointer;
+    }
+
+    .menu {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .menu li {
+      position: relative;
+    }
+
+    .menu li a {
+      text-decoration: none;
+      color: white;
+      font-size: 1rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 10px;
+      transition: background 0.3s;
+      display: block;
+    }
+
+    .menu li a:hover {
+      background: blue;
+      cursor: pointer;
+    }
+
+    .submenu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(226, 227, 229, 0.409);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 1rem;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.883);
+      white-space: nowrap;
+      z-index: 999;
+    }
+
+    .menu li:hover .submenu {
+      display: block;
+    }
+
+    .submenu a {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: rgb(228, 226, 240);
+      text-decoration: none;
+    }
+
+    .submenu a:hover {
+      text-decoration: none;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .toggle {
+        display: block;
+      }
+      h1{
+        font-size: 0.7rem;
+        animation: changecolor 10s ease infinite, zoomGlow 2s ease infinite alternate;
+      }
+      .nav-container{
+        width:100%;
+        position:sticky;
+      }
+      nav{
+        border-radius:0%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin: 0;
+      }
+      .menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem;
+      }
+      .menu.active {
+        display: flex;
+      }
+      .menu li {
+        width: 100%;
+        text-align:center;
+      }
+      .menu li a {
+        padding: 0.75rem 1rem;
+      }
+      .submenu {
+        position: static;
+        background: light;
+        padding-left: 1rem;
+      }
+      .menu li:hover .submenu {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+<video class="bg-video" autoplay loop muted poster="poster.jpg">
+    <source src="v2.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<div class="overlay"></div>
+<nav>
+  <div class="nav-container">
+    <div class="brand">Real Hero Nadeem</div>
+    <div class="toggle" onclick="toggleMenu()">☰</div>
+    <ul class="menu" id="menu">
+      <li><a href="#">Home</a></li>
+      <li>
+        <a href="#">Contact</a>
+        <div class="submenu">
+          <a href="https://www.instagram.com/top_real_nadeem/">Instagram</a>
+          <a href="mailto:nadeemrealhero@gmail.com">Email</a>
+          <a href="tel:+9368218331">Mobile</a>
+        </div>
+      </li>
+      <li>
+        <a href="#">About</a>
+        <div class="submenu">
+          <a href="#">Team</a>
+          <a href="#">Story</a>
+        </div>
+      </li>
+      <li>
+        <a href="#">Account</a>
+        <div class="submenu">
+          <a href="loginform.html">login page </a>
+          <a href="#"> Profile </a>
+        </div>
+      </li>
+      <li>
+        <a href="#">Logout</a>
+        <div class="submenu">
+          <a href="#">Nikal lo</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<h1> 🌟🌟 Explore Real Hero Nadeem's World 🌟🌟</h1>
+
+<div class="container">
+  <div data-aos="flip-right" class="card" id="education"><a href="education.html">
+    <h2>📚 Education</h2>
+    <p>Courses, exams, learning resources and all about education for every age group.</p></a>
+  </div>
+  <div data-aos="slide-left" class="card" id="technology"><a href="technology.html">
+    <h2>💻 Technology</h2>
+    <p>Latest in gadgets, AI, web development, and everything tech-related.</p></a>
+  </div>
+  <div data-aos="zoom-in-up" class="card" id="health"><a href="health.html">
+    <h2>🏥 Health</h2>
+    <p>Tips for mental & physical health, healthy living guides, and expert advice.</p></a>
+  </div>
+  <div data-aos="slide-up" class="card" id="travel"><a href="travel.html">
+    <h2>🌍 Travel</h2>
+    <p>Explore beautiful destinations, travel tips, and cultural experiences.</p></a>
+  </div>
+  <div data-aos="flip-right" class="card" id="art">
+     <a href="art.html">
+    <h2>🎨 Art & Design</h2>
+    <p>Discover creative inspirations, design ideas, and artistic expressions.</p></a>
+  </div>
+  <div data-aos="flip-left" class="card" id="socialmedia">
+  <a href="socialmedia.html"> <h2>📱 Social Media</h2>
+    <p>All about trending platforms, influencer tips, and social growth strategies.</p></a>
+  </div>
+  <div data-aos="zoom-out" class="card" id="games">
+    <a href="gameinterface.html">
+      <h2>🎮 Games</h2>
+      <p>Latest games, reviews, tips, walkthroughs and esports updates.</p>
+    </a>
+  </div>
+  <div data-aos="slide-up" class="card" id="realheronadeem">
+    <a href="nadeeminfo.html">
+      <h2> 🌟 Real Hero Nadeem</h2>
+      <p>Know more about Real Hero Nadeem's journey, works, and contributions.</p>
+    </a>
+  </div>
+  </div>
+<footer>
+  <p>Owner: <strong>Real Hero Nadeem</strong> | Email: <a href="mailto:nadeemrealhero@gmail.com">nadeemrealhero@gmail.com</a></p>
+  <p>
+    Follow on:
+    <a href="#">Instagram</a> |
+    <a href="#">Facebook</a> |
+    <a href="#">YouTube</a> |
+    <a href="#">Twitter</a>
+  </p>
+  <p>All rights reserved © Real Hero Nadeem</p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init(); // ye initialize karega AOS ko
+  function toggleMenu() {
+    const menu = document.getElementById("menu");
+    menu.classList.toggle("active");
+  }
+</script>
+
+</body>
+</html>
