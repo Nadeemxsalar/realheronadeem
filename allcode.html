@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Real Hero Nadeem - Categories</title>
-  <link rel="stylesheet" href="website.css">
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
-  <script src="website.js"></script>
   <style>
     /* Background Video */
     video.bg-video {
@@ -41,6 +38,7 @@
     }
 
     body {
+      /* This is the fallback background for mobile when video is hidden */
       background: linear-gradient(120deg, #e0c3fc, #8ec5fc);
       color: #333;
       padding-top: 60px;
@@ -77,11 +75,11 @@
 
     .card {
       margin-top:2%;
-      background: rgba(255, 255, 255, 0.9); /* Slightly more opaque for readability */
+      background: rgba(255, 255, 255, 0.9);
       width: 300px;
       padding: 25px;
       border-radius: 15px;
-      transition: transform 0.3s ease, filter 0.3s ease; /* Animate filter instead of box-shadow */
+      transition: transform 0.3s ease, filter 0.3s ease;
       cursor: pointer;
       position: relative;
       overflow:hidden;
@@ -126,7 +124,7 @@
     }
 
     .card:hover {
-      transform: translateY(-10px) translateZ(0); /* Keep on own layer on hover */
+      transform: translateY(-10px) translateZ(0);
     }
 
     .card h2 {
@@ -200,7 +198,6 @@
     nav {
       background: rgba(8, 14, 25, 0.908);
       padding: 1rem 2rem;
-      border-radius: 0%;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
@@ -291,6 +288,11 @@
 
     /* Mobile Responsive */
     @media (max-width: 768px) {
+      /* HIDE THE VIDEO ON MOBILE for best performance */
+      video.bg-video {
+        display: none;
+      }
+      
       .toggle {
         display: block;
       }
@@ -303,7 +305,6 @@
         position:sticky;
       }
       nav{
-        border-radius:0%;
         position: fixed;
         top: 0;
         left: 0;
@@ -422,12 +423,12 @@
       <p>Know more about Real Hero Nadeem's journey, works, and contributions.</p>
     </a>
   </div>
-  </div>
+</div>
 <footer>
   <p>Owner: <strong>Real Hero Nadeem</strong> | Email: <a href="mailto:nadeemrealhero@gmail.com">nadeemrealhero@gmail.com</a></p>
   <p>
     Follow on:
-    <a href="#">Instagram</a> |
+    <a href="https://www.instagram.com/top_real_nadeem/">Instagram</a> |
     <a href="#">Facebook</a> |
     <a href="#">YouTube</a> |
     <a href="#">Twitter</a>
@@ -436,7 +437,10 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
-  AOS.init(); // ye initialize karega AOS ko
+  // This initializes the AOS scroll animations
+  AOS.init(); 
+
+  // This function toggles the mobile menu
   function toggleMenu() {
     const menu = document.getElementById("menu");
     menu.classList.toggle("active");
