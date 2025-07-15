@@ -158,13 +158,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 @keyframes changecolor {
-  0%{ background: blue; color:white;}
-  25%{ background: orange; color:white}
-  50%{ background: red;color:white }
-  75%{ background: white;color:black }
-  100%{ background: green; color:white; }
- 
-  
+  0%   { background: rgba(0, 0, 255, 0.9); color: rgba(255, 255, 255, 0.9); }     /* Blue */
+  25%  { background: rgba(255, 165, 0, 0.9); color: rgba(255, 255, 255, 0.9); }   /* Orange */
+  50%  { background: rgba(255, 0, 0, 0.9); color: rgba(255, 255, 255, 0.9); }     /* Red */
+  75%  { background: rgba(255, 255, 255, 0.9); color: rgba(0, 0, 0, 0.9); }       /* White */
+  100% { background: rgba(0, 128, 0, 0.9); color: rgba(255, 255, 255, 0.9); }     /* Green */
 }
   @keyframes movement
   {
