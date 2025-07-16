@@ -1,131 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Color Tile Puzzle+</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #1f1c2c, #928dab);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-      padding: 10px;
-    }
-    h1 {
-      margin-top: 20px;
-      font-size: 2.5rem;
-      text-shadow: 1px 1px 5px black;
-      text-align: center;
-    }
-    #goalTitle {
-      margin: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      transition: color 0.5s ease;
-    }
-    .grid-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 100%;
-      overflow-x: auto;
-    }
-    #grid, #goal {
-      display: grid;
-      gap: 5px;
-      margin: 10px;
-    }
-    .tile {
-      width: clamp(40px, 12vw, 60px);
-      height: clamp(40px, 12vw, 60px);
-      border-radius: 10px;
-      transition: background 0.3s, transform 0.2s;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
-    }
-    .tile:hover {
-      transform: scale(1.05);
-    }
-    .tile:active {
-      transform: scale(0.95);
-    }
-    .button-bar {
-      margin: 10px;
-      flex-wrap: wrap;
-      display: flex;
-      justify-content: center;
-    }
-    button {
-      margin: 5px;
-      padding: 10px 15px;
-      font-size: 14px;
-      background: #00bcd4;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-    }
-    #timer, #scoreDisplay {
-      font-size: 16px;
-      margin: 5px;
-    }
-    .hinted {
-      border: 3px dashed white;
-    }
-    .score-box {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Color Tile Puzzle+</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #1f1c2c, #928dab);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 10px;
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 5px black;
+            text-align: center;
+        }
+        #goalTitle {
+            margin: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            transition: color 0.5s ease;
+        }
+        .grid-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        #grid, #goal {
+            display: grid;
+            gap: 5px;
+            margin: 10px;
+        }
+        .tile {
+            width: clamp(40px, 12vw, 60px);
+            height: clamp(40px, 12vw, 60px);
+            border-radius: 10px;
+            transition: background 0.3s, transform 0.2s;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0,0,0,0.3);
+        }
+        .tile:hover { transform: scale(1.05); }
+        .tile:active { transform: scale(0.95); }
+        .button-bar {
+            margin: 10px;
+            flex-wrap: wrap;
+            display: flex;
+            justify-content: center;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 14px;
+            background: #00bcd4;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+        }
+        button:hover { background: #0097a7; }
+        button.danger { background: #e74c3c; }
+        button.danger:hover { background: #c0392b; }
+        .score-box {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        #timer, #scoreDisplay, #levelDisplay {
+            font-size: 16px;
+            margin: 5px;
+        }
+        .hinted { border: 3px dashed white; }
 
-    /* Celebration Flowers */
-    .flower {
-      position: fixed;
-      top: -50px;
-      font-size: 24px;
-      animation: fall 3s linear forwards;
-      pointer-events: none;
-      z-index: 9999;
-    }
+        .flower {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 11000;
+            opacity: 0;
+            top: 50vh;
+            left: 50vw;
+            animation: burst 3s ease-out forwards;
+        }
+        @keyframes burst {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: var(--transform-end); opacity: 0; }
+        }
 
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-    }
-  </style>
+        #guideOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .guide-content {
+            background: #2c2a3e;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10001;
+        }
+        #guideText {
+            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        #guideHand {
+            position: fixed;
+            font-size: 50px;
+            z-index: 10002;
+            transform: rotate(120deg);
+            animation: pulse 1s infinite;
+            pointer-events: none;
+            display: none;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1) rotate(120deg); }
+            50% { transform: scale(1.2) rotate(120deg); }
+            100% { transform: scale(1) rotate(120deg); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 400px) {
+            h1 { font-size: 2rem; }
+            #guideText { font-size: 16px; }
+            button { padding: 8px 12px; font-size: 13px; }
+        }
+    </style>
 </head>
 <body>
-  <h1>Color Tile Puzzle+</h1>
-  <div id="goalTitle">🎯 Match this pattern:</div>
-  <div class="grid-wrapper">
-    <div id="goal"></div>
-    <div id="levelDisplay">Level: 1</div>
-    <div class="score-box">
-      <div id="timer">⏱ Time: 5:00</div>
-      <div id="scoreDisplay">⭐ Score: 0</div>
+    <h1>Color Tile Puzzle+</h1>
+    <div id="goalTitle">🎯 Match this pattern:</div>
+    <div class="grid-wrapper">
+        <div id="goal"></div>
+        <div id="levelDisplay">Level: 1</div>
+        <div class="score-box">
+            <div id="timer">⏱ Time: 5:00</div>
+            <div id="scoreDisplay">⭐ Score: 0</div>
+        </div>
+        <div id="grid"></div>
     </div>
-    <div id="grid"></div>
-  </div>
 
-  <div class="button-bar">
-    <button onclick="resetLevel()">Reset</button>
-    <button onclick="showHint()">Hint</button>
-    <button onclick="undoLastMove()">Undo</button>
-  </div>
+    <div class="button-bar">
+        <button onclick="resetLevel()">Color change</button>
+        <button onclick="showHint()">Hint</button>
+        <button onclick="undoLastMove()">Undo</button>
+        <button onclick="showGuide(true)">How to Play</button>
+        <button onclick="startNewGame()" class="danger">New Game </button>
+    </div>
 
-  <script>
+    <div id="guideOverlay">
+        <div class="guide-content">
+            <p id="guideText">Welcome! Let's learn how to play.</p>
+            <button onclick="nextGuideStep()">Next</button>
+        </div>
+    </div>
+    <div id="guideHand">👇</div>
+
+    <script>
     const colors = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f"];
     let level = 1;
     let gridSize = 3;
@@ -143,129 +201,203 @@
     const timerDisplay = document.getElementById("timer");
     const scoreDisplay = document.getElementById("scoreDisplay");
 
-    function createGrid(size) {
-      clearInterval(timerInterval);
-      timeLeft = 300;
-      timerDisplay.textContent = `⏱ Time: 5:00`;
-      timerInterval = setInterval(() => {
-        timeLeft--;
-        let minutes = Math.floor(timeLeft / 60);
-        let seconds = timeLeft % 60;
-        timerDisplay.textContent = `⏱ Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-        if (timeLeft === 0) {
-          clearInterval(timerInterval);
-          alert("⏰ Time's up! Try again.");
-          resetLevel();
+    const guideOverlay = document.getElementById('guideOverlay');
+    const guideText = document.getElementById('guideText');
+    const guideHand = document.getElementById('guideHand');
+    const guideNextButton = guideOverlay.querySelector('button');
+    let guideStep = 0;
+
+    // --- Game State Functions (localStorage) ---
+    function saveGame() {
+        localStorage.setItem('colorPuzzleLevel', level);
+        localStorage.setItem('colorPuzzleScore', score);
+    }
+
+    function loadGame() {
+        const savedLevel = localStorage.getItem('colorPuzzleLevel');
+        const savedScore = localStorage.getItem('colorPuzzleScore');
+        if (savedLevel) {
+            level = parseInt(savedLevel, 10);
+            score = parseInt(savedScore || '0', 10);
         }
-      }, 1000);
+        levelDisplay.textContent = `Level: ${level}`;
+        scoreDisplay.textContent = `⭐ Score: ${score}`;
+        gridSize = Math.min(6, 3 + Math.floor((level - 1) / 2));
+    }
+    
+    function startNewGame() {
+        if (confirm("Are you sure? Aapki save ki hui progress chali jayegi.")) {
+            localStorage.removeItem('colorPuzzleLevel');
+            localStorage.removeItem('colorPuzzleScore');
+            level = 1;
+            score = 0;
+            gridSize = 3;
+            levelDisplay.textContent = `Level: ${level}`;
+            scoreDisplay.textContent = `⭐ Score: ${score}`;
+            createGrid(gridSize);
+        }
+    }
 
-      previousStates = [];
-      gridContainer.innerHTML = "";
-      goalContainer.innerHTML = "";
-      grid = [];
-      goal = [];
+    function createGrid(size) {
+        clearInterval(timerInterval);
+        timeLeft = 120;
+        timerDisplay.textContent = `⏱ Time: 2:00`;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerDisplay.textContent = `⏱ Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert("⏰ Time's up! Try again.");
+                resetLevel();
+            }
+        }, 1000);
 
-      const colTemplate = `repeat(${size}, minmax(clamp(40px, 12vw, 60px), 1fr))`;
-      gridContainer.style.gridTemplateColumns = colTemplate;
-      goalContainer.style.gridTemplateColumns = colTemplate;
+        previousStates = [];
+        gridContainer.innerHTML = "";
+        goalContainer.innerHTML = "";
+        grid = [];
+        goal = [];
 
-      for (let i = 0; i < size * size; i++) {
-        const tile = document.createElement("div");
-        const goalTile = document.createElement("div");
+        const colTemplate = `repeat(${size}, 1fr)`;
+        gridContainer.style.gridTemplateColumns = colTemplate;
+        goalContainer.style.gridTemplateColumns = colTemplate;
 
-        let colorIndex = Math.floor(Math.random() * colors.length);
-        let goalColorIndex = Math.floor(Math.random() * colors.length);
-
-        tile.classList.add("tile");
-        goalTile.classList.add("tile");
-
-        tile.style.background = colors[colorIndex];
-        goalTile.style.background = colors[goalColorIndex];
-
-        tile.dataset.colorIndex = colorIndex;
-        goalTile.dataset.colorIndex = goalColorIndex;
-
-        tile.addEventListener("click", () => {
-          previousStates.push(grid.map(t => t.dataset.colorIndex));
-          let index = (parseInt(tile.dataset.colorIndex) + 1) % colors.length;
-          tile.dataset.colorIndex = index;
-          tile.style.background = colors[index];
-          checkWin();
-        });
-
-        grid.push(tile);
-        goal.push(goalTile);
-
-        gridContainer.appendChild(tile);
-        goalContainer.appendChild(goalTile);
-      }
-
-      animateLabelColor();
+        for (let i = 0; i < size * size; i++) {
+            const tile = document.createElement("div");
+            const goalTile = document.createElement("div");
+            let colorIndex = Math.floor(Math.random() * colors.length);
+            let goalColorIndex = Math.floor(Math.random() * colors.length);
+            tile.className = "tile";
+            goalTile.className = "tile";
+            tile.style.background = colors[colorIndex];
+            goalTile.style.background = colors[goalColorIndex];
+            tile.dataset.colorIndex = colorIndex;
+            goalTile.dataset.colorIndex = goalColorIndex;
+            tile.addEventListener("click", () => {
+                previousStates.push(grid.map(t => t.dataset.colorIndex));
+                let index = (parseInt(tile.dataset.colorIndex) + 1) % colors.length;
+                tile.dataset.colorIndex = index;
+                tile.style.background = colors[index];
+                checkWin();
+            });
+            grid.push(tile);
+            goal.push(goalTile);
+            gridContainer.appendChild(tile);
+            goalContainer.appendChild(goalTile);
+        }
+        animateLabelColor();
     }
 
     function checkWin() {
-      let matched = true;
-      for (let i = 0; i < grid.length; i++) {
-        if (grid[i].dataset.colorIndex !== goal[i].dataset.colorIndex) {
-          matched = false;
-          break;
+        const matched = grid.every((tile, i) => tile.dataset.colorIndex === goal[i].dataset.colorIndex);
+        if (matched) {
+            clearInterval(timerInterval);
+            score += level * timeLeft * 10;
+            level++;
+            saveGame();
+            scoreDisplay.textContent = `⭐ Score: ${score}`;
+            levelDisplay.textContent = `Level: ${level}`;
+            triggerCelebration();
+            setTimeout(() => {
+                gridSize = Math.min(6, 3 + Math.floor((level - 1) / 2));
+                createGrid(gridSize);
+            }, 2500);
         }
-      }
-      if (matched) {
-        clearInterval(timerInterval);
-        score += level * timeLeft * 10;
-        scoreDisplay.textContent = `⭐ Score: ${score}`;
-        triggerCelebration(); // 🌸 Add falling flowers
-        setTimeout(() => {
-          level++;
-          gridSize = Math.min(6, 3 + Math.floor(level / 2));
-          levelDisplay.textContent = `Level: ${level}`;
-          createGrid(gridSize);
-        }, 1500);
-      }
     }
 
     function triggerCelebration() {
-      for (let i = 0; i < 30; i++) {
-        const flower = document.createElement("div");
-        flower.textContent = "🎉 🌸 🎉 ";
-        flower.className = "flower";
-        flower.style.left = `${Math.random() * 100}vw`;
-        flower.style.fontSize = `${Math.random() * 24 + 16}px`;
-        document.body.appendChild(flower);
-        setTimeout(() => flower.remove(), 3000);
-      }
+        for (let i = 0; i < 50; i++) {
+            const flower = document.createElement("div");
+            flower.textContent = Math.random() > 0.5 ? "🎉" : "🌸";
+            flower.className = "flower";
+            const angle = Math.random() * Math.PI * 2;
+            const radius = Math.random() * 500 + 100;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            const rotation = Math.random() * 720 - 360;
+            flower.style.setProperty('--transform-end', `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(1)`);
+            document.body.appendChild(flower);
+            setTimeout(() => flower.remove(), 3000);
+        }
     }
 
-    function resetLevel() {
-      createGrid(gridSize);
-    }
+    function resetLevel() { createGrid(gridSize); }
 
     function undoLastMove() {
-      if (previousStates.length > 0) {
-        let last = previousStates.pop();
-        grid.forEach((tile, idx) => {
-          tile.dataset.colorIndex = last[idx];
-          tile.style.background = colors[last[idx]];
-        });
-      }
+        if (previousStates.length > 0) {
+            const last = previousStates.pop();
+            grid.forEach((tile, idx) => {
+                tile.dataset.colorIndex = last[idx];
+                tile.style.background = colors[last[idx]];
+            });
+        }
     }
 
     function showHint() {
-      for (let i = 0; i < grid.length; i++) {
-        if (grid[i].dataset.colorIndex !== goal[i].dataset.colorIndex) {
-          grid[i].classList.add("hinted");
-          setTimeout(() => grid[i].classList.remove("hinted"), 1000);
-          break;
+        for (let i = 0; i < grid.length; i++) {
+            if (grid[i].dataset.colorIndex !== goal[i].dataset.colorIndex) {
+                grid[i].classList.add("hinted");
+                setTimeout(() => grid[i].classList.remove("hinted"), 1000);
+                break;
+            }
         }
-      }
     }
 
     function animateLabelColor() {
-      goalLabel.style.color = colors[Math.floor(Math.random() * colors.length)];
+        goalLabel.style.color = colors[Math.floor(Math.random() * colors.length)];
     }
 
+    // --- Guide Functions ---
+    function showGuide(forceShow = false) {
+        if (!forceShow && localStorage.getItem('hasSeenGuide')) return;
+        guideStep = 0;
+        guideOverlay.style.display = 'flex';
+        nextGuideStep();
+    }
+
+    function nextGuideStep() {
+        guideStep++;
+        guideHand.style.display = 'block';
+
+        const buttonRect = guideNextButton.getBoundingClientRect();
+        guideHand.style.left = `${buttonRect.left + buttonRect.width / 2 - 0}px`;
+        guideHand.style.top = `${buttonRect.top + buttonRect.height - 10}px`;
+
+        switch(guideStep) {
+            case 1:
+                guideText.innerHTML = "Namaste! Yeh ek color matching puzzle game hai. Shuru karne ke liye 'Next' dabayein.";
+                break;
+            case 2:
+                guideText.innerHTML = "Aapka maqsad upar diye gaye 'goal pattern' ko neeche wale grid mein copy karna hai.";
+                break;
+            case 3:
+                guideText.innerHTML = "Grid ke tile par click karke uska rang badlein. Time khatam hone se pehle puzzle solve karein!";
+                break;
+            case 4:
+                guideText.innerHTML = "Bas itna hi! Khelne ke liye 'Got It!' dabayein. All the best! 👍";
+                guideNextButton.textContent = 'Got It!';
+                break;
+            default:
+                closeGuide();
+                break;
+        }
+    }
+
+    function closeGuide() {
+        guideOverlay.style.display = 'none';
+        guideHand.style.display = 'none';
+        guideNextButton.textContent = 'Next';
+        localStorage.setItem('hasSeenGuide', 'true');
+    }
+
+    // --- Initial Load ---
+    loadGame();
     createGrid(gridSize);
-  </script>
+    if (!localStorage.getItem('hasSeenGuide')) {
+        showGuide(true);
+    }
+    </script>
 </body>
 </html>
