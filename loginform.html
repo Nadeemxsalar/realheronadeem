@@ -185,9 +185,39 @@
       transform: scale(1.02);
     }
 
+    .or-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 1.5rem 0; /* Increased margin for better spacing */
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .or-divider:not(:empty)::before {
+      margin-right: .5em;
+    }
+
+    .or-divider:not(:empty)::after {
+      margin-left: .5em;
+    }
+
     .google {
       background: linear-gradient(to right, #db4437, #f4b400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem; /* Space between text and emoji */
       margin-top: 0.6rem;
+    }
+
+    .google span {
+      font-size: 1.2rem; /* Larger emoji */
     }
 
     .link-btn {
@@ -244,13 +274,13 @@
       visibility: visible;
       opacity: 1;
     }
-   
+    
   </style>
 </head>
 <body>
 
   <nav>
-   <h1> MyApp </h1>
+    <h1>MyApp</h1>
     <div class="nav-links" id="navLinks">
       <a href="#">Home</a>
       <a href="#">About</a>
@@ -278,7 +308,10 @@
       </div>
       <div class="spinner" id="spinner"></div>
       <button onclick="handleSubmit()" id="submitButton">Login</button>
-      <button class="google" onclick="handleGoogle()">Sign in with Google</button>
+      
+      <div class="or-divider">Or</div> 
+
+      <button class="google" onclick="handleGoogle()">Sign in with Google <span>G</span></button> 
       <div class="link-btn" onclick="toggleMode()">Don't have an account? Sign up</div>
       <div class="link-btn" onclick="forgotPassword()">Forgot Password?</div>
       <div class="tick" id="successTick">✔️</div>
