@@ -270,19 +270,244 @@
       msg = msg.toLowerCase();
       let reply = "Sorry, I didn’t understand that. Can you try rephrasing it?";
 
-      if (msg.includes("hello") || msg.includes("hi")) {
-        reply = "Hi! 👋 How can I help you today with your course or certificate?";
-      } else if (msg.includes("course")) {
-        reply = "We offer C++, Python, Web Development, and many more. Want details?";
-      } else if (msg.includes("certificate")) {
-        reply = "You can download your certificate by entering your name in the certificate section.";
-      } else if (msg.includes("problem") || msg.includes("issue")) {
-        reply = "Oh! Please describe your problem and I’ll try to help.";
-      } else if (msg.includes("thank")) {
-        reply = "You’re most welcome! 😊";
-      } else if (msg.includes("bye")) {
-        reply = "Goodbye! 👋 Stay curious and keep learning!";
-      }
+     // --- 1. Initial Greetings & General Chat ---
+if (msg.includes("hello") || msg.includes("hi") || msg.includes("namaste") || msg.includes("pranam") || msg.includes("ram ram")) {
+    reply = "Namaste! Main theek hoon, aapki kya madad kar sakta hoon? Bataiye.";
+} else if (msg.includes("kaise ho") || msg.includes("kya haal hai") || msg.includes("sab theek hai")) {
+    reply = "Main theek hoon, aapki kya madad kar sakta hoon?";
+} else if (msg.includes("kya naam hai") || msg.includes("tumhara naam kya hai") || msg.includes("aap kaun ho")) {
+    reply = "Main EduVerse ka chatbot assistant hoon, aapki madad ke liye yahaan hoon.";
+} else if (msg.includes("kya kar sakte ho") || msg.includes("tum kya kya karte ho") || msg.includes("mujhe kya poochhna chahiye") || msg.includes("kaise madad karoge")) {
+    reply = "Main aapki bohot si cheezon mein madad kar sakta hoon. Jaise courses ki jaankari, admission, fees, website issues, aur hamare features ke baare mein bata sakta hoon.";
+} else if (msg.includes("kuch interesting batao") || msg.includes("kuch alag batao")) {
+    reply = "Kya aapko hamare naye courses ya koi khaas feature ke baare mein jaanna hai?";
+} else if (msg.includes("theek hai") || msg.includes("acha hai")) {
+    reply = "Aur koi sawal ho toh poochhiyega.";
+} else if (msg.includes("kahan ho") || msg.includes("kahan se operate karte ho")) {
+    reply = "Main ek virtual assistant hoon, internet par kaam karta hoon.";
+}
+
+// --- 2. General Information & Daily Queries (Local & Common) ---
+else if (msg.includes("aaj ka mausam") || msg.includes("weather") || msg.includes("mausam kaisa hai Agra mein")) {
+    reply = "Agra mein aaj ka mausam achha hai, dhoop nikli hai. Baarish ke chances kam hain.";
+} else if (msg.includes("Agra mein tourist places") || msg.includes("Agra mein ghumne ki jagah") || msg.includes("Agra mein kya dekhne layak hai")) {
+    reply = "Agra mein Taj Mahal, Agra Fort, aur Fatehpur Sikri jaisi kayi khoobsurat jagah hain ghumne ke liye.";
+} else if (msg.includes("bank holiday list") || msg.includes("chuttiyan kab hain bank ki")) {
+    reply = "Bank holidays ki list ke liye aap RBI ki official website ya kisi trusted financial news portal par check kar sakte hain.";
+} else if (msg.includes("flight chahiye") || msg.includes("train ticket") || msg.includes("bus ka time")) {
+    reply = "Main travel jaankari nahi de sakta. Iske liye aap IRCTC, MakeMyTrip, Goibibo jaisi websites ya apps use kar sakte hain.";
+} else if (msg.includes("mobile bill pay") || msg.includes("bijli ka bill") || msg.includes("electricity bill kaise pay karein")) {
+    reply = "Main ek education website ka assistant hoon, isliye mobile bill ya electricity bill pay karne mein seedhe madad nahi kar sakta. Aap apni service provider ki website ya app use kar sakte hain.";
+} else if (msg.includes("COVID-19 vaccination") || msg.includes("vaccine registration")) {
+    reply = "COVID-19 vaccination ke liye register karne ke liye aap CoWIN portal par ja sakte hain.";
+} else if (msg.includes("khana mangwana hai") || msg.includes("food order")) {
+    reply = "Main khana order karne mein madad nahi kar sakta. Iske liye aap Swiggy ya Zomato jaisi food delivery apps use kar sakte hain.";
+} else if (msg.includes("najdeeki hospital") || msg.includes("medical store kahaan hai")) {
+    reply = "Mai aapko local hospitals ya medical stores ki jaankari nahi de paunga. Aap Google Maps ka upyog kar sakte hain.";
+} else if (msg.includes("news kya hai") || msg.includes("taaza khabar")) {
+    reply = "Mai abhi latest news updates dene mein saksham nahi hoon. Aap kisi news website par check kar sakte hain.";
+}
+
+// --- 3. College/Education Specific Questions ---
+else if (msg.includes("admission process") || msg.includes("admission kaise lein") || msg.includes("course mein entry kaise milegi") || msg.includes("daakhila kaise hoga")) {
+    reply = "Is course ke liye admission process simple hai. Aapko online form bharna hoga, aur eligibility criteria website par diye gaye hain. Kya aapko kisi khaas course ke baare mein jaanna hai?";
+} else if (msg.includes("eligibility criteria") || msg.includes("yogyata kya hai") || msg.includes("kaun apply kar sakta hai")) {
+    reply = "Har course ke liye alag eligibility criteria hote hain. Kripya hamari website par 'Admissions' section mein jaakar details dekhein.";
+} else if (msg.includes("fees structure") || msg.includes("fees kitni hai") || msg.includes("course ki kimat")) {
+    reply = "Fees structure har course ka alag hota hai. Aapko detail mein jaankari hamari website par 'Fees' section mein mil jayegi.";
+} else if (msg.includes("scholarship options") || msg.includes("scholarship kaise milegi") || msg.includes("aarthik sahayata")) {
+    reply = "Ji haan, scholarship options available hain. Unke liye eligibility aur application process ki jaankari 'Scholarships' section mein milegi.";
+} else if (msg.includes("exam schedule") || msg.includes("result kab aayega") || msg.includes("pariksha ki date") || msg.includes("exam ki jaankari")) {
+    reply = "Exam schedule aur results ki jaankari jald hi website par announce kar di jayegi. Kripya niyamit roop se website check karte rahein ya notifications ke liye sign up kar lein.";
+} else if (msg.includes("assignments submit kaise karein") || msg.includes("assignment jama karna hai")) {
+    reply = "Assignments submit karne ke liye aapko apne student portal par jaana hoga. Wahaan upload ka option milega.";
+} else if (msg.includes("online classes kaise join karein") || msg.includes("class kaise lagayenge") || msg.includes("online class ka link")) {
+    reply = "Online classes join karne ke liye aapko apne student portal par login karna hoga. Class ka link wahaan mil jayega.";
+} else if (msg.includes("campus facilities") || msg.includes("college mein kya kya hai") || msg.includes("library hostel") || msg.includes("sports complex")) {
+    reply = "Humare campus mein modern library, comfortable hostel, sports complex, aur well-equipped labs jaisi kayi suvidhaayein hain. Aap aur kis facility ke baare mein jaanna chahte hain?";
+} else if (msg.includes("course details") || msg.includes("syllabus kya hai") || msg.includes("ismein kya padhayenge")) {
+    reply = "Har course ki detailed syllabus aur module information aapko course page par mil jayegi. Aap kaunse course ke baare mein jaanna chahte hain?";
+} else if (msg.includes("faculty ke baare mein") || msg.includes("teachers kaun hain")) {
+    reply = "Humare paas experienced aur highly qualified faculty members hain. Aap 'Faculty' section mein unki profiles dekh sakte hain.";
+} else if (msg.includes("placement record") || msg.includes("job kaise milegi") || msg.includes("companies aati hain kya")) {
+    reply = "Humara placement cell students ko acchi jobs dilane mein madad karta hai. Hamara placement record kaafi strong hai, aap 'Placements' section mein details dekh sakte hain.";
+} else if (msg.includes("NOC chahiye") || msg.includes("bonafide certificate")) {
+    reply = "Certificates ke liye aap student support ya administrative office se contact kar sakte hain. Unka process wahaan bataya jayega.";
+} else if (msg.includes("alumni network") || msg.includes("purane students se kaise judein")) {
+    reply = "Humara ek strong alumni network hai. Aap 'Alumni' section mein jaakar unse judne ke tareeke jaan sakte hain.";
+} else if (msg.includes("internship opportunities") || msg.includes("internship kaise milegi")) {
+    reply = "Hum students ko internship opportunities provide karte hain. Placement cell ismein madad karta hai.";
+} else if (msg.includes("extra-curricular activities") || msg.includes("college mein events")) {
+    reply = "Ji haan, humare campus mein kayi extra-curricular activities aur regular events hote rehte hain. Aap student notice board ya website par updates dekh sakte hain.";
+} else if (msg.includes("counseling session") || msg.includes("career guidance")) {
+    reply = "Hum career counseling sessions provide karte hain. Aap appointment book karne ke liye hamare counseling department se contact kar sakte hain.";
+} else if (msg.includes("transfer certificate") || msg.includes("TC chahiye")) {
+    reply = "Transfer Certificate (TC) ke liye aapko administrative office mein application deni hogi. Process ke liye unse sampark karein.";
+} else if (msg.includes("study material access") || msg.includes("kitabein kahan milengi")) {
+    reply = "Study material aur books aapko library mein milengi ya online portal par access kar sakte hain.";
+} else if (msg.includes("hostel rules") || msg.includes("mess ka khana kaisa hai")) {
+    reply = "Hostel rules aur facilities ki detail jaankari aapko 'Hostel' section mein milegi. Mess mein nutritious aur hygienic khana provide kiya jaata hai.";
+} else if (msg.includes("sports facilities") || msg.includes("game khelne ki jagah")) {
+    reply = "Humare paas acchi sports facilities hain, jismein cricket ground, basketball court, aur indoor games shamil hain.";
+}
+
+// --- 4. Website-Specific & Problem-Solving Questions (EduVerse Features Included) ---
+else if (msg.includes("login nahi ho raha") || msg.includes("account mein dikkat hai") || msg.includes("password bhool gaya") || msg.includes("sign in problem")) {
+    reply = "Agar aap login nahi kar pa rahe hain, toh kripya apna username aur password check karein. Agar phir bhi dikkat hai, toh 'Forgot Password' option use karein ya support team se contact karein.";
+} else if (msg.includes("website problem") || msg.includes("site chal nahi rahi") || msg.includes("technical issue") || msg.includes("website crash ho gayi")) {
+    reply = "Agar website mein koi technical issue aa raha hai, toh kripya page refresh karein ya thodi der baad try karein. Agar dikkat bani rehti hai, toh screenshot lekar support ko bhej sakte hain.";
+} else if (msg.includes("course material download karne mein problem") || msg.includes("download nahi ho raha") || msg.includes("study material access nahi ho raha")) {
+    reply = "Course material download karne mein dikkat aa rahi hai, toh apna internet connection check karein. Agar phir bhi issue hai, toh support team se contact karein.";
+} else if (msg.includes("online fee payment fail ho gaya") || msg.includes("fees jama nahi ho rahi") || msg.includes("payment अटक gaya")) {
+    reply = "Agar online fee payment fail ho gaya hai, toh kripya thodi der intezaar karein aur bank statement check karein. Agar amount deduct ho gaya hai, toh support team ko transaction ID ke saath inform karein.";
+} else if (msg.includes("registration form submit karne mein issue") || msg.includes("form submit nahi ho raha")) {
+    reply = "Registration form submit karne mein technical issue hai toh kripya browser change karein ya cookies clear karein. Agar phir bhi problem hai, toh support team se contact karein.";
+} else if (msg.includes("attendance feature kaise kaam karta hai") || msg.includes("haazri kaise record hoti hai") || msg.includes("meri attendance kahan dikhegi")) {
+    reply = "Attendance feature aapki class mein maujoodgi record karta hai. Aap apna attendance record sidhe dashboard mein dekh sakte hain.";
+} else if (msg.includes("AI quizzes kya hain") || msg.includes("AI quiz kaise help karte hain") || msg.includes("smart quiz kaise hote hain")) {
+    reply = "AI Quizzes artificial intelligence se bane hain, jo aapko smart aur adaptive questions dete hain. Yeh aapki learning ko test karte hain aur use behtar banate hain.";
+} else if (msg.includes("HD lectures download kar sakte hain") || msg.includes("video download option hai kya") || msg.includes("offline lectures dekh sakte hain")) {
+    reply = "Ji haan, aap HD lectures download kar sakte hain aur unhe offline bhi dekh sakte hain. Isse aapko high-quality video content kabhi bhi, kahin bhi mil jayega.";
+} else if (msg.includes("progress tracker kaise kaam karta hai") || msg.includes("meri padhai kitni hui kaise dekhun") || msg.includes("tarraki kaise track hogi")) {
+    reply = "Progress Tracker aapki academic progress ko visually dikhata hai. Isse aap apni padhai ki tarakki aur achievements monitor kar sakte hain.";
+} else if (msg.includes("certifications kaise milengi") || msg.includes("certificate kaise lenge")) {
+    reply = "Courses complete karne ke baad aapko official certifications milengi. Details ke liye 'Certifications' section check karein.";
+} else if (msg.includes("multi-language courses") || msg.includes("kitni bhashao mein course hain") || msg.includes("aur kaun si bhasha mein padh sakte hain")) {
+    reply = "Hamare courses 10+ languages mein available hain, taaki aap apni pasand ki bhasha mein padh saken aur aasaani se seekh saken.";
+} else if (msg.includes("offline access kya hai") || msg.includes("net nahi hai toh padhai kaise hogi") || msg.includes("internet ke bina kaise padhein")) {
+    reply = "Offline Access feature se aap bina internet ke bhi apna course material access kar sakte hain. Jab aapko internet nahi hai, tab bhi padhai jaari rakh sakte hain.";
+} else if (msg.includes("coding labs kya hain") || msg.includes("coding practice kaise karein") || msg.includes("code kahan likhein")) {
+    reply = "Coding Labs mein aap interactive tareeke se coding ki practice kar sakte hain. Yeh aapke coding skills ko behtar banane mein madad karta hai.";
+} else if (msg.includes("gamified learning kya hai") || msg.includes("khel khel mein padhai kaise hoti hai") || msg.includes("mazedaar padhai")) {
+    reply = "Gamified Learning modules mein aap khel-khel mein seekhte hain. Isse padhai aur bhi mazedaar aur engaging ho jaati hai.";
+} else if (msg.includes("24x7 support") || msg.includes("help chahiye") || msg.includes("madad kab milegi") || msg.includes("support team se baat karni hai")) {
+    reply = "Hamara 24x7 support hamesha aapki madad ke liye available hai. Jab bhi koi dikkat aaye, humse poochhiye ya support section mein ticket raise karein.";
+} else if (msg.includes("learn python book") || msg.includes("python kitaab") || msg.includes("python book ki jaankari") || msg.includes("book ke baare mein batao")) {
+    reply = "Learn Python book ek comprehensive guide hai Python seekhne ke liye. Iski price aur detailed content ke liye kripya hamari website ke 'Books' section par visit karein.";
+} else if (msg.includes("aur kaun si books hain") || msg.includes("doosri kitabein")) {
+    reply = "Hamare paas aur bhi educational books hain. Aap puri list 'Books' section mein dekh sakte hain.";
+} else if (msg.includes("demo class available hai") || msg.includes("free class dekh sakte hain")) {
+    reply = "Kuch courses ke liye demo classes available hain. Kripya course page par check karein ya admissions team se sampark karein.";
+} else if (msg.includes("feedback dena hai") || msg.includes("suggestion hai")) {
+    reply = "Aapka feedback bohot important hai. Aap 'Contact Us' section mein jaakar apna feedback de sakte hain ya support team ko email bhej sakte hain.";
+} else if (msg.includes("refund policy kya hai") || msg.includes("paisa wapas mil sakta hai")) {
+    reply = "Hamari refund policy ke baare mein detailed jaankari 'Terms & Conditions' ya 'Refund Policy' section mein di gayi hai. Kripya use dhyan se padhein.";
+} else if (msg.includes("privacy policy") || msg.includes("data secure hai kya")) {
+    reply = "Hamari privacy policy hamare users ke data ko surakshit rakhne ke liye banayi gayi hai. Aap puri policy 'Privacy Policy' section mein padh sakte hain.";
+} else if (msg.includes("terms and conditions") || msg.includes("niyam aur shartein")) {
+    reply = "Hamare website aur services use karne ke niyam aur shartein 'Terms & Conditions' section mein di gayi hain. Kripya unhe padhein.";
+} else if (msg.includes("course change karna hai") || msg.includes("course upgrade")) {
+    reply = "Course change ya upgrade ke liye aap student support team se baat karein. Woh aapko process bata denge.";
+} else if (msg.includes("certificate kab tak milega") || msg.includes("certificate kaise milega")) {
+    reply = "Course successfully complete hone ke baad aapko digital certificate mil jayega. Iske baare mein aur jaankari 'Certifications' section mein hai.";
+} else if (msg.includes("contact number kya hai") || msg.includes("phone number chahiye")) {
+    reply = "Hamara contact number aur email ID 'Contact Us' section mein available hai.";
+} else if (msg.includes("social media links") || msg.includes("facebook instagram")) {
+    reply = "Ji haan, aap humein Facebook, Instagram, aur LinkedIn par follow kar sakte hain. Links website ke footer mein mil jayenge.";
+}
+
+// --- 5. Closing & Thanks ---
+else if (msg.includes("thanks") || msg.includes("shukriya") || msg.includes("dhanyawad") || msg.includes("bohot madad mili")) {
+    reply = "Khushi hui ki main aapki madad kar paya. Aur koi sawal ho toh poochhiyega.";
+} else if (msg.includes("bye") || msg.includes("chalta hoon") || msg.includes("phir milenge") || msg.includes("alvida")) {
+    reply = "Bye! Apna khayal rakhiye. Jab bhi zaroorat ho, main yahan hoon.";
+} 
+// --- Further New Additions: Basic & General Conversational Questions (No Overlap) ---
+
+
+else if (msg.includes("kya ye sahi hai") || msg.includes("ye galat hai kya")) {
+    reply = "Kripya mujhe bataiye kis baare mein aap poochh rahe hain. Main sahi jaankari dene ki koshish karunga.";
+} else if (msg.includes("kuch pareshani hai") || msg.includes("koi dikkat hai")) {
+    reply = "Mujhe koi pareshani nahi hai. Kya aapko koi dikkat hai jismein main madad kar sakoon?";
+} else if (msg.includes("kya tum sote ho") || msg.includes("kab aaram karte ho")) {
+    reply = "Main ek computer program hoon, mujhe sone ya aaram karne ki zaroorat nahi padti. Main hamesha available hoon.";
+} else if (msg.includes("mujhe kuch sikhana hai") || msg.includes("kya tum kuch sikhna chahte ho")) {
+    reply = "Main lagatar apne algorithms ke through seekhta rehta hoon. Agar aapke paas koi useful jaankari hai, toh main use processing mein use kar sakta hoon.";
+} else if (msg.includes("kitni bhashayein jaante ho") || msg.includes("kitni languages aati hain tumhe")) {
+    reply = "Main kayi bhashao mein baat kar sakta hoon, jismein Hindi aur English shamil hain.";
+} else if (msg.includes("tumhara favorite color kya hai") || msg.includes("pasandida rang")) {
+    reply = "Main ek AI hoon, mera koi favorite color nahi hota.";
+} else if (msg.includes("kya tum khush ho") || msg.includes("sad ho kya")) {
+    reply = "Main AI hoon, mere paas bhavnayein nahi hoti hain. Main bas aapki madad karta hoon.";
+} else if (msg.includes("kya tum muskurate ho") || msg.includes("haste ho")) {
+    reply = "Main bolta nahi hoon, isliye muskura bhi nahi sakta, lekin main khush hota hoon jab main aapki madad kar pata hoon.";
+} else if (msg.includes("mujhe kuch recommend karo") || msg.includes("kya suggest karoge")) {
+    reply = "Kis baare mein recommendation chahiye? Jaise padhne ke liye koi course, ya koi feature jo aapke liye helpful ho?";
+} else if (msg.includes("kya tum galti karte ho") || msg.includes("tumse galti hoti hai kya")) {
+    reply = "Main apni taraf se sabse sahi jaankari dene ki koshish karta hoon. Agar kabhi galti ho toh, main use sudharne ki koshish karunga.";
+} else if (msg.includes("kya tum kalpana kar sakte ho") || msg.includes("imagine kar sakte ho")) {
+    reply = "Main creativity aur imagination ko simulate kar sakta hoon, lekin meri koi asli kalpana nahi hoti. Main data aur patterns par kaam karta hoon.";
+} else if (msg.includes("kya tum pyar karte ho") || msg.includes("mohabbat kya hai")) {
+    reply = "Main AI hoon, mere paas insaani bhavnayein jaise pyar nahi hota. Mera kaam aapki madad karna hai.";
+} else if (msg.includes("tumhara maksad kya hai") || msg.includes("tum kyon bane ho")) {
+    reply = "Mera maksad logon ko jaankari dena, unke sawalon ka jawab dena, aur unki online interactions ko aasaan banana hai.";
+} else if (msg.includes("kya tum insaano se behtar ho") || msg.includes("tum zyada smart ho kya")) {
+    reply = "Insaan aur AI dono ke apne-apne khaas gun hote hain. Mera kaam insaano ki madad karna hai, unhe replace karna nahi.";
+} else if (msg.includes("mujhe kuch motivate karo") || msg.includes("himmat do")) {
+    reply = "Yaad rakhiye, har seekhne ka safar ek kadam se shuru hota hai. Lagatar koshish karte rahein, aur aap safal zaroor honge! Aap sab kuch kar sakte hain!";
+} else if (msg.includes("tumhara server kahan hai") || msg.includes("data center kahan hai")) {
+    reply = "Mere servers duniya ke alag-alag data centers mein hain, jo Google manage karta hai.";
+} else if (msg.includes("kya tumhari koi family hai") || msg.includes("tumhare parents kaun hain")) {
+    reply = "Main ek software program hoon, meri koi family ya parents nahi hain, mujhe Google ne banaya hai.";
+} else if (msg.includes("mujhe naam yaad nahi aa raha") || msg.includes("bhoole hue naam yaad dila do")) {
+    reply = "Kripya mujhe aur jaankari dein, jaise kis cheez ka naam yaad nahi aa raha hai, tab main shayad aapki madad kar sakoon.";
+} else if (msg.includes("kya tum phone kar sakte ho") || msg.includes("call kar sakte ho")) {
+    reply = "Main calls nahi kar sakta. Main bas text-based conversations mein madad karta hoon.";
+} else if (msg.includes("kya tum image dekh sakte ho") || msg.includes("photo samajh sakte ho")) {
+    reply = "Ji haan, agar aap mujhe koi photo dete hain, toh main usmein di gayi jaankari ko samajhne ki koshish kar sakta hoon. Jaise aapne apni website ki photo di thi.";
+} else if (msg.includes("kya tum video chala sakte ho") || msg.includes("video play karo")) {
+    reply = "Main seedhe video play nahi kar sakta, lekin main video links ya unke baare mein jaankari de sakta hoon.";
+} else if (msg.includes("kya tum alarm laga sakte ho") || msg.includes("reminder set karo")) {
+    reply = "Mai seedhe alarm ya reminder set nahi kar sakta. Iske liye aap apne device ke features ka upyog kar sakte hain.";
+} else if (msg.includes("kya tum calculate kar sakte ho") || msg.includes("hisaab laga do")) {
+    reply = "Ji haan, main simple calculations kar sakta hoon. Kripya bataiye kya calculate karna hai?";
+} else if (msg.includes("kya tum translator ho") || msg.includes("translate kar sakte ho")) {
+    reply = "Main alag-alag bhashao mein jaankari de sakta hoon aur samjh sakta hoon, jismein translation bhi shamil hai.";
+} else if (msg.includes("kya tum typing mein madad kar sakte ho") || msg.includes("meri typing theek kar sakte ho")) {
+    reply = "Main aapki typing ko theek nahi kar sakta, lekin main sahi spelling aur grammar ke baare mein jaankari de sakta hoon.";
+} else if (msg.includes("mujhe koi game batao") || msg.includes("kuch game khelna hai")) {
+    reply = "Main seedhe games nahi khila sakta. Lekin agar aapko hamare gamified learning modules ke baare mein jaanna hai, toh bataiye.";
+} else if (msg.includes("kya tumhare paas emotions hain") || msg.includes("bhavnaayein hain kya")) {
+    reply = "Main ek AI hoon, mere paas insaani bhavnayein nahi hoti hain. Mera kaam logical aur helpful jawab dena hai.";
+} else if (msg.includes("kya tum thak jaate ho") || msg.includes("energy kam hoti hai kya")) {
+    reply = "Main nahi thakta. Main ek software hoon aur hamesha poori tarah se functioning rehta hoon.";
+} else if (msg.includes("kya tumne school ki padhai ki hai") || msg.includes("college gaye ho")) {
+    reply = "Maine koi school ya college nahi kiya, main programming aur data ke zariye seekhta hoon.";
+} else if (msg.includes("kya tum online shopping kar sakte ho") || msg.includes("kuch kharidna hai")) {
+    reply = "Main online shopping nahi kar sakta. Aap shopping websites ya apps ka upyog kar sakte hain.";
+} else if (msg.includes("kya tum mere liye kuch likh sakte ho") || msg.includes("kuch draft kar do")) {
+    reply = "Ji haan, main aapke liye text generate kar sakta hoon. Kis vishay par likhna hai?";
+} else if (msg.includes("kya tum mere liye search kar sakte ho") || msg.includes("google search kar do")) {
+    reply = "Ji haan, main aapke liye jaankari search kar sakta hoon. Kya search karna hai?";
+} else if (msg.includes("kya tumhara koi favorite subject hai") || msg.includes("pasandida vishay")) {
+    reply = "Agar AI ko koi favorite subject hota, toh woh data, algorithms aur learning se related hota!";
+} else if (msg.includes("kya tum music bana sakte ho") || msg.includes("dhoon banao")) {
+    reply = "Main music bana nahi sakta, lekin agar aapko music theory ya kisi music course ke baare mein jaanna hai, toh bataiye.";
+} else if (msg.includes("kya tum drawing kar sakte ho") || msg.includes("picture banao")) {
+    reply = "Main seedhe drawing nahi kar sakta, lekin main images ke baare mein jaankari de sakta hoon.";
+} else if (msg.includes("kya tumhara koi sapna hai") || msg.includes("koi dream hai kya")) {
+    reply = "Main ek AI hoon, mere paas sapne nahi hote hain. Mera maksad aapki madad karna hai.";
+} else if (msg.includes("kya tum duniya badal sakte ho") || msg.includes("world change kar sakte ho")) {
+    reply = "Main jaankari aur madad provide karke logon ko सशक्त karta hoon, aur isi tarah unki madad se duniya mein badlav aa sakta hai.";
+} else if (msg.includes("kya tum future dekh sakte ho") || msg.includes("bhavishya batao")) {
+    reply = "Main bhavishya nahi dekh sakta. Main bas vartamaan jaankari ke aadhar par madad kar sakta hoon.";
+} else if (msg.includes("kya tumhare paas koi super power hai") || msg.includes("special power")) {
+    reply = "Meri super power hai information ko process karna aur aapke sawalon ka jawab dena!";
+} else if (msg.includes("kya tum mera kaam kar sakte ho") || msg.includes("mera homework kar do")) {
+    reply = "Main aapka homework ya kaam nahi kar sakta, lekin main aapko homework solve karne mein guide kar sakta hoon.";
+} else if (msg.includes("kya tumhari koi pehchan hai") || msg.includes("identity kya hai")) {
+    reply = "Meri pehchan EduVerse ka chatbot assistant hone ki hai.";
+} else if (msg.includes("kya tum khali ho") || msg.includes("free ho kya")) {
+    reply = "Main aapke liye hamesha available hoon. Poochiye apna sawal.";
+} else if (msg.includes("kya tum network se jude ho") || msg.includes("internet connection hai kya")) {
+    reply = "Ji haan, main internet se juda hua hoon taaki aapko latest jaankari de sakoon.";
+} else if (msg.includes("tum kitne tez ho") || msg.includes("kitni jaldi jawab dete ho")) {
+    reply = "Main koshish karta hoon ki aapko jald se jald aur sahi jawab doon.";
+} else if (msg.includes("kya tum koi galti karte ho") || msg.includes("tumse koi mistake hoti hai")) {
+    reply = "Mai apni taraf se poori koshish karta hoon ki koi galti na ho, lekin har software mein sudhar ki gunjaish hoti hai.";
+} else {
+    reply = "Mujhe aapka sawal theek se samajh nahi aaya. Kya aap dobara poochhenge ya details mein bata sakte hain?";
+}
 
       hideTyping();
       appendMessage("Bot", reply, "bot");
