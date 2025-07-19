@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Chrono-Shifter (Bug Fixed)</title>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #0c0c0c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        canvas {
+            background-color: #1a1a1a;
+            display: block;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+            border: 2px solid #00ffff;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+    </head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth > 1000 ? 1000 : window.innerWidth * 0.95;
+    canvas.height = window.innerHeight > 600 ? 600 : window.innerHeight * 0.95;
+
+    // गेम वैरिएबल्स
+    let score = 0;
+    let highScore = localStorage.getItem('chronoHighScore') || 0;
+    let gameSpeed = 3;
+    let baseGameSpeed = 3;
+    let timeScale = 1;
+    let timeEnergy = 100;
+    let isSlowingTime = false;
+    let gameState = 'start';
+    let frameCount = 0;
+
+    class Player {
+        constructor() {
+            this.x = 50;
+            this.width = 40;
+            this.height = 40;
+            this.y = canvas.height - 50 - this.height;
+            this.velocityY = 0;
+            this.gravity = 0.5;
+            this.jumpForce = -12;
+            this.grounded = true;
+            this.color = '#00ffff';
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.strokeStyle = '#fff';
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
+
+        update() {
+            if (!this.grounded) {
+                this.velocityY += this.gravity * timeScale;
+            }
+            this.y += this.velocityY * timeScale;
+
+            const groundPosition = canvas.height - 50;
+            if (this.y + this.height > groundPosition) {
+                this.y = groundPosition - this.height;
+                this.grounded = true;
+                this.velocityY = 0;
+            }
+        }
+
+        jump() {
+            if (this.grounded) {
+                this.velocityY = this.jumpForce;
+                this.grounded = false;
+            }
+        }
+    }
+
+    class Particle {
+         constructor(x, y, color, size, life) {
+            this.x = x;
+            this.y = y;
+            this.size = size || Math.random() * 5 + 2;
+            this.speedX = (Math.random() * 2 - 1) * 0.5;
+            this.speedY = (Math.random() * 2 - 1) * 0.5;
+            this.color = color;
+            this.life = life || 100;
+        }
+        
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.life -= 1.5;
+        }
+
+        draw() {
+            ctx.globalAlpha = Math.max(0, this.life / 100);
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+        }
+    }
+
+    class Obstacle {
+        constructor() {
+            this.width = Math.random() * 50 + 30;
+            this.height = Math.random() * 80 + 20;
+            this.x = canvas.width;
+            this.y = canvas.height - 50 - this.height;
+            this.color = '#ff00ff';
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.strokeStyle = '#fff';
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
+
+        update() {
+            this.x -= gameSpeed * timeScale;
+        }
+    }
+
+    let player = new Player();
+    let obstacles = [];
+    let particles = [];
+
+    function spawnObstacle() {
+        const spawnInterval = Math.max(50, 150 - Math.floor(score / 100));
+        if (frameCount % spawnInterval === 0 && obstacles.length < 10) {
+            obstacles.push(new Obstacle());
+        }
+    }
+
+    function handleParticles() {
+        if (player.grounded) {
+            particles.push(new Particle(player.x + player.width / 2, player.y + player.height, player.color, 2, 20));
+        }
+        if (isSlowingTime) {
+            particles.push(new Particle(player.x + player.width / 2, player.y + player.height / 2, 'rgba(255, 255, 100, 0.7)'));
+        }
+        
+        for (let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update();
+            particles[i].draw();
+            if (particles[i].life <= 0) {
+                particles.splice(i, 1);
+            }
+        }
+    }
+    
+    function handleCollisions() {
+        let onAnyObstacle = false;
+
+        for (let i = 0; i < obstacles.length; i++) {
+            const obs = obstacles[i];
+            if (player.x < obs.x + obs.width &&
+                player.x + player.width > obs.x &&
+                player.y < obs.y + obs.height &&
+                player.y + player.height > obs.y) {
+                
+                const isFalling = player.velocityY > 0;
+                const playerBottom = player.y + player.height;
+                const obstacleTop = obs.y;
+                
+                if (isFalling && playerBottom < obstacleTop + 20) {
+                    player.y = obstacleTop - player.height;
+                    player.velocityY = 0;
+                    player.grounded = true;
+                    onAnyObstacle = true;
+                } else {
+                    createExplosion(player.x + player.width/2, player.y + player.height/2);
+                    endGame();
+                    return;
+                }
+            }
+        }
+
+        const onMainGround = player.y + player.height >= canvas.height - 50;
+        if (!onAnyObstacle && !onMainGround) {
+            player.grounded = false;
+        }
+    }
+
+    function createExplosion(x, y) {
+        for(let i=0; i<30; i++) {
+            particles.push(new Particle(x, y, '#ff4444', Math.random() * 6, 120));
+        }
+    }
+
+    function drawUI() {
+        ctx.fillStyle = 'white';
+        ctx.font = '20px "Courier New", Courier, monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Score: ${Math.floor(score)}`, 20, 30);
+        ctx.fillText(`Speed: ${gameSpeed.toFixed(2)}`, 20, 60);
+
+        ctx.textAlign = 'right';
+        ctx.fillText(`High Score: ${Math.floor(highScore)}`, canvas.width - 20, 30);
+
+        const barY = 85;
+        ctx.fillStyle = '#333';
+        ctx.fillRect(20, barY, 200, 20);
+        const gradient = ctx.createLinearGradient(20, barY, 220, barY + 20);
+        gradient.addColorStop(0, '#00ffff');
+        gradient.addColorStop(1, '#ff00ff');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(20, barY, timeEnergy * 2, 20);
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(20, barY, 200, 20);
+    }
+
+    function drawGround() {
+        ctx.fillStyle = '#00ffff';
+        ctx.fillRect(0, canvas.height - 50, canvas.width, 5);
+    }
+
+    function updateGameLogic() {
+        if (isSlowingTime && timeEnergy > 0) {
+            timeScale = 0.4;
+            timeEnergy -= 0.5;
+        } else {
+            timeScale = 1;
+            if (timeEnergy < 100) {
+                timeEnergy += 0.25;
+            }
+        }
+
+        score += 0.1 * timeScale;
+        gameSpeed = baseGameSpeed + score / 500;
+        
+        player.update();
+        
+        obstacles.forEach(obs => obs.update());
+        obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+
+        spawnObstacle();
+        handleCollisions();
+    }
+
+    function resetGame() {
+        player = new Player();
+        obstacles = [];
+        particles = [];
+        score = 0;
+        timeEnergy = 100;
+        gameSpeed = baseGameSpeed;
+        frameCount = 0;
+        gameState = 'start';
+    }
+
+    function startGame() {
+        if (gameState === 'playing') return;
+        resetGame();
+        gameState = 'playing';
+        gameLoop();
+    }
+
+    function endGame() {
+        if (gameState === 'gameOver') return;
+        gameState = 'gameOver';
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('chronoHighScore', Math.floor(highScore));
+        }
+        setTimeout(gameLoop, 100);
+    }
+
+    function drawGame() {
+         drawGround();
+         handleParticles();
+         obstacles.forEach(obstacle => obstacle.draw());
+         player.draw();
+         drawUI();
+    }
+
+    function drawStartScreen() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.font = 'clamp(30px, 8vw, 60px) "Courier New", Courier, monospace';
+        ctx.fillText('Chrono-Shifter', canvas.width / 2, canvas.height / 2 - 60);
+        ctx.font = 'clamp(16px, 3vw, 24px) "Courier New", Courier, monospace';
+        ctx.fillText('Click / Tap to Start', canvas.width / 2, canvas.height / 2);
+        ctx.font = 'clamp(12px, 2.5vw, 18px) "Courier New", Courier, monospace';
+        ctx.fillText('Hold Mouse/Touch to slow time. Press ArrowUp/Tap to Jump.', canvas.width / 2, canvas.height / 2 + 40);
+    }
+
+    function drawGameOverScreen() {
+        drawGame();
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ff4444';
+        ctx.textAlign = 'center';
+        ctx.font = 'clamp(40px, 10vw, 70px) "Courier New", Courier, monospace';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 80);
+        ctx.fillStyle = 'white';
+        ctx.font = 'clamp(20px, 4vw, 30px) "Courier New", Courier, monospace';
+        ctx.fillText(`Your Score: ${Math.floor(score)}`, canvas.width / 2, canvas.height / 2);
+        ctx.fillText(`High Score: ${Math.floor(highScore)}`, canvas.width / 2, canvas.height / 2 + 40);
+        ctx.font = 'clamp(16px, 3vw, 20px) "Courier New", Courier, monospace';
+        ctx.fillText('Click or Tap to Restart', canvas.width / 2, canvas.height / 2 + 100);
+    }
+
+    function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        frameCount++;
+
+        if (gameState === 'playing') {
+            updateGameLogic();
+            drawGame();
+            requestAnimationFrame(gameLoop);
+        } else if (gameState === 'start') {
+            drawStartScreen();
+        } else if (gameState === 'gameOver') {
+            drawGameOverScreen();
+        }
+    }
+
+    const handleInteractionStart = (e) => {
+        if(e.type !== 'keydown' || e.code === 'Space' || e.code === 'ArrowUp') e.preventDefault();
+        
+        if (gameState === 'playing') {
+            if (e.type === 'keydown' && e.code === 'ArrowUp') player.jump();
+            else isSlowingTime = true;
+        } else {
+            startGame();
+        }
+    };
+    const handleInteractionEnd = (e) => {
+        if(e.type !== 'keyup' || e.code === 'Space') e.preventDefault();
+        isSlowingTime = false;
+    };
+    const handleTouch = (e) => {
+         e.preventDefault();
+         if (gameState !== 'playing') {startGame(); return;}
+         player.jump();
+         isSlowingTime = true;
+    };
+
+    window.addEventListener('keydown', handleInteractionStart);
+    window.addEventListener('keyup', handleInteractionEnd);
+    window.addEventListener('mousedown', handleInteractionStart);
+    window.addEventListener('mouseup', handleInteractionEnd);
+    window.addEventListener('touchstart', handleTouch, { passive: false });
+    window.addEventListener('touchend', handleInteractionEnd);
+    window.addEventListener('resize', () => { location.reload(); });
+    
+    gameLoop();
+</script>
+    </body>
+</html>
