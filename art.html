@@ -1,306 +1,476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Art & Design Studio</title>
-
-    <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Global Styles */
-body, html {
-    height: 100%;
-    font-family: 'Arial', sans-serif;
-    overflow-x: hidden;
-}
-
-/* Background Animation */
-.bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, #ff4081, #3f51b5);
-    animation: gradientBackground 10s ease infinite;
-    z-index: -1;
-}
-
-@keyframes gradientBackground {
-    0% { background: linear-gradient(45deg, #ff4081, #3f51b5); }
-    50% { background: linear-gradient(45deg, #ff9800, #9c27b0); }
-    100% { background: linear-gradient(45deg, #ff4081, #3f51b5); }
-}
-
-/* Navbar */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 30px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    flex-wrap: wrap;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-    transition: color 0.3s ease;
-}
-
-.navbar a:hover {
-    color: #ff4081;
-}
-
-/* Hero Section */
-.hero {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    flex-direction: column;
-    animation: fadeIn 2s ease-in-out;
-    padding: 0 20px;
-    margin-top: -10%;
-}
-
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-}
-
-.hero p {
-    font-size: 1.3rem;
-    margin-bottom: 30px;
-    opacity: 0.8;
-}
-
-.cta-btn {
-    padding: 12px 30px;
-    background-color: #ff4081;
-    color: white;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    border-radius: 5px;
-}
-
-.cta-btn:hover {
-    background-color: #f50057;
-    transform: scale(1.1);
-}
-
-/* Section Styles */
-section {
-    padding: 80px 20px;
-    text-align: center;
-}
-
-.section-title {
-    font-size: 2.2rem;
-    margin-bottom: 30px;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    animation: fadeInUp 1.5s ease-in-out;
-}
-
-/* Responsive Grid */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 0;
-    animation: fadeInUp 2s ease-in-out;
-}
-
-.grid-item {
-    background: #fff;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    transform: scale(1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.grid-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
-
-.grid-item img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-}
-
-.grid-item h3 {
-    padding: 20px;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #333;
-}
-
-.grid-item p {
-    padding: 0 20px 20px;
-    font-size: 1rem;
-    color: #666;
-}
-
-/* Footer */
-.footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 40px 20px;
-    width: 100%;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive Typography */
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.2rem;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern Art Gallery</title>
+  <style>
+    :root {
+      --bg: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      --text: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --card-border: rgba(255, 255, 255, 0.3);
+      --accent: #00f7ff;
+      --glow: rgba(0, 247, 255, 0.6);
     }
-    .hero p {
-        font-size: 1rem;
+
+    body.light {
+      --bg: linear-gradient(to right, #ffffff, #e1eafc);
+      --text: #111;
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --card-border: rgba(0, 0, 0, 0.2);
+      --accent: #0066ff;
+      --glow: rgba(0, 102, 255, 0.3);
     }
-    .section-title {
-        font-size: 1.8rem;
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: all 0.5s ease;
     }
-}
-</style>
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      backdrop-filter: blur(10px);
+      background: var(--card-bg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input, select {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--text);
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    button, .like-btn {
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--accent);
+    }
+
+    .like-btn {
+      float: right;
+    }
+
+    .like-btn.liked {
+      color: red;
+    }
+
+    #gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px var(--glow);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .info {
+      margin-top: 10px;
+    }
+
+    .info h3 {
+      margin: 0;
+    }
+
+    .info p {
+      margin: 5px 0 0;
+      font-size: 0.9rem;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--accent);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover .tooltip {
+      opacity: 1;
+    }
+
+    #loadMore, #topBtn {
+      display: block;
+      margin: 30px auto;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 0 12px var(--glow);
+      cursor: pointer;
+    }
+
+    #topBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      border-radius: 50%;
+    }
+
+    .theme-icon {
+      font-size: 1.5rem;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 500px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      border-radius: 12px;
+    }
+
+    a#downloadBtn {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--accent);
+    }
+
+    @media(max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .controls {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+
+      .card img {
+        height: 140px;
+      }
+    }
+
+    mark {
+      background: yellow;
+      color: black;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>🎨 Art Gallery</h1>
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search..." />
+      <select id="filter">
+        <option value="all">All</option>
+        <option value="painting">Painting</option>
+        <option value="digital">Digital</option>
+      </select>
+      <button id="toggleTheme" title="Toggle Theme">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+  </header>
 
-    <!-- Background Animation -->
-    <div class="bg"></div>
+  <div id="gallery"></div>
+  <button id="loadMore">Load More</button>
+  <button id="topBtn">↑</button>
 
-    <!-- Navbar -->
-    <div class="navbar">
-        <div class="logo">RHN STUDIO </div>
-        <div>
-            <a href="#home">Home</a>
-            <a href="#portfolio">Portfolio</a>
-            <a href="#contact">Contact</a>
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <img id="modalImg" src="" alt="">
+      <h2 id="modalTitle"></h2>
+      <p id="modalArtist"></p>
+      <a id="downloadBtn" href="#" download target="_blank">⬇️ Download</a>
+    </div>
+  </div>
+
+  <!-- VanillaTilt -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+  <script>
+    const artworks = [
+  { title: "Art 1", artist: "Artist 1", category: "painting", image: "https://picsum.photos/id/1015/800/600" },
+  { title: "Art 2", artist: "Artist 2", category: "digital",  image: "https://picsum.photos/id/1016/800/600" },
+  { title: "Art 3", artist: "Artist 3", category: "sculpture", image: "https://picsum.photos/id/1020/800/600" },
+  { title: "Art 4", artist: "Artist 4", category: "painting", image: "https://picsum.photos/id/1024/800/600" },
+  { title: "Art 5", artist: "Artist 5", category: "digital",  image: "https://picsum.photos/id/1025/800/600" },
+  { title: "Art 6", artist: "Artist 6", category: "sculpture", image: "https://picsum.photos/id/1033/800/600" },
+  { title: "Art 7", artist: "Artist 7", category: "painting", image: "https://picsum.photos/id/1035/800/600" },
+  { title: "Art 8", artist: "Artist 8", category: "digital",  image: "https://picsum.photos/id/1038/800/600" },
+  { title: "Art 9", artist: "Artist 9", category: "sculpture", image: "https://picsum.photos/id/1039/800/600" },
+  { title: "Art 10", artist: "Artist 10", category: "painting", image: "https://picsum.photos/id/1040/800/600" },
+  { title: "Art 11", artist: "Artist 11", category: "digital", image: "https://picsum.photos/id/1041/800/600" },
+  { title: "Art 12", artist: "Artist 12", category: "sculpture", image: "https://picsum.photos/id/1042/800/600" },
+  { title: "Art 13", artist: "Artist 13", category: "painting", image: "https://picsum.photos/id/1043/800/600" },
+  { title: "Art 14", artist: "Artist 14", category: "digital", image: "https://picsum.photos/id/1044/800/600" },
+  { title: "Art 15", artist: "Artist 15", category: "sculpture", image: "https://picsum.photos/id/1045/800/600" },
+  { title: "Art 16", artist: "Artist 16", category: "painting", image: "https://picsum.photos/id/1047/800/600" },
+  { title: "Art 17", artist: "Artist 17", category: "digital", image: "https://picsum.photos/id/1048/800/600" },
+  { title: "Art 18", artist: "Artist 18", category: "sculpture", image: "https://picsum.photos/id/1049/800/600" },
+  { title: "Art 19", artist: "Artist 19", category: "painting", image: "https://picsum.photos/id/1050/800/600" },
+  { title: "Art 20", artist: "Artist 20", category: "digital", image: "https://picsum.photos/id/1051/800/600" },
+  { title: "Art 21", artist: "Artist 21", category: "sculpture", image: "https://picsum.photos/id/1052/800/600" },
+  { title: "Art 22", artist: "Artist 22", category: "painting", image: "https://picsum.photos/id/1053/800/600" },
+  { title: "Art 23", artist: "Artist 23", category: "digital", image: "https://picsum.photos/id/1054/800/600" },
+  { title: "Art 24", artist: "Artist 24", category: "sculpture", image: "https://picsum.photos/id/1055/800/600" },
+  { title: "Art 25", artist: "Artist 25", category: "painting", image: "https://picsum.photos/id/1056/800/600" },
+  { title: "Art 26", artist: "Artist 26", category: "digital", image: "https://picsum.photos/id/1057/800/600" },
+  { title: "Art 27", artist: "Artist 27", category: "sculpture", image: "https://picsum.photos/id/1058/800/600" },
+  { title: "Art 28", artist: "Artist 28", category: "painting", image: "https://picsum.photos/id/1059/800/600" },
+  { title: "Art 29", artist: "Artist 29", category: "digital", image: "https://picsum.photos/id/1060/800/600" },
+  { title: "Art 30", artist: "Artist 30", category: "sculpture", image: "https://picsum.photos/id/1061/800/600" },
+  { title: "Art 31", artist: "Artist 31", category: "painting", image: "https://picsum.photos/id/1062/800/600" },
+  { title: "Art 32", artist: "Artist 32", category: "digital", image: "https://picsum.photos/id/1063/800/600" },
+  { title: "Art 33", artist: "Artist 33", category: "sculpture", image: "https://picsum.photos/id/1064/800/600" },
+  { title: "Art 34", artist: "Artist 34", category: "painting", image: "https://picsum.photos/id/1065/800/600" },
+  { title: "Art 35", artist: "Artist 35", category: "digital", image: "https://picsum.photos/id/1066/800/600" },
+  { title: "Art 36", artist: "Artist 36", category: "sculpture", image: "https://picsum.photos/id/1067/800/600" },
+  { title: "Art 37", artist: "Artist 37", category: "painting", image: "https://picsum.photos/id/1068/800/600" },
+  { title: "Art 38", artist: "Artist 38", category: "digital", image: "https://picsum.photos/id/1069/800/600" },
+  { title: "Art 39", artist: "Artist 39", category: "sculpture", image: "https://picsum.photos/id/1070/800/600" },
+  { title: "Art 40", artist: "Artist 40", category: "painting", image: "https://picsum.photos/id/1071/800/600" },
+  { title: "Art 41", artist: "Artist 41", category: "digital", image: "https://picsum.photos/id/1072/800/600" },
+  { title: "Art 42", artist: "Artist 42", category: "sculpture", image: "https://picsum.photos/id/1073/800/600" },
+  { title: "Art 43", artist: "Artist 43", category: "painting", image: "https://picsum.photos/id/1074/800/600" },
+  { title: "Art 44", artist: "Artist 44", category: "digital", image: "https://picsum.photos/id/1075/800/600" },
+  { title: "Art 45", artist: "Artist 45", category: "sculpture", image: "https://picsum.photos/id/1076/800/600" },
+  { title: "Art 46", artist: "Artist 46", category: "painting", image: "https://picsum.photos/id/1077/800/600" },
+  { title: "Art 47", artist: "Artist 47", category: "digital", image: "https://picsum.photos/id/1078/800/600" },
+  { title: "Art 48", artist: "Artist 48", category: "sculpture", image: "https://picsum.photos/id/1079/800/600" },
+  { title: "Art 49", artist: "Artist 49", category: "painting", image: "https://picsum.photos/id/1080/800/600" },
+  { title: "Art 50", artist: "Artist 50", category: "digital", image: "https://picsum.photos/id/1081/800/600" },
+{ title: "Art 51", artist: "Artist 51", category: "painting", image: "https://picsum.photos/id/1082/800/600" },
+{ title: "Art 52", artist: "Artist 52", category: "digital", image: "https://picsum.photos/id/1083/800/600" },
+{ title: "Art 53", artist: "Artist 53", category: "sculpture", image: "https://picsum.photos/id/1084/800/600" },
+{ title: "Art 54", artist: "Artist 54", category: "painting", image: "https://picsum.photos/id/1085/800/600" },
+{ title: "Art 55", artist: "Artist 55", category: "digital", image: "https://picsum.photos/id/1086/800/600" },
+{ title: "Art 56", artist: "Artist 56", category: "sculpture", image: "https://picsum.photos/id/1087/800/600" },
+{ title: "Art 57", artist: "Artist 57", category: "painting", image: "https://picsum.photos/id/1088/800/600" },
+{ title: "Art 58", artist: "Artist 58", category: "digital", image: "https://picsum.photos/id/1089/800/600" },
+{ title: "Art 59", artist: "Artist 59", category: "sculpture", image: "https://picsum.photos/id/1090/800/600" },
+{ title: "Art 60", artist: "Artist 60", category: "painting", image: "https://picsum.photos/id/1091/800/600" },
+{ title: "Art 61", artist: "Artist 61", category: "digital", image: "https://picsum.photos/id/1092/800/600" },
+{ title: "Art 62", artist: "Artist 62", category: "sculpture", image: "https://picsum.photos/id/1093/800/600" },
+{ title: "Art 63", artist: "Artist 63", category: "painting", image: "https://picsum.photos/id/1094/800/600" },
+{ title: "Art 64", artist: "Artist 64", category: "digital", image: "https://picsum.photos/id/1095/800/600" },
+{ title: "Art 65", artist: "Artist 65", category: "sculpture", image: "https://picsum.photos/id/1096/800/600" },
+{ title: "Art 66", artist: "Artist 66", category: "painting", image: "https://picsum.photos/id/1097/800/600" },
+{ title: "Art 67", artist: "Artist 67", category: "digital", image: "https://picsum.photos/id/1098/800/600" },
+{ title: "Art 68", artist: "Artist 68", category: "sculpture", image: "https://picsum.photos/id/1099/800/600" },
+{ title: "Art 69", artist: "Artist 69", category: "painting", image: "https://picsum.photos/id/1100/800/600" },
+{ title: "Art 70", artist: "Artist 70", category: "digital", image: "https://picsum.photos/id/1101/800/600" },
+{ title: "Art 71", artist: "Artist 71", category: "sculpture", image: "https://picsum.photos/id/1102/800/600" },
+{ title: "Art 72", artist: "Artist 72", category: "painting", image: "https://picsum.photos/id/1103/800/600" },
+{ title: "Art 73", artist: "Artist 73", category: "digital", image: "https://picsum.photos/id/1104/800/600" },
+{ title: "Art 74", artist: "Artist 74", category: "sculpture", image: "https://picsum.photos/id/1105/800/600" },
+{ title: "Art 75", artist: "Artist 75", category: "painting", image: "https://picsum.photos/id/1106/800/600" },
+{ title: "Art 76", artist: "Artist 76", category: "digital", image: "https://picsum.photos/id/1107/800/600" },
+{ title: "Art 77", artist: "Artist 77", category: "sculpture", image: "https://picsum.photos/id/1108/800/600" },
+{ title: "Art 78", artist: "Artist 78", category: "painting", image: "https://picsum.photos/id/1109/800/600" },
+{ title: "Art 79", artist: "Artist 79", category: "digital", image: "https://picsum.photos/id/1110/800/600" },
+{ title: "Art 80", artist: "Artist 80", category: "sculpture", image: "https://picsum.photos/id/1111/800/600" },
+{ title: "Art 81", artist: "Artist 81", category: "painting", image: "https://picsum.photos/id/1112/800/600" },
+{ title: "Art 82", artist: "Artist 82", category: "digital", image: "https://picsum.photos/id/1113/800/600" },
+{ title: "Art 83", artist: "Artist 83", category: "sculpture", image: "https://picsum.photos/id/1114/800/600" },
+{ title: "Art 84", artist: "Artist 84", category: "painting", image: "https://picsum.photos/id/1115/800/600" },
+{ title: "Art 85", artist: "Artist 85", category: "digital", image: "https://picsum.photos/id/1116/800/600" },
+{ title: "Art 86", artist: "Artist 86", category: "sculpture", image: "https://picsum.photos/id/1117/800/600" },
+{ title: "Art 87", artist: "Artist 87", category: "painting", image: "https://picsum.photos/id/1118/800/600" },
+{ title: "Art 88", artist: "Artist 88", category: "digital", image: "https://picsum.photos/id/1119/800/600" },
+{ title: "Art 89", artist: "Artist 89", category: "sculpture", image: "https://picsum.photos/id/1120/800/600" },
+{ title: "Art 90", artist: "Artist 90", category: "painting", image: "https://picsum.photos/id/1121/800/600" },
+{ title: "Art 91", artist: "Artist 91", category: "digital", image: "https://picsum.photos/id/1122/800/600" },
+{ title: "Art 92", artist: "Artist 92", category: "sculpture", image: "https://picsum.photos/id/1123/800/600" },
+{ title: "Art 93", artist: "Artist 93", category: "painting", image: "https://picsum.photos/id/1124/800/600" },
+{ title: "Art 94", artist: "Artist 94", category: "digital", image: "https://picsum.photos/id/1125/800/600" },
+{ title: "Art 95", artist: "Artist 95", category: "sculpture", image: "https://picsum.photos/id/1126/800/600" },
+{ title: "Art 96", artist: "Artist 96", category: "painting", image: "https://picsum.photos/id/1127/800/600" },
+{ title: "Art 97", artist: "Artist 97", category: "digital", image: "https://picsum.photos/id/1128/800/600" },
+{ title: "Art 98", artist: "Artist 98", category: "sculpture", image: "https://picsum.photos/id/1129/800/600" },
+{ title: "Art 99", artist: "Artist 99", category: "painting", image: "https://picsum.photos/id/1130/800/600" },
+{ title: "Art 100", artist: "Artist 100", category: "digital", image: "https://picsum.photos/id/1131/800/600" }
+
+];
+
+
+    let shown = 0;
+    const perBatch = 4;
+
+    const gallery = document.getElementById('gallery');
+    const searchInput = document.getElementById('search');
+    const filterSelect = document.getElementById('filter');
+    const loadMoreBtn = document.getElementById('loadMore');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalArtist = document.getElementById('modalArtist');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const themeIcon = document.getElementById('themeIcon');
+
+    function renderCard(art) {
+      const liked = JSON.parse(localStorage.getItem('likedArts') || '[]');
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="tooltip">Click to view</div>
+        <img src="${art.image}" alt="${art.title}">
+        <div class="info">
+          <h3>${highlight(art.title)}</h3>
+          <p>${highlight(art.artist)}</p>
+          <button class="like-btn ${liked.includes(art.title) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${art.title}')">❤️</button>
         </div>
-    </div>
+      `;
+      card.onclick = () => showModal(art);
+      VanillaTilt.init(card, { max: 15, speed: 400, glare: true, "max-glare": 0.2 });
+      return card;
+    }
 
-    <!-- Hero Section -->
-    <div class="hero" id="home">
-        <h1>Explore the World of Art</h1>
-        <p>Bringing creativity and passion to life with every design.</p>
-        <button class="cta-btn">Explore Our Work</button>
-    </div>
+    function loadMore() {
+      const filtered = filterData();
+      const toShow = filtered.slice(shown, shown + perBatch);
+      toShow.forEach(art => gallery.appendChild(renderCard(art)));
+      shown += toShow.length;
+      if (shown >= filtered.length) loadMoreBtn.style.display = 'none';
+    }
 
-    <!-- Portfolio Section -->
-    <section id="portfolio">
-        <h2 class="section-title">REAL HERO NADEEM</h2>
-        <div class="grid-container">
-            <div class="grid-item">
-                <img src="leaf.jpg" alt="Art 1">
-                <h3>Abstract Art</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="tree.jpg" alt="Art 2">
-                <h3>Modern Design</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="tree2.jpg" alt="Art 3">
-                <h3>Digital Artwork</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-        </div><br><br>
-   <div class="grid-container">
-            <div class="grid-item">
-                <img src="usa.jpeg" alt="Art 1">
-                <h3>Abstract Art</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="paris.jpeg" alt="Art 2">
-                <h3>Modern Design</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="Indonesia.jpeg" alt="Art 3">
-                <h3>Digital Artwork</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-        </div><br><br>
- <div class="grid-container">
-            <div class="grid-item">
-                <img src="bg.jpeg" alt="Art 1">
-                <h3>Abstract Art</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="tree.jpg" alt="Art 2">
-                <h3>Modern Design</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="tree2.jpg" alt="Art 3">
-                <h3>Digital Artwork</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-        </div><br><br>
-<div class="grid-container">
-            <div class="grid-item">
-                <img src="leaf.jpg" alt="Art 1">
-                <h3>Abstract Art</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="tree.jpg" alt="Art 2">
-                <h3>Modern Design</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-            <div class="grid-item">
-                <img src="tree2.jpg" alt="Art 3">
-                <h3>Digital Artwork</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac leo libero.</p>
-            </div>
-        </div>
-</section>
+    function filterData() {
+      const query = searchInput.value.toLowerCase();
+      const category = filterSelect.value;
+      return artworks.filter(a =>
+        (category === 'all' || a.category === category) &&
+        (a.title.toLowerCase().includes(query) || a.artist.toLowerCase().includes(query))
+      );
+    }
 
-    <!-- Footer Section -->
-    <div class="footer" id="contact">
-        <p>&copy; 2025 ArtStudio. All Rights Reserved.</p>
-    </div>
+    function highlight(text) {
+      const kw = searchInput.value.toLowerCase();
+      if (!kw) return text;
+      return text.replace(new RegExp(kw, 'gi'), m => `<mark>${m}</mark>`);
+    }
 
+    function toggleLike(title) {
+      let liked = JSON.parse(localStorage.getItem('likedArts') || '[]');
+      if (liked.includes(title)) {
+        liked = liked.filter(t => t !== title);
+      } else {
+        liked.push(title);
+      }
+      localStorage.setItem('likedArts', JSON.stringify(liked));
+      filterAndRender();
+    }
+
+    function filterAndRender() {
+      gallery.innerHTML = '';
+      shown = 0;
+      loadMore();
+    }
+
+    function showModal(art) {
+      modalImg.src = art.image;
+      modalTitle.textContent = art.title;
+      modalArtist.textContent = art.artist;
+      downloadBtn.href = art.image;
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    document.getElementById('toggleTheme').onclick = () => {
+      document.body.classList.toggle('light');
+      themeIcon.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    };
+
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+      themeIcon.textContent = '☀️';
+    }
+
+    document.getElementById('topBtn').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.onscroll = () => {
+      document.getElementById('topBtn').style.display = window.scrollY > 200 ? 'block' : 'none';
+    };
+
+    modal.onclick = e => { if (e.target === modal) closeModal(); };
+
+    searchInput.addEventListener('input', filterAndRender);
+    filterSelect.addEventListener('change', filterAndRender);
+    loadMoreBtn.addEventListener('click', loadMore);
+
+    // Initial load
+    filterAndRender();
+  </script>
 </body>
 </html>
