@@ -6,222 +6,127 @@
   <title>Modern Art Gallery</title>
   <style>
     :root {
-      --bg: linear-gradient(to right, #0f0c29, #302b63, #24243e);
-      --text: #ffffff;
-      --card-bg: rgba(255, 255, 255, 0.1);
-      --card-border: rgba(255, 255, 255, 0.3);
-      --accent: #00f7ff;
-      --glow: rgba(0, 247, 255, 0.6);
-    }
-
-    body.light {
-      --bg: linear-gradient(to right, #ffffff, #e1eafc);
-      --text: #111;
-      --card-bg: rgba(255, 255, 255, 0.8);
-      --card-border: rgba(0, 0, 0, 0.2);
+      --text: #000;
+      --card-bg: rgba(255,255,255,0.9);
+      --card-border: rgba(0,0,0,0.2);
       --accent: #0066ff;
-      --glow: rgba(0, 102, 255, 0.3);
+      --glow: rgba(0,102,255,0.3);
     }
-
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
+      margin: 0; font-family: 'Segoe UI', sans-serif;
       color: var(--text);
-      transition: all 0.5s ease;
+      background: linear-gradient(-45deg,#ff0057,#ffcc00,#00f2ff,#8e2de2);
+      background-size:400% 400%; animation: gradient 15s ease infinite;
+      transition: .5s ease;
     }
-
+    @keyframes gradient {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    
+    body.light {
+      background: linear-gradient(to right,#ffffff,#e1eafc);
+      --text:#000; --card-bg:rgba(255,255,255,0.9); --card-border:rgba(0,0,0,0.2);
+      --accent:#0066ff; --glow:rgba(0,102,255,0.3);
+    }
+    
     header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      padding: 15px 20px;
-      backdrop-filter: blur(10px);
-      background: var(--card-bg);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:15px 20px;background:var(--card-bg); backdrop-filter:blur(10px);
+      position:sticky; top:0; z-index:999; overflow-x:auto; gap:10px;
     }
-
-    header h1 {
-      font-size: 1.2rem;
-      margin: 0;
-      flex: 1 1 auto;
+    
+    header h1 {margin:0;font-size:1.3rem;}
+    
+    .controls {display:flex; gap:10px; align-items:center;}
+    
+    .controls input, .controls select {
+      padding:8px 14px; border:1px solid rgba(0,0,0,0.2);
+      border-radius:10px; background:rgba(255,255,255,0.6);
+      color: var(--text); backdrop-filter:blur(6px);
+      box-shadow:inset 0 2px 4px rgba(0,0,0,0.1);
+      transition:.3s ease;
     }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+    
+    .controls input {
+      padding-left:34px;
+      background-image:url("data:image/svg+xml,%3Csvg fill='black' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21.71 20.29l-3.39-3.39A9 9 0 109 18a9 9 0 006.9-3.3l3.39 3.39a1 1 0 001.42-1.42zM4 10a6 6 0 1112 0 6 6 0 01-12 0z'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;
+      background-size:18px;
+      background-position:10px center;
     }
-
-    input, select {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.2);
-      color: var(--text);
-    }
-
-    input::placeholder {
-      color: #ccc;
-    }
-
-    button, .like-btn {
-      border: none;
-      background: transparent;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: var(--accent);
-    }
-
-    .like-btn {
-      float: right;
-    }
-
-    .like-btn.liked {
-      color: red;
-    }
-
+    
+    button {background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--accent);}
+    
     #gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px; padding:20px;
     }
-
+    
     .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 15px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
+      background:var(--card-bg); border:1px solid var(--card-border);
+      border-radius:16px; overflow:hidden; position:relative;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1); transition:.4s ease;
+      cursor:pointer;
     }
-
+    
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 30px var(--glow);
+      transform:translateY(-5px);
+      box-shadow: 0 0 15px var(--accent), 0 0 30px var(--glow);
     }
-
+    
     .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
+      width:100%; height:180px; object-fit:cover;
+       filter:brightness(1.05) contrast(1.1);
     }
-
+    
     .info {
-      margin-top: 10px;
+      padding:15px;
     }
-
-    .info h3 {
-      margin: 0;
+    
+    .info h3, .info p {
+      margin:4px 0;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
-
-    .info p {
-      margin: 5px 0 0;
-      font-size: 0.9rem;
-    }
-
-    .tooltip {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--accent);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      color: #fff;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .card:hover .tooltip {
-      opacity: 1;
-    }
-
+    
+    .like-btn { float:right; font-size:1.2rem; background:none; border:none; cursor:pointer; color:var(--accent);}
+    .like-btn.liked { color:red; }
+    
+    .view-count {font-size:0.8rem; margin-top:8px; color:var(--accent);}
+    
     #loadMore, #topBtn {
-      display: block;
-      margin: 30px auto;
-      padding: 10px 20px;
-      font-size: 1rem;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 0 12px var(--glow);
-      cursor: pointer;
+      display:block; margin:30px auto; padding:10px 20px;
+      font-size:1rem; background:var(--accent); color:#fff;
+      border:none; border-radius:8px; box-shadow:0 0 12px var(--glow); cursor:pointer;
     }
-
-    #topBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: none;
-      border-radius: 50%;
-    }
-
-    .theme-icon {
-      font-size: 1.5rem;
-    }
-
-    /* Modal */
+    
+    #topBtn { position:fixed; bottom:20px; right:20px; display:none;}
+    
     .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
+      display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;
     }
-
+    
     .modal-content {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 16px;
-      max-width: 500px;
-      text-align: center;
-      backdrop-filter: blur(10px);
+      background:var(--card-bg); padding:20px; border-radius:16px;
+      max-width:500px; text-align:center; backdrop-filter:blur(10px);
     }
-
-    .modal-content img {
-      max-width: 100%;
-      border-radius: 12px;
-    }
-
+    
+    .modal-content img { max-width:100%; border-radius:12px; }
+    
     a#downloadBtn {
-      display: inline-block;
-      margin-top: 10px;
-      color: var(--accent);
+        display: inline-block;
+        margin-top: 15px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 1.2rem;
     }
-
-    @media(max-width: 600px) {
+    
+    mark { background:yellow;color:black; }
+    
+    @media(max-width:600px) {
       header {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
+        justify-content: flex-start;
       }
-
-      .controls {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-      }
-
-      .card img {
-        height: 140px;
-      }
-    }
-
-    mark {
-      background: yellow;
-      color: black;
+      .controls { flex-wrap:nowrap; }
+      .card img { height:140px; }
     }
   </style>
 </head>
@@ -229,247 +134,319 @@
   <header>
     <h1>🎨 Art Gallery</h1>
     <div class="controls">
-      <input type="text" id="search" placeholder="Search..." />
+      <input id="search" placeholder="Search…" />
       <select id="filter">
         <option value="all">All</option>
         <option value="painting">Painting</option>
         <option value="digital">Digital</option>
+        <option value="sculpture">Sculpture</option>
       </select>
-      <button id="toggleTheme" title="Toggle Theme">
-        <span id="themeIcon">🌙</span>
-      </button>
+      <button id="toggleTheme" title="Toggle Theme"><span id="themeIcon">🌙</span></button>
     </div>
   </header>
-
+  
   <div id="gallery"></div>
   <button id="loadMore">Load More</button>
-  <button id="topBtn">↑</button>
-
-  <!-- Modal -->
+  <button id="topBtn">⬆️</button>
+  
   <div class="modal" id="modal">
     <div class="modal-content">
       <img id="modalImg" src="" alt="">
       <h2 id="modalTitle"></h2>
       <p id="modalArtist"></p>
+      <div class="view-count" id="viewCount"></div>
       <a id="downloadBtn" href="#" download target="_blank">⬇️ Download</a>
     </div>
   </div>
 
-  <!-- VanillaTilt -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
   <script>
-    const artworks = [
-  { title: "Art 1", artist: "Artist 1", category: "painting", image: "https://picsum.photos/id/1015/800/600" },
-  { title: "Art 2", artist: "Artist 2", category: "digital",  image: "https://picsum.photos/id/1016/800/600" },
-  { title: "Art 3", artist: "Artist 3", category: "sculpture", image: "https://picsum.photos/id/1020/800/600" },
-  { title: "Art 4", artist: "Artist 4", category: "painting", image: "https://picsum.photos/id/1024/800/600" },
-  { title: "Art 5", artist: "Artist 5", category: "digital",  image: "https://picsum.photos/id/1025/800/600" },
-  { title: "Art 6", artist: "Artist 6", category: "sculpture", image: "https://picsum.photos/id/1033/800/600" },
-  { title: "Art 7", artist: "Artist 7", category: "painting", image: "https://picsum.photos/id/1035/800/600" },
-  { title: "Art 8", artist: "Artist 8", category: "digital",  image: "https://picsum.photos/id/1038/800/600" },
-  { title: "Art 9", artist: "Artist 9", category: "sculpture", image: "https://picsum.photos/id/1039/800/600" },
-  { title: "Art 10", artist: "Artist 10", category: "painting", image: "https://picsum.photos/id/1040/800/600" },
-  { title: "Art 11", artist: "Artist 11", category: "digital", image: "https://picsum.photos/id/1041/800/600" },
-  { title: "Art 12", artist: "Artist 12", category: "sculpture", image: "https://picsum.photos/id/1042/800/600" },
-  { title: "Art 13", artist: "Artist 13", category: "painting", image: "https://picsum.photos/id/1043/800/600" },
-  { title: "Art 14", artist: "Artist 14", category: "digital", image: "https://picsum.photos/id/1044/800/600" },
-  { title: "Art 15", artist: "Artist 15", category: "sculpture", image: "https://picsum.photos/id/1045/800/600" },
-  { title: "Art 16", artist: "Artist 16", category: "painting", image: "https://picsum.photos/id/1047/800/600" },
-  { title: "Art 17", artist: "Artist 17", category: "digital", image: "https://picsum.photos/id/1048/800/600" },
-  { title: "Art 18", artist: "Artist 18", category: "sculpture", image: "https://picsum.photos/id/1049/800/600" },
-  { title: "Art 19", artist: "Artist 19", category: "painting", image: "https://picsum.photos/id/1050/800/600" },
-  { title: "Art 20", artist: "Artist 20", category: "digital", image: "https://picsum.photos/id/1051/800/600" },
-  { title: "Art 21", artist: "Artist 21", category: "sculpture", image: "https://picsum.photos/id/1052/800/600" },
-  { title: "Art 22", artist: "Artist 22", category: "painting", image: "https://picsum.photos/id/1053/800/600" },
-  { title: "Art 23", artist: "Artist 23", category: "digital", image: "https://picsum.photos/id/1054/800/600" },
-  { title: "Art 24", artist: "Artist 24", category: "sculpture", image: "https://picsum.photos/id/1055/800/600" },
-  { title: "Art 25", artist: "Artist 25", category: "painting", image: "https://picsum.photos/id/1056/800/600" },
-  { title: "Art 26", artist: "Artist 26", category: "digital", image: "https://picsum.photos/id/1057/800/600" },
-  { title: "Art 27", artist: "Artist 27", category: "sculpture", image: "https://picsum.photos/id/1058/800/600" },
-  { title: "Art 28", artist: "Artist 28", category: "painting", image: "https://picsum.photos/id/1059/800/600" },
-  { title: "Art 29", artist: "Artist 29", category: "digital", image: "https://picsum.photos/id/1060/800/600" },
-  { title: "Art 30", artist: "Artist 30", category: "sculpture", image: "https://picsum.photos/id/1061/800/600" },
-  { title: "Art 31", artist: "Artist 31", category: "painting", image: "https://picsum.photos/id/1062/800/600" },
-  { title: "Art 32", artist: "Artist 32", category: "digital", image: "https://picsum.photos/id/1063/800/600" },
-  { title: "Art 33", artist: "Artist 33", category: "sculpture", image: "https://picsum.photos/id/1064/800/600" },
-  { title: "Art 34", artist: "Artist 34", category: "painting", image: "https://picsum.photos/id/1065/800/600" },
-  { title: "Art 35", artist: "Artist 35", category: "digital", image: "https://picsum.photos/id/1066/800/600" },
-  { title: "Art 36", artist: "Artist 36", category: "sculpture", image: "https://picsum.photos/id/1067/800/600" },
-  { title: "Art 37", artist: "Artist 37", category: "painting", image: "https://picsum.photos/id/1068/800/600" },
-  { title: "Art 38", artist: "Artist 38", category: "digital", image: "https://picsum.photos/id/1069/800/600" },
-  { title: "Art 39", artist: "Artist 39", category: "sculpture", image: "https://picsum.photos/id/1070/800/600" },
-  { title: "Art 40", artist: "Artist 40", category: "painting", image: "https://picsum.photos/id/1071/800/600" },
-  { title: "Art 41", artist: "Artist 41", category: "digital", image: "https://picsum.photos/id/1072/800/600" },
-  { title: "Art 42", artist: "Artist 42", category: "sculpture", image: "https://picsum.photos/id/1073/800/600" },
-  { title: "Art 43", artist: "Artist 43", category: "painting", image: "https://picsum.photos/id/1074/800/600" },
-  { title: "Art 44", artist: "Artist 44", category: "digital", image: "https://picsum.photos/id/1075/800/600" },
-  { title: "Art 45", artist: "Artist 45", category: "sculpture", image: "https://picsum.photos/id/1076/800/600" },
-  { title: "Art 46", artist: "Artist 46", category: "painting", image: "https://picsum.photos/id/1077/800/600" },
-  { title: "Art 47", artist: "Artist 47", category: "digital", image: "https://picsum.photos/id/1078/800/600" },
-  { title: "Art 48", artist: "Artist 48", category: "sculpture", image: "https://picsum.photos/id/1079/800/600" },
-  { title: "Art 49", artist: "Artist 49", category: "painting", image: "https://picsum.photos/id/1080/800/600" },
-  { title: "Art 50", artist: "Artist 50", category: "digital", image: "https://picsum.photos/id/1081/800/600" },
-{ title: "Art 51", artist: "Artist 51", category: "painting", image: "https://picsum.photos/id/1082/800/600" },
-{ title: "Art 52", artist: "Artist 52", category: "digital", image: "https://picsum.photos/id/1083/800/600" },
-{ title: "Art 53", artist: "Artist 53", category: "sculpture", image: "https://picsum.photos/id/1084/800/600" },
-{ title: "Art 54", artist: "Artist 54", category: "painting", image: "https://picsum.photos/id/1085/800/600" },
-{ title: "Art 55", artist: "Artist 55", category: "digital", image: "https://picsum.photos/id/1086/800/600" },
-{ title: "Art 56", artist: "Artist 56", category: "sculpture", image: "https://picsum.photos/id/1087/800/600" },
-{ title: "Art 57", artist: "Artist 57", category: "painting", image: "https://picsum.photos/id/1088/800/600" },
-{ title: "Art 58", artist: "Artist 58", category: "digital", image: "https://picsum.photos/id/1089/800/600" },
-{ title: "Art 59", artist: "Artist 59", category: "sculpture", image: "https://picsum.photos/id/1090/800/600" },
-{ title: "Art 60", artist: "Artist 60", category: "painting", image: "https://picsum.photos/id/1091/800/600" },
-{ title: "Art 61", artist: "Artist 61", category: "digital", image: "https://picsum.photos/id/1092/800/600" },
-{ title: "Art 62", artist: "Artist 62", category: "sculpture", image: "https://picsum.photos/id/1093/800/600" },
-{ title: "Art 63", artist: "Artist 63", category: "painting", image: "https://picsum.photos/id/1094/800/600" },
-{ title: "Art 64", artist: "Artist 64", category: "digital", image: "https://picsum.photos/id/1095/800/600" },
-{ title: "Art 65", artist: "Artist 65", category: "sculpture", image: "https://picsum.photos/id/1096/800/600" },
-{ title: "Art 66", artist: "Artist 66", category: "painting", image: "https://picsum.photos/id/1097/800/600" },
-{ title: "Art 67", artist: "Artist 67", category: "digital", image: "https://picsum.photos/id/1098/800/600" },
-{ title: "Art 68", artist: "Artist 68", category: "sculpture", image: "https://picsum.photos/id/1099/800/600" },
-{ title: "Art 69", artist: "Artist 69", category: "painting", image: "https://picsum.photos/id/1100/800/600" },
-{ title: "Art 70", artist: "Artist 70", category: "digital", image: "https://picsum.photos/id/1101/800/600" },
-{ title: "Art 71", artist: "Artist 71", category: "sculpture", image: "https://picsum.photos/id/1102/800/600" },
-{ title: "Art 72", artist: "Artist 72", category: "painting", image: "https://picsum.photos/id/1103/800/600" },
-{ title: "Art 73", artist: "Artist 73", category: "digital", image: "https://picsum.photos/id/1104/800/600" },
-{ title: "Art 74", artist: "Artist 74", category: "sculpture", image: "https://picsum.photos/id/1105/800/600" },
-{ title: "Art 75", artist: "Artist 75", category: "painting", image: "https://picsum.photos/id/1106/800/600" },
-{ title: "Art 76", artist: "Artist 76", category: "digital", image: "https://picsum.photos/id/1107/800/600" },
-{ title: "Art 77", artist: "Artist 77", category: "sculpture", image: "https://picsum.photos/id/1108/800/600" },
-{ title: "Art 78", artist: "Artist 78", category: "painting", image: "https://picsum.photos/id/1109/800/600" },
-{ title: "Art 79", artist: "Artist 79", category: "digital", image: "https://picsum.photos/id/1110/800/600" },
-{ title: "Art 80", artist: "Artist 80", category: "sculpture", image: "https://picsum.photos/id/1111/800/600" },
-{ title: "Art 81", artist: "Artist 81", category: "painting", image: "https://picsum.photos/id/1112/800/600" },
-{ title: "Art 82", artist: "Artist 82", category: "digital", image: "https://picsum.photos/id/1113/800/600" },
-{ title: "Art 83", artist: "Artist 83", category: "sculpture", image: "https://picsum.photos/id/1114/800/600" },
-{ title: "Art 84", artist: "Artist 84", category: "painting", image: "https://picsum.photos/id/1115/800/600" },
-{ title: "Art 85", artist: "Artist 85", category: "digital", image: "https://picsum.photos/id/1116/800/600" },
-{ title: "Art 86", artist: "Artist 86", category: "sculpture", image: "https://picsum.photos/id/1117/800/600" },
-{ title: "Art 87", artist: "Artist 87", category: "painting", image: "https://picsum.photos/id/1118/800/600" },
-{ title: "Art 88", artist: "Artist 88", category: "digital", image: "https://picsum.photos/id/1119/800/600" },
-{ title: "Art 89", artist: "Artist 89", category: "sculpture", image: "https://picsum.photos/id/1120/800/600" },
-{ title: "Art 90", artist: "Artist 90", category: "painting", image: "https://picsum.photos/id/1121/800/600" },
-{ title: "Art 91", artist: "Artist 91", category: "digital", image: "https://picsum.photos/id/1122/800/600" },
-{ title: "Art 92", artist: "Artist 92", category: "sculpture", image: "https://picsum.photos/id/1123/800/600" },
-{ title: "Art 93", artist: "Artist 93", category: "painting", image: "https://picsum.photos/id/1124/800/600" },
-{ title: "Art 94", artist: "Artist 94", category: "digital", image: "https://picsum.photos/id/1125/800/600" },
-{ title: "Art 95", artist: "Artist 95", category: "sculpture", image: "https://picsum.photos/id/1126/800/600" },
-{ title: "Art 96", artist: "Artist 96", category: "painting", image: "https://picsum.photos/id/1127/800/600" },
-{ title: "Art 97", artist: "Artist 97", category: "digital", image: "https://picsum.photos/id/1128/800/600" },
-{ title: "Art 98", artist: "Artist 98", category: "sculpture", image: "https://picsum.photos/id/1129/800/600" },
-{ title: "Art 99", artist: "Artist 99", category: "painting", image: "https://picsum.photos/id/1130/800/600" },
-{ title: "Art 100", artist: "Artist 100", category: "digital", image: "https://picsum.photos/id/1131/800/600" }
-
+   const artworks = [
+    { title: "Mountain Blues", artist: "Rohan Verma", category: "painting", image: "https://picsum.photos/id/1015/800/600" },
+    { title: "Coastal Serenity", artist: "Anika Sharma", category: "digital", image: "https://picsum.photos/id/1016/800/600" },
+    { title: "Golden Gate Dreams", artist: "Liam Carter", category: "sculpture", image: "https://picsum.photos/id/1020/800/600" },
+    { title: "Forest Pathway", artist: "Priya Singh", category: "painting", image: "https://picsum.photos/id/1024/800/600" },
+    { title: "Urban Solitude", artist: "Kenji Tanaka", category: "digital", image: "https://picsum.photos/id/1025/800/600" },
+    { title: "Desert Waves", artist: "Aarav Mehra", category: "sculpture", image: "https://picsum.photos/id/1033/800/600" },
+    { title: "Misty Pier", artist: "Isabella Rossi", category: "painting", image: "https://picsum.photos/id/1035/800/600" },
+    { title: "Silent Shore", artist: "Vikram Rathod", category: "digital", image: "https://picsum.photos/id/1038/800/600" },
+    { title: "Canyon's Shadow", artist: "Elena Petrova", category: "sculpture", image: "https://picsum.photos/id/1039/800/600" },
+    { title: "Winter's Embrace", artist: "Naina Gupta", category: "painting", image: "https://picsum.photos/id/1040/800/600" },
+    { title: "Electric Bloom", artist: "Omar Al-Farsi", category: "digital", image: "https://picsum.photos/id/1041/800/600" },
+    { title: "Autumn Creek", artist: "Advait Kulkarni", category: "sculpture", image: "https://picsum.photos/id/1042/800/600" },
+    { title: "Northern Lights", artist: "Freya Olsen", category: "painting", image: "https://picsum.photos/id/1043/800/600" },
+    { title: "City at Dusk", artist: "Kabir Shah", category: "digital", image: "https://picsum.photos/id/1044/800/600" },
+    { title: "The Old Barn", artist: "Meera Desai", category: "sculpture", image: "https://picsum.photos/id/1045/800/600" },
+    { title: "Frozen Lake", artist: "Yuki Hamada", category: "painting", image: "https://picsum.photos/id/1047/800/600" },
+    { title: "Cybernetic Flow", artist: "Arjun Reddy", category: "digital", image: "https://picsum.photos/id/1048/800/600" },
+    { title: "Hillside Hues", artist: "Chloe Dubois", category: "sculpture", image: "https://picsum.photos/id/1049/800/600" },
+    { title: "Pastel Skies", artist: "Imran Khan", category: "painting", image: "https://picsum.photos/id/1050/800/600" },
+    { title: "River's Bend", artist: "Sofia Bianchi", category: "digital", image: "https://picsum.photos/id/1051/800/600" },
+    { title: "Stone Arch", artist: "David Lee", category: "sculpture", image: "https://picsum.photos/id/1052/800/600" },
+    { title: "First Snow", artist: "Aisha Begum", category: "painting", image: "https://picsum.photos/id/1053/800/600" },
+    { title: "Dockside Stillness", artist: "Mateo Vargas", category: "digital", image: "https://picsum.photos/id/1054/800/600" },
+    { title: "Wooden Path", artist: "Riya Kapoor", category: "sculpture", image: "https://picsum.photos/id/1055/800/600" },
+    { title: "Ocean's Breath", artist: "Finn O'Connor", category: "painting", image: "https://picsum.photos/id/1056/800/600" },
+    { title: "Metropolis Glow", artist: "Saanvi Patel", category: "digital", image: "https://picsum.photos/id/1057/800/600" },
+    { title: "Twilight Peaks", artist: "Aditya Singh", category: "sculpture", image: "https://picsum.photos/id/1058/800/600" },
+    { title: "Morning Fog", artist: "Hana Kim", category: "painting", image: "https://picsum.photos/id/1059/800/600" },
+    { title: "Digital Drift", artist: "Leo Schmidt", category: "digital", image: "https://picsum.photos/id/1060/800/600" },
+    { title: "Forgotten Pier", artist: "Zara Ahmed", category: "sculpture", image: "https://picsum.photos/id/1061/800/600" },
+    { title: "Galactic Dreams", artist: "Ivan Petrov", category: "painting", image: "https://picsum.photos/id/1062/800/600" },
+    { title: "Valley View", artist: "Kiara Advani", category: "digital", image: "https://picsum.photos/id/1063/800/600" },
+    { title: "Sunset Silhouette", artist: "Chen Liu", category: "sculpture", image: "https://picsum.photos/id/1064/800/600" },
+    { title: "Island Escape", artist: "Maria Garcia", category: "painting", image: "https://picsum.photos/id/1065/800/600" },
+    { title: "Chromatic Wave", artist: "Rajesh Kumar", category: "digital", image: "https://picsum.photos/id/1066/800/600" },
+    { title: "Lone Tree", artist: "Emily White", category: "sculpture", image: "https://picsum.photos/id/1067/800/600" },
+    { title: "City Reflections", artist: "Wei Zhang", category: "painting", image: "https://picsum.photos/id/1068/800/600" },
+    { title: "Cosmic River", artist: "Fatima Al-Jamil", category: "digital", image: "https://picsum.photos/id/1069/800/600" },
+    { title: "Astitva", artist: "Siddharth Joshi", category: "sculpture", image: "https://picsum.photos/id/1070/800/600" },
+    { title: "Crimson Field", artist: "Alina Popescu", category: "painting", image: "https://picsum.photos/id/1071/800/600" },
+    { title: "Neon Grid", artist: "Rohan Bhatia", category: "digital", image: "https://picsum.photos/id/1072/800/600" },
+    { title: "The Lighthouse", artist: "Clara Schumann", category: "sculpture", image: "https://picsum.photos/id/1073/800/600" },
+    { title: "Metropolitan", artist: "Arjun Mathur", category: "painting", image: "https://picsum.photos/id/1074/800/600" },
+    { title: "Glacial Melt", artist: "Nikhil Gowda", category: "digital", image: "https://picsum.photos/id/1075/800/600" },
+    { title: "Forest Floor", artist: "Olga Ivanova", category: "sculpture", image: "https://picsum.photos/id/1076/800/600" },
+    { title: "By the Lake", artist: "Samaira Khan", category: "painting", image: "https://picsum.photos/id/1077/800/600" },
+    { title: "Digital Mirage", artist: "Hans Zimmerman", category: "digital", image: "https://picsum.photos/id/1078/800/600" },
+    { title: "Prabhat", artist: "Ishita Dutta", category: "sculpture", image: "https://picsum.photos/id/1079/800/600" },
+    { title: "Yaadon Ki Gali", artist: "Karan Malhotra", category: "painting", image: "https://picsum.photos/id/1080/800/600" },
+    { title: "Retro Future", artist: "Tanya Sharma", category: "digital", image: "https://picsum.photos/id/1081/800/600" },
+    { title: "Golden Fields", artist: "Lucas Müller", category: "painting", image: "https://picsum.photos/id/1082/800/600" },
+    { title: "Abstract Dimensions", artist: "Zoya Akhtar", category: "digital", image: "https://picsum.photos/id/1083/800/600" },
+    { title: "Monsoon Evening", artist: "Varun Bajaj", category: "sculpture", image: "https://picsum.photos/id/1084/800/600" },
+    { title: "Serene Vista", artist: "John Smith", category: "painting", image: "https://picsum.photos/id/1085/800/600" },
+    { title: "Data Stream", artist: "Aanya Reddy", category: "digital", image: "https://picsum.photos/id/1086/800/600" },
+    { title: "Cliffside", artist: "Mohammed Asif", category: "sculpture", image: "https://picsum.photos/id/1087/800/600" },
+    { title: "Winter Sun", artist: "Laura Bailey", category: "painting", image: "https://picsum.photos/id/1088/800/600" },
+    { title: "Virtual Reality", artist: "Dhruv Sehgal", category: "digital", image: "https://picsum.photos/id/1089/800/600" },
+    { title: "The Summit", artist: "Anjali Menon", category: "sculpture", image: "https://picsum.photos/id/1090/800/600" },
+    { title: "Calm Waters", artist: "Marco Conti", category: "painting", image: "https://picsum.photos/id/1091/800/600" },
+    { title: "Pixel Forest", artist: "Suresh Pillai", category: "digital", image: "https://picsum.photos/id/1092/800/600" },
+    { title: "Rocky Coast", artist: "Catalina Flores", category: "sculpture", image: "https://picsum.photos/id/1093/800/600" },
+    { title: "Country Road", artist: "Sunita Rao", category: "painting", image: "https://picsum.photos/id/1094/800/600" },
+    { title: "Night Drive", artist: "Farhan Ali", category: "digital", image: "https://picsum.photos/id/1095/800/600" },
+    { title: "Ancient Stones", artist: "Eva Nowak", category: "sculpture", image: "https://picsum.photos/id/1096/800/600" },
+    { title: "The Bridge", artist: "Anand Kumar", category: "painting", image: "https://picsum.photos/id/1097/800/600" },
+    { title: "Glitch Garden", artist: "Reema Sen", category: "digital", image: "https://picsum.photos/id/1098/800/600" },
+    { title: "Harbor Lights", artist: "Yusuf Abdullah", category: "sculpture", image: "https://picsum.photos/id/1099/800/600" },
+    { title: "Dreamscape", artist: "Pooja Hegde", category: "painting", image: "https://picsum.photos/id/1100/800/600" },
+    { title: "Binary Sunset", artist: "Vikrant Singh", category: "digital", image: "https://picsum.photos/id/1101/800/600" },
+    { title: "Manthan", artist: "Gaurav Chawla", category: "sculpture", image: "https://picsum.photos/id/1102/800/600" },
+    { title: "Quiet Morning", artist: "Lin Wang", category: "painting", image: "https://picsum.photos/id/1103/800/600" },
+    { title: "Circuit Board City", artist: "Harsh Patel", category: "digital", image: "https://picsum.photos/id/1104/800/600" },
+    { title: "The Cave", artist: "Nora Fatehi", category: "sculpture", image: "https://picsum.photos/id/1105/800/600" },
+    { title: "Meadow's Calm", artist: "Ibrahim Al-Sayed", category: "painting", image: "https://picsum.photos/id/1106/800/600" },
+    { title: "Liquid Light", artist: "Sana Sheikh", category: "digital", image: "https://picsum.photos/id/1107/800/600" },
+    { title: "Zenith", artist: "Arnav Kapoor", category: "sculpture", image: "https://picsum.photos/id/1108/800/600" },
+    { title: "Reflections", artist: "Yara Khalil", category: "painting", image: "https://picsum.photos/id/1109/800/600" },
+    { title: "Datafall", artist: "Kabir Bedi", category: "digital", image: "https://picsum.photos/id/1110/800/600" },
+    { title: "Solitude Stone", artist: "Mila Kuznetsova", category: "sculpture", image: "https://picsum.photos/id/1111/800/600" },
+    { title: "Pastoral Scene", artist: "Rajat Gupta", category: "painting", image: "https://picsum.photos/id/1112/800/600" },
+    { title: "Holographic Sky", artist: "Divya Agarwal", category: "digital", image: "https://picsum.photos/id/1113/800/600" },
+    { title: "Creek Bend", artist: "Ethan Hunt", category: "sculpture", image: "https://picsum.photos/id/1114/800/600" },
+    { title: "Open Road", artist: "Tariq Hussain", category: "painting", image: "https://picsum.photos/id/1115/800/600" },
+    { title: "Aurora", artist: "Nisha Nair", category: "digital", image: "https://picsum.photos/id/1116/800/600" },
+    { title: "Frozen Cascade", artist: "Dmitri Volkov", category: "sculpture", image: "https://picsum.photos/id/1117/800/600" },
+    { title: "Crimson Sunset", artist: "Sunidhi Chauhan", category: "painting", image: "https://picsum.photos/id/1118/800/600" },
+    { title: "System Override", artist: "Jayesh Mehta", category: "digital", image: "https://picsum.photos/id/1119/800/600" },
+    { title: "The Watcher", artist: "Aarushi Khanna", category: "sculpture", image: "https://picsum.photos/id/1120/800/600" },
+    { title: "Ocean Mist", artist: "Javier Bardem", category: "painting", image: "https://picsum.photos/id/1121/800/600" },
+    { title: "Synthwave Hills", artist: "Parth Samthaan", category: "digital", image: "https://picsum.photos/id/1122/800/600" },
+    { title: "River Stones", artist: "Irina Shayk", category: "sculpture", image: "https://picsum.photos/id/1123/800/600" },
+    { title: "The Crossing", artist: "Vivek Oberoi", category: "painting", image: "https://picsum.photos/id/1124/800/600" },
+    { title: "Quantum Entanglement", artist: "Preeti Desai", category: "digital", image: "https://picsum.photos/id/1125/800/600" },
+    { title: "Earthen Arch", artist: "Sai Pallavi", category: "sculpture", image: "https://picsum.photos/id/1126/800/600" },
+    { title: "Whispering Pines", artist: "Amir Khan", category: "painting", image: "https://picsum.photos/id/1127/800/600" },
+    { title: "Digital Odyssey", artist: "Sakshi Tanwar", category: "digital", image: "https://picsum.photos/id/1128/800/600" },
+    { title: "Coastal Path", artist: "Rajat Tokas", category: "sculpture", image: "https://picsum.photos/id/1129/800/600" },
+    { title: "Amber Glow", artist: "Fatima Sana Shaikh", category: "painting", image: "https://picsum.photos/id/1130/800/600" },
+    { title: "Neon Jungle", artist: "Shaheer Sheikh", category: "digital", image: "https://picsum.photos/id/1131/800/600" },
+{ title: "Crimson Peak", artist: "Yara Shahidi", category: "painting", image: "https://picsum.photos/id/1132/800/600" },
+    { title: "Code Breaker", artist: "Aditya Roy", category: "digital", image: "https://picsum.photos/id/1133/800/600" },
+    { title: "Terra Cotta", artist: "Lakshmi Menon", category: "sculpture", image: "https://picsum.photos/id/1134/800/600" },
+    { title: "Sun-kissed Valley", artist: "Antonio Banderas", category: "painting", image: "https://picsum.photos/id/1135/800/600" },
+    { title: "Glitch in the Matrix", artist: "Rhea Kapoor", category: "digital", image: "https://picsum.photos/id/1136/800/600" },
+    { title: "Bronze Age", artist: "Mikhail Petrov", category: "sculpture", image: "https://picsum.photos/id/1137/800/600" },
+    { title: "The Forgotten Lake", artist: "Salma Hayek", category: "painting", image: "https://picsum.photos/id/1138/800/600" },
+    { title: "Digital Soul", artist: "Kunal Nayyar", category: "digital", image: "https://picsum.photos/id/1139/800/600" },
+    { title: "Echoes of Time", artist: "Priyanka Bose", category: "sculpture", image: "https://picsum.photos/id/1140/800/600" },
+    { title: "Lavender Fields", artist: "Diego Luna", category: "painting", image: "https://picsum.photos/id/1141/800/600" },
+    { title: "Cybernetic City", artist: "Suman Rao", category: "digital", image: "https://picsum.photos/id/1142/800/600" },
+    { title: "The Thinker's Stone", artist: "Chen Hao", category: "sculpture", image: "https://picsum.photos/id/1143/800/600" },
+    { title: "Autumn's Fire", artist: "Suraj Sharma", category: "painting", image: "https://picsum.photos/id/1144/800/600" },
+    { title: "Virtual Bloom", artist: "Anushka Manchanda", category: "digital", image: "https://picsum.photos/id/1145/800/600" },
+    { title: "Steel Blossom", artist: "Rajkummar Rao", category: "sculpture", image: "https://picsum.photos/id/1146/800/600" },
+    { title: "Midnight Ocean", artist: "Freida Pinto", category: "painting", image: "https://picsum.photos/id/1147/800/600" },
+    { title: "Neon Dreams", artist: "Vikrant Massey", category: "digital", image: "https://picsum.photos/id/1148/800/600" },
+    { title: "Concrete Canvas", artist: "Sophie Turner", category: "sculpture", image: "https://picsum.photos/id/1149/800/600" },
+    { title: "Golden Hour", artist: "Ali Fazal", category: "painting", image: "https://picsum.photos/id/1150/800/600" },
+    { title: "Data Stream", artist: "Monica Bellucci", category: "digital", image: "https://picsum.photos/id/1151/800/600" },
+    { title: "The Serpent", artist: "Sendhil Ramamurthy", category: "sculpture", image: "https://picsum.photos/id/1152/800/600" },
+    { title: "Emerald Valley", artist: "Zendaya", category: "painting", image: "https://picsum.photos/id/1153/800/600" },
+    { title: "Pixelated Sunset", artist: "Ranveer Singh", category: "digital", image: "https://picsum.photos/id/1154/800/600" },
+    { title: "The Oracle", artist: "Gal Gadot", category: "sculpture", image: "https://picsum.photos/id/1155/800/600" },
+    { title: "Winter's Whisper", artist: "Deepika Padukone", category: "painting", image: "https://picsum.photos/id/1156/800/600" },
+    { title: "Synthwave Rider", artist: "Siddhant Chaturvedi", category: "digital", image: "https://picsum.photos/id/1157/800/600" },
+    { title: "Titan's Rest", artist: "Chris Hemsworth", category: "sculpture", image: "https://picsum.photos/id/1158/800/600" },
+    { title: "The Old Mill", artist: "Alia Bhatt", category: "painting", image: "https://picsum.photos/id/1159/800/600" },
+    { title: "Holographic Oasis", artist: "Vicky Kaushal", category: "digital", image: "https://picsum.photos/id/1160/800/600" },
+    { title: "Windswept", artist: "Katrina Kaif", category: "sculpture", image: "https://picsum.photos/id/1161/800/600" },
+    { title: "Azure Coast", artist: "Ranbir Kapoor", category: "painting", image: "https://picsum.photos/id/1162/800/600" },
+    { title: "Quantum Petals", artist: "Kareena Kapoor", category: "digital", image: "https://picsum.photos/id/1163/800/600" },
+    { title: "The Guardian", artist: "Hrithik Roshan", category: "sculpture", image: "https://picsum.photos/id/1164/800/600" },
+    { title: "Silent Woods", artist: "Priyanka Chopra", category: "painting", image: "https://picsum.photos/id/1165/800/600" },
+    { title: "Digital Genesis", artist: "Shahid Kapoor", category: "digital", image: "https://picsum.photos/id/1166/800/600" },
+    { title: "Stone Heart", artist: "Aishwarya Rai", category: "sculpture", image: "https://picsum.photos/id/1167/800/600" },
+    { title: "Desert Bloom", artist: "Akshay Kumar", category: "painting", image: "https://picsum.photos/id/1168/800/600" },
+    { title: "Chromatic Aberration", artist: "Anushka Sharma", category: "digital", image: "https://picsum.photos/id/1169/800/600" },
+    { title: "Celestial Form", artist: "Shah Rukh Khan", category: "sculpture", image: "https://picsum.photos/id/1170/800/600" },
+    { title: "River of Dreams", artist: "Kajol Devgan", category: "painting", image: "https://picsum.photos/id/1171/800/600" },
+    { title: "Virtual Cascade", artist: "Ajay Devgn", category: "digital", image: "https://picsum.photos/id/1172/800/600" },
+    { title: "The Phoenix", artist: "Madhuri Dixit", category: "sculpture", image: "https://picsum.photos/id/1173/800/600" },
+    { title: "Crimson Tide", artist: "Salman Khan", category: "painting", image: "https://picsum.photos/id/1174/800/600" },
+    { title: "Neon Noir", artist: "Vidya Balan", category: "digital", image: "https://picsum.photos/id/1175/800/600" },
+    { title: "The Sentinel", artist: "Aamir Khan", category: "sculpture", image: "https://picsum.photos/id/1176/800/600" },
+    { title: "First Light", artist: "Rani Mukerji", category: "painting", image: "https://picsum.photos/id/1177/800/600" },
+    { title: "Glitchscape", artist: "Saif Ali Khan", category: "digital", image: "https://picsum.photos/id/1178/800/600" },
+    { title: "The Wanderer", artist: "Preity Zinta", category: "sculpture", image: "https://picsum.photos/id/1179/800/600" },
+    { title: "Misty Mountains", artist: "Farhan Akhtar", category: "painting", image: "https://picsum.photos/id/1180/800/600" },
+    { title: "Retro Circuit", artist: "Sonam Kapoor", category: "digital", image: "https://picsum.photos/id/1181/800/600" },
+    { title: "The Weeping Angel", artist: "Irrfan Khan", category: "sculpture", image: "https://picsum.photos/id/1182/800/600" },
+    { title: "Amber Waves", artist: "Tabu", category: "painting", image: "https://picsum.photos/id/1183/800/600" },
+    { title: "Digital Ocean", artist: "Nawazuddin Siddiqui", category: "digital", image: "https://picsum.photos/id/1184/800/600" },
+    { title: "Gargoyle's Gaze", artist: "Konkona Sen Sharma", category: "sculpture", image: "https://picsum.photos/id/1185/800/600" },
+    { title: "The Painted Desert", artist: "Manoj Bajpayee", category: "painting", image: "https://picsum.photos/id/1186/800/600" },
+    { title: "Virtual Eden", artist: "Radhika Apte", category: "digital", image: "https://picsum.photos/id/1187/800/600" },
+    { title: "Frozen in Time", artist: "Pankaj Tripathi", category: "sculpture", image: "https://picsum.photos/id/1188/800/600" },
+    { title: "Sunset Boulevard", artist: "Taapsee Pannu", category: "painting", image: "https://picsum.photos/id/1189/800/600" },
+    { title: "Neon Cityscape", artist: "Ayushmann Khurrana", category: "digital", image: "https://picsum.photos/id/1190/800/600" },
+    { title: "The Silent Giant", artist: "Bhumi Pednekar", category: "sculpture", image: "https://picsum.photos/id/1191/800/600" },
+    { title: "Whispering Grass", artist: "Sushant Singh Rajput", category: "painting", image: "https://picsum.photos/id/1192/800/600" },
+    { title: "Digital Drizzle", artist: "Kriti Sanon", category: "digital", image: "https://picsum.photos/id/1193/800/600" },
+    { title: "The Ancestor", artist: "Sanya Malhotra", category: "sculpture", image: "https://picsum.photos/id/1194/800/600" },
+    { title: "Coastal Fog", artist: "Dulquer Salmaan", category: "painting", image: "https://picsum.photos/id/1195/800/600" },
+    { title: "Virtual Dawn", artist: "Parineeti Chopra", category: "digital", image: "https://picsum.photos/id/1196/800/600" },
+    { title: "The Creator", artist: "Vijay Deverakonda", category: "sculpture", image: "https://picsum.photos/id/1197/800/600" },
+    { title: "The Long Road", artist: "Shraddha Kapoor", category: "painting", image: "https://picsum.photos/id/1198/800/600" },
+    { title: "Data Bloom", artist: "Prabhas", category: "digital", image: "https://picsum.photos/id/1199/800/600" },
+    { title: "The Old God", artist: "Anushka Shetty", category: "sculpture", image: "https://picsum.photos/id/1200/800/600" },
+    { title: "Sakura Dream", artist: "Allu Arjun", category: "painting", image: "https://picsum.photos/id/1201/800/600" },
+    { title: "Cyber Dream", artist: "Rashmika Mandanna", category: "digital", image: "https://picsum.photos/id/1202/800/600" },
+    { title: "The Leviathan", artist: "Ram Charan", category: "sculpture", image: "https://picsum.photos/id/1203/800/600" },
+    { title: "The Golden Path", artist: "Samantha Ruth Prabhu", category: "painting", image: "https://picsum.photos/id/1204/800/600" },
+    { title: "Virtual Love", artist: "N. T. Rama Rao Jr.", category: "digital", image: "https://picsum.photos/id/1205/800/600" },
+    { title: "The Matriarch", artist: "Nayanthara", category: "sculpture", image: "https://picsum.photos/id/1206/800/600" },
+    { title: "Summer Haze", artist: "Yash", category: "painting", image: "https://picsum.photos/id/1207/800/600" },
+    { title: "Code of Creation", artist: "Pooja Hegde", category: "digital", image: "https://picsum.photos/id/1208/800/600" },
+    { title: "The Colossus", artist: "Suriya", category: "sculpture", image: "https://picsum.photos/id/1209/800/600" },
+    { title: "A Walk to Remember", artist: "Trisha Krishnan", category: "painting", image: "https://picsum.photos/id/1210/800/600" },
+    { title: "Digital Abstract", artist: "Vijay", category: "digital", image: "https://picsum.photos/id/1211/800/600" },
+    { title: "The Fossil", artist: "Keerthy Suresh", category: "sculpture", image: "https://picsum.photos/id/1212/800/600" },
+    { title: "Twilight's Last Gleaming", artist: "Ajith Kumar", category: "painting", image: "https://picsum.photos/id/1213/800/600" },
+    { title: "Data Overload", artist: "Kajal Aggarwal", category: "digital", image: "https://picsum.photos/id/1214/800/600" },
+    { title: "The Protector", artist: "Dhanush", category: "sculpture", image: "https://picsum.photos/id/1215/800/600" },
+    { title: "The Quiet River", artist: "Sai Pallavi", category: "painting", image: "https://picsum.photos/id/1216/800/600" },
+    { title: "Virtual Reality", artist: "Kamal Haasan", category: "digital", image: "https://picsum.photos/id/1217/800/600" },
+    { title: "The Sage", artist: "Shruti Haasan", category: "sculpture", image: "https://picsum.photos/id/1218/800/600" },
+    { title: "The Journey Home", artist: "Rajinikanth", category: "painting", image: "https://picsum.photos/id/1219/800/600" },
+    { title: "Digital Nirvana", artist: "Tamannaah Bhatia", category: "digital", image: "https://picsum.photos/id/1220/800/600" },
+    { title: "The Watchtower", artist: "Mohanlal", category: "sculpture", image: "https://picsum.photos/id/1221/800/600" },
+    { title: "Verdant Valley", artist: "Mammootty", category: "painting", image: "https://picsum.photos/id/1222/800/600" },
+    { title: "Electric Sheep", artist: "Fahadh Faasil", category: "digital", image: "https://picsum.photos/id/1223/800/600" },
+    { title: "The Ancient One", artist: "Parvathy Thiruvothu", category: "sculpture", image: "https://picsum.photos/id/1224/800/600" },
+    { title: "The Last Sunset", artist: "Prithviraj Sukumaran", category: "painting", image: "https://picsum.photos/id/1225/800/600" },
+    { title: "Code's Embrace", artist: "Nazriya Nazim", category: "digital", image: "https://picsum.photos/id/1226/800/600" },
+    { title: "The Stone Giant", artist: "Tovino Thomas", category: "sculpture", image: "https://picsum.photos/id/1227/800/600" },
+    { title: "A Place Beyond", artist: "Nithya Menen", category: "painting", image: "https://picsum.photos/id/1228/800/600" },
+    { title: "Digital Heartbeat", artist: "Shane Nigam", category: "digital", image: "https://picsum.photos/id/1229/800/600" },
+    { title: "The Earth Mother", artist: "Aishwarya Lekshmi", category: "sculpture", image: "https://picsum.photos/id/1230/800/600" },
+    { title: "Fading Memories", artist: "Anna Ben", category: "painting", image: "https://picsum.photos/id/1231/800/600" },
 ];
-
-
-    let shown = 0;
-    const perBatch = 4;
-
-    const gallery = document.getElementById('gallery');
-    const searchInput = document.getElementById('search');
-    const filterSelect = document.getElementById('filter');
-    const loadMoreBtn = document.getElementById('loadMore');
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalArtist = document.getElementById('modalArtist');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const themeIcon = document.getElementById('themeIcon');
-
-    function renderCard(art) {
-      const liked = JSON.parse(localStorage.getItem('likedArts') || '[]');
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="tooltip">Click to view</div>
-        <img src="${art.image}" alt="${art.title}">
-        <div class="info">
-          <h3>${highlight(art.title)}</h3>
-          <p>${highlight(art.artist)}</p>
-          <button class="like-btn ${liked.includes(art.title) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${art.title}')">❤️</button>
-        </div>
-      `;
-      card.onclick = () => showModal(art);
-      VanillaTilt.init(card, { max: 15, speed: 400, glare: true, "max-glare": 0.2 });
-      return card;
-    }
-
-    function loadMore() {
-      const filtered = filterData();
-      const toShow = filtered.slice(shown, shown + perBatch);
-      toShow.forEach(art => gallery.appendChild(renderCard(art)));
-      shown += toShow.length;
-      if (shown >= filtered.length) loadMoreBtn.style.display = 'none';
-    }
-
-    function filterData() {
-      const query = searchInput.value.toLowerCase();
-      const category = filterSelect.value;
-      return artworks.filter(a =>
-        (category === 'all' || a.category === category) &&
-        (a.title.toLowerCase().includes(query) || a.artist.toLowerCase().includes(query))
-      );
-    }
-
-    function highlight(text) {
-      const kw = searchInput.value.toLowerCase();
-      if (!kw) return text;
-      return text.replace(new RegExp(kw, 'gi'), m => `<mark>${m}</mark>`);
-    }
-
-    function toggleLike(title) {
-      let liked = JSON.parse(localStorage.getItem('likedArts') || '[]');
-      if (liked.includes(title)) {
-        liked = liked.filter(t => t !== title);
-      } else {
-        liked.push(title);
-      }
-      localStorage.setItem('likedArts', JSON.stringify(liked));
-      filterAndRender();
-    }
-
-    function filterAndRender() {
-      gallery.innerHTML = '';
-      shown = 0;
-      loadMore();
-    }
-
-    function showModal(art) {
-      modalImg.src = art.image;
-      modalTitle.textContent = art.title;
-      modalArtist.textContent = art.artist;
-      downloadBtn.href = art.image;
-      modal.style.display = 'flex';
-    }
-
-    function closeModal() {
-      modal.style.display = 'none';
-    }
-
-    document.getElementById('toggleTheme').onclick = () => {
-      document.body.classList.toggle('light');
-      themeIcon.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
-      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-    };
-
-    if (localStorage.getItem('theme') === 'light') {
-      document.body.classList.add('light');
-      themeIcon.textContent = '☀️';
-    }
-
-    document.getElementById('topBtn').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-    window.onscroll = () => {
-      document.getElementById('topBtn').style.display = window.scrollY > 200 ? 'block' : 'none';
-    };
-
-    modal.onclick = e => { if (e.target === modal) closeModal(); };
-
+    let shown=0, perBatch=9;
+    const gallery=document.getElementById('gallery'),
+          searchInput=document.getElementById('search'),
+          filterSelect=document.getElementById('filter'),
+          loadMoreBtn=document.getElementById('loadMore'),
+          modal=document.getElementById('modal'),
+          modalImg=document.getElementById('modalImg'),
+          modalTitle=document.getElementById('modalTitle'),
+          modalArtist=document.getElementById('modalArtist'),
+          downloadBtn=document.getElementById('downloadBtn'),
+          themeIcon=document.getElementById('themeIcon'),
+          viewCount=document.getElementById('viewCount');
+    
     searchInput.addEventListener('input', filterAndRender);
     filterSelect.addEventListener('change', filterAndRender);
     loadMoreBtn.addEventListener('click', loadMore);
+    document.getElementById('toggleTheme').onclick = toggleTheme;
+    document.getElementById('topBtn').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+    window.addEventListener('scroll',()=>{document.getElementById('topBtn').style.display = window.scrollY>300?'block':'none'});
+    modal.onclick=e=>{ if(e.target===modal) modal.style.display='none'; };
 
-    // Initial load
+    function renderCard(art){
+      const liked=JSON.parse(localStorage.getItem('likedArts')||'[]');
+      const card=document.createElement('div'); card.className='card';
+      card.innerHTML = `
+        <img loading="lazy" src="${art.image}" alt="${art.title}">
+        <div class="info">
+          <h3>${highlight(art.title)}</h3>
+          <p>${highlight(art.artist)}</p>
+          <button class="like-btn ${liked.includes(art.title)?'liked':''}" onclick="event.stopPropagation(); toggleLike('${art.title}')">❤️</button>
+        </div>`;
+      card.onclick = ()=>showModal(art);
+      if(window.innerWidth>768) VanillaTilt.init(card,{max:15,speed:400,glare:true,"max-glare":0.2});
+      return card;
+    }
+
+    function highlight(text){
+      const kw=searchInput.value.toLowerCase();
+      return kw ? text.replace(new RegExp(kw,'gi'),m=>`<mark>${m}</mark>`) : text;
+    }
+
+    function filterData(){
+      const q=searchInput.value.toLowerCase(), c=filterSelect.value;
+      return artworks.filter(a=>
+        (c==='all'||a.category===c) &&
+        (a.title.toLowerCase().includes(q)||a.artist.toLowerCase().includes(q))
+      );
+    }
+
+    function loadMore(){
+      const f = filterData(), slice = f.slice(shown, shown+perBatch);
+      slice.forEach(a=>gallery.appendChild(renderCard(a)));
+      shown += slice.length;
+      loadMoreBtn.style.display = shown >= f.length ? 'none' : 'block';
+    }
+
+    function filterAndRender(){ gallery.innerHTML=''; shown=0; loadMore(); }
+
+    function toggleLike(title){
+      let liked = JSON.parse(localStorage.getItem('likedArts')||'[]');
+      liked.includes(title)? liked = liked.filter(t=>t!==title) : liked.push(title);
+      localStorage.setItem('likedArts', JSON.stringify(liked)); filterAndRender();
+    }
+
+    function showModal(art){
+      modalImg.src = art.image; modalTitle.textContent = art.title;
+      modalArtist.textContent = art.artist; downloadBtn.href = art.image;
+      const key = 'views_'+art.title;
+      const v = parseInt(localStorage.getItem(key)||'0') + 1;
+      localStorage.setItem(key, v);
+      viewCount.textContent = `Viewed: ${v} times`;
+      modal.style.display = 'flex';
+    }
+
+    function toggleTheme(){
+      document.body.classList.toggle('light');
+      themeIcon.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+
+    if(localStorage.getItem('theme') !== 'dark'){
+      document.body.classList.add('light'); themeIcon.textContent = '☀️';
+    }
+    
     filterAndRender();
   </script>
 </body>
