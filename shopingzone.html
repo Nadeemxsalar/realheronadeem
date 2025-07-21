@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopZone - Real Hero Nadeem 🛍️</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #f4f4f4; }
+
+    header {
+      background: #232f3e;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      position:sticky;
+      top:0%;
+      z-index:1000;
+    }
+
+    .logo { font-size: 24px; font-weight: bold; }
+
+    .search-container {
+      position: relative;
+      flex: 1;
+      max-width: 400px;
+      margin: 10px;
+    }
+
+    .search-container input {
+      width: 100%;
+      padding: 10px 35px 10px 15px;
+      border: none;
+      border-radius: 20px;
+    }
+
+    .search-container .search-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: gray;
+      cursor: pointer;
+      
+    }
+
+    .cart { font-size: 20px; cursor: pointer; }
+
+    nav {
+      background: #37475a;
+      padding: 10px;
+      text-align: center;
+    
+    }
+
+    nav button {
+      background: transparent;
+      color: white;
+      border: none;
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+      
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      
+    }
+
+    .product {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .product img {
+      height: 160px;
+      width: 100%;
+      object-fit: contain;
+      transition: 0.4s ease-in-out;
+    }
+
+    .product:hover { transform: scale(1.03); }
+    .product img:hover { transform: scale(1.1); }
+
+    .product h3 { margin: 10px 0; }
+    .product p { font-weight: bold; color: #222; }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover {
+      color: green;
+    }
+
+    .cart-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 340px;
+      height: 100%;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+      padding: 20px;
+      z-index: 1000;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .cart-panel.show { display: block; }
+
+    .cart-panel h2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    #cart-items li {
+      background: #f9f9f9;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #cart-items li button {
+      background: #d9534f;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cart-total {
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 18px;
+    }
+
+    .marquee {
+      background: white;
+      padding: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .marquee img {
+      height: 60px;
+      margin: 0 20px;
+      vertical-align: middle;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      transition: 0.5s;
+      z-index: 9999;
+    }
+
+    #toast.show {
+      opacity: 1;
+    }
+
+    #payment-box {
+      display: none;
+    }
+
+    .payment-section {
+      background: white;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .payment-section h3 {
+      margin-bottom: 10px;
+    }
+
+    .payment-section input, .payment-section textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .payment-section button {
+      background: green;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #selected-product {
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background: #232f3e;
+      color: white;
+      padding: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">ShopZone</div>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search for products..." />
+      <span class="search-icon" onclick="searchProduct()">🔍</span>
+    </div>
+    <div class="cart" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
+  </header>
+
+  <div class="marquee">
+    <marquee scrollamount="7">
+      <img src="https://m.media-amazon.com/images/I/71ZDY57yTQL._AC_UY327_FMwebp_QL65_.jpg"/>
+      <img src="https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg"/>
+      <img src="https://m.media-amazon.com/images/I/61Y2VVWcGBL._AC_UL600_FMwebp_QL65_.jpg"/>
+      <img src="https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg"/>
+    </marquee>
+  </div>
+
+  <nav>
+    <button onclick="filterCategory('all')">All</button>
+    <button onclick="filterCategory('mobile')">Mobiles</button>
+    <button onclick="filterCategory('laptop')">Laptops</button>
+    <button onclick="filterCategory('watch')">Watches</button>
+  </nav>
+
+  <main>
+    <div id="product-list" class="product-container"></div>
+  </main>
+
+  <div id="cart-panel" class="cart-panel">
+    <h2>Your Cart <button class="close-btn" onclick="toggleCart()">×</button></h2>
+    <ul id="cart-items"></ul><br>
+    <button onclick="checkout()"> Order Now </button>
+  </div>
+
+  <div id="payment-box">
+    <div class="payment-section">
+      <h3>Payment Info</h3>
+      <div id="selected-product"></div>
+      <input type="text" placeholder="Full Name"/>
+      <input type="text" placeholder="Card Number"/>
+      <input type="text" placeholder="Expiry (MM/YY)"/>
+      <input type="text" placeholder="CVV"/>
+      <textarea placeholder="Shipping Address"></textarea>
+      <button onclick="alert('Payment Successful 🎉')">Pay Now</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 ShopZone. Created by Real Hero Nadeem 🛍️</p>
+  </footer>
+
+  <div id="toast">Item Added</div>
+
+  <script>
+     const products = [
+    { id: 1, name: "iPhone 14", category: "mobile", price: 89900, image: "https://m.media-amazon.com/images/I/71ZDY57yTQL._AC_UY327_FMwebp_QL65_.jpg" },
+    { id: 2, name: "Samsung S23", category: "mobile", price: 79999, image: "https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg" },
+    { id: 3, name: "Noise Smart Watch", category: "watch", price: 1999, image: "https://m.media-amazon.com/images/I/61Y2VVWcGBL._AC_UL600_FMwebp_QL65_.jpg" },
+    { id: 4, name: "HP Laptop", category: "laptop", price: 55999, image: "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg" },
+    { id: 5, name: "boAt Rockerz 450", category: "headphones", price: 1499, image: "https://m.media-amazon.com/images/I/61u1VALn6JL._AC_UY327_FMwebp_QL65_.jpg" },
+    { id: 6, name: "OnePlus Nord CE 3 Lite", category: "mobile", price: 19999, image: "https://m.media-amazon.com/images/I/61QRgOgBx0L._AC_UY327_FMwebp_QL65_.jpg" }
+  ];
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    function renderProducts(filter = 'all') {
+      const list = document.getElementById("product-list");
+      list.innerHTML = "";
+      const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+      filtered.forEach(p => {
+        list.innerHTML += `
+          <div class="product">
+            <img src="${p.image}" alt="${p.name}" />
+            <h3>${p.name}</h3>
+            <p>₹${p.price.toLocaleString()}</p>
+            <button class="icon-btn" onclick="addToCart(${p.id})" title="Add to Cart">🛒</button>
+            <button class="icon-btn" onclick="orderNow(${p.id})" title="Order Now">🛍</button>
+          </div>
+        `;
+      });
+    }
+
+    function addToCart(id) {
+      const item = products.find(p => p.id === id);
+      cart.push(item);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cart-count").textContent = cart.length;
+      showToast(`${item.name} added to cart!`);
+    }
+
+    function toggleCart() {
+      const panel = document.getElementById("cart-panel");
+      panel.classList.toggle("show");
+      const list = document.getElementById("cart-items");
+      list.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price;
+        list.innerHTML += `
+          <li>
+            ${item.name} - ₹${item.price.toLocaleString()}
+            <button onclick="removeFromCart(${index})">🗑️</button>
+          </li>
+        `;
+      });
+      list.innerHTML += `<div class="cart-total">Total: ₹${total.toLocaleString()}</div>`;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cart-count").textContent = cart.length;
+      toggleCart(); toggleCart();
+    }
+
+    function checkout() {
+      if (cart.length === 0) return showToast("Cart is empty!");
+      showToast("Thanks for shopping, Nadeem bhai! 🛍️");
+      cart = [];
+      localStorage.removeItem("cart");
+      document.getElementById("cart-count").textContent = 0;
+      toggleCart();
+    }
+
+    function orderNow(productId) {
+      const product = products.find(p => p.id === productId);
+      document.getElementById("selected-product").textContent = `You are ordering: ${product.name} - ₹${product.price.toLocaleString()}`;
+      document.getElementById("payment-box").style.display = "block";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function searchProduct() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+      const list = document.getElementById("product-list");
+      list.innerHTML = "";
+      if (filtered.length === 0) {
+        list.innerHTML = "<p style='padding:10px;'>No product found.</p>";
+      } else {
+        filtered.forEach(p => {
+          list.innerHTML += `
+            <div class="product">
+              <img src="${p.image}" alt="${p.name}"/>
+              <h3>${p.name}</h3>
+              <p>₹${p.price.toLocaleString()}</p>
+              <button class="icon-btn" onclick="addToCart(${p.id})">🛒</button>
+              <button class="icon-btn" onclick="orderNow(${p.id})">🛍️</button>
+            </div>
+          `;
+        });
+      }
+    }
+
+    function filterCategory(cat) {
+      renderProducts(cat);
+    }
+
+    window.onload = () => {
+      renderProducts();
+      document.getElementById("cart-count").textContent = cart.length;
+    }
+  </script>
+</body>
+</html>
