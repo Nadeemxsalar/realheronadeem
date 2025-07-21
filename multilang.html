@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduLang Pro - Learn Anytime</title>
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif;}
+    body {
+      background: linear-gradient(135deg, #000000, #141e30);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px #00ffe5;
+    }
+    .navbar {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .nav-item {
+      color: #00ffe5;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .nav-item:hover {
+      text-shadow: 0 0 10px #00ffe5;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .card {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 30px #00f0ff;
+    }
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .card p {
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .glow-btn {
+      background: #00ffe5;
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ffe5;
+      transition: 0.3s;
+    }
+    .glow-btn:hover {
+      box-shadow: 0 0 25px #00ffe5, 0 0 35px #00ffe5;
+    }
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 255, 200, 0.9);
+      color: black;
+      padding: 15px 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px #00ffe5;
+      display: none;
+    }
+    .dark-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #00ffe5;
+      color: #000;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .quiz-section {
+      margin-top: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 600px;
+      display: none;
+    }
+    footer {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌐 EduLang Pro</h1>
+  <div class="navbar">
+    <span class="nav-item" onclick="scrollToCourses()">Courses</span>
+    <span class="nav-item" onclick="showQuiz()">Practice Quiz</span>
+    <span class="nav-item" onclick="showPopup('Daily Word: Bonjour = Hello (French)')">Daily Word</span>
+    <span class="nav-item" onclick="showPopup('Live Chat Coming Soon!')">Live Chat</span>
+    <span class="nav-item" onclick="showPopup('AI Practice Mode Enabled')">AI Practice</span>
+  </div>
+  <div class="container" id="courseContainer"></div>  <div class="quiz-section" id="quizSection">
+    <h2>Quiz: What is the meaning of "Gracias"?</h2>
+    <button class="glow-btn" onclick="quizAnswer(this, false)">Hello</button>
+    <button class="glow-btn" onclick="quizAnswer(this, true)">Thank You</button>
+    <button class="glow-btn" onclick="quizAnswer(this, false)">Goodbye</button>
+  </div><button class="dark-toggle" onclick="toggleDarkMode()">🌓 Theme</button>
+
+  <div class="popup" id="popup"></div>
+  <footer>© 2025 EduLang Pro | Designed by Real Hero Nadeem</footer>  <script>
+    const courses = [
+      {title: "English Basics", desc: "Start from alphabets, grammar, and simple speaking."},
+      {title: "French Beginner", desc: "Daily phrases, numbers, and verbs."},
+      {title: "Spanish Intermediate", desc: "Build confidence in real conversations."},
+      {title: "Arabic Starter", desc: "Learn letters, words, and sounds."},
+      {title: "German Grammar", desc: "Cases, genders, and sentence structure."},
+      {title: "Hindi Speaking", desc: "Common dialogues with native pronunciation."},
+      {title: "Korean for K-pop Fans", desc: "Read lyrics and phrases used in K-dramas."},
+      {title: "Japanese Kana", desc: "Hiragana, Katakana with animation."},
+      {title: "Italian Romance", desc: "Fluent romantic phrases and culture."},
+      {title: "Chinese Tones", desc: "Tone practice with interactive examples."},
+    ];
+
+    const container = document.getElementById("courseContainer");
+    courses.forEach(course => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<h2>${course.title}</h2><p>${course.desc}</p><button class='glow-btn' onclick=\"showPopup('Opening ${course.title}...')\">Start Now</button>`;
+      container.appendChild(card);
+    });
+
+    function scrollToCourses() {
+      document.getElementById("courseContainer").scrollIntoView({behavior: "smooth"});
+    }
+
+    function showPopup(msg) {
+      const popup = document.getElementById("popup");
+      popup.textContent = msg;
+      popup.style.display = "block";
+      setTimeout(() => popup.style.display = "none", 3000);
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      if (document.body.classList.contains("dark-mode")) {
+        document.body.style.background = "#f5f5f5";
+        document.body.style.color = "#000";
+      } else {
+        document.body.style.background = "linear-gradient(135deg, #000000, #141e30)";
+        document.body.style.color = "#fff";
+      }
+    }
+
+    function showQuiz() {
+      document.getElementById("quizSection").style.display = "block";
+      scrollToElement("quizSection");
+    }
+
+    function quizAnswer(button, isCorrect) {
+      if (isCorrect) {
+        showPopup("✅ Correct! 'Gracias' means Thank You");
+      } else {
+        showPopup("❌ Oops! Try again");
+      }
+    }
+
+    function scrollToElement(id) {
+      document.getElementById(id).scrollIntoView({behavior: "smooth"});
+    }
+  </script></body>
+</html>
