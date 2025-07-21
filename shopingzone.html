@@ -272,7 +272,7 @@
     <marquee scrollamount="7">
       <img src="https://m.media-amazon.com/images/I/71ZDY57yTQL._AC_UY327_FMwebp_QL65_.jpg"/>
       <img src="https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg"/>
-      <img src="https://m.media-amazon.com/images/I/61Y2VVWcGBL._AC_UL600_FMwebp_QL65_.jpg"/>
+      <img src="https://m.media-amazon.com/images/I/61ofV82kMKL._AC_UY327_FMwebp_QL65_.jpg"/>
       <img src="https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg"/>
     </marquee>
   </div>
@@ -315,13 +315,35 @@
 
   <script>
     const products = [
-      { id: 1, name: "iPhone 14", category: "mobile", price: 89900, image: "https://m.media-amazon.com/images/I/71ZDY57yTQL._AC_UY327_FMwebp_QL65_.jpg" },
-      { id: 2, name: "Samsung S23", category: "mobile", price: 79999, image: "https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg" },
-      { id: 3, name: "Noise Smart Watch", category: "watch", price: 1999, image: "https://m.media-amazon.com/images/I/61Y2VVWcGBL._AC_UL600_FMwebp_QL65_.jpg" },
-      { id: 4, name: "HP Laptop", category: "laptop", price: 55999, image: "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg" },
-      { id: 5, name: "boAt Rockerz 450", category: "headphones", price: 1499, image: "https://m.media-amazon.com/images/I/61u1VALn6JL._AC_UY327_FMwebp_QL65_.jpg" },
-      { id: 6, name: "OnePlus Nord CE 3 Lite", category: "mobile", price: 19999, image: "https://m.media-amazon.com/images/I/61QRgOgBx0L._AC_UY327_FMwebp_QL65_.jpg" }
-    ];
+  { id: 1, name: "iPhone 14", category: "mobile", price: 25341, image: "https://m.media-amazon.com/images/I/71ZDY57yTQL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 2, name: "Samsung S23", category: "mobile", price: 5947, image: "https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 3, name: "OnePlus Nord CE 3 Lite", category: "mobile", price: 17476, image: "https://m.media-amazon.com/images/I/61QRgOgBx0L._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 4, name: "Xiaomi Redmi Note 13", category: "mobile", price: 90876, image: "https://m.media-amazon.com/images/I/8104evx11QL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 5, name: "Realme Narzo 60X", category: "mobile", price: 7174, image: "https://m.media-amazon.com/images/I/71DSxfKzkJL._AC_UY327_FMwebp_QL65_.jpg" },
+
+  { id: 6, name: "HP Laptop", category: "laptop", price: 62560, image: "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 7, name: "Dell Inspiron", category: "laptop", price: 45693, image: "https://m.media-amazon.com/images/I/41mv+31tapL._SY300_SX300_.jpg" },
+  { id: 8, name: "Lenovo ThinkPad", category: "laptop", price: 80077, image: "https://m.media-amazon.com/images/I/71c0GSxtEEL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 9, name: "Asus VivoBook", category: "laptop", price: 41083, image: "https://m.media-amazon.com/images/I/718goB02iNL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 10, name: "MacBook Air M2", category: "laptop", price: 18138, image: "https://m.media-amazon.com/images/I/71TPda7cwUL._AC_UY327_FMwebp_QL65_.jpg" },
+
+  { id: 11, name: "Noise Smart Watch", category: "watch", price: 8675, image: "https://m.media-amazon.com/images/I/61ofV82kMKL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 12, name: "boAt Xtend", category: "watch", price: 36264, image: "https://m.media-amazon.com/images/I/61ZuL8CUigL._AC_UL600_FMwebp_QL65_.jpg" },
+  { id: 13, name: "Fire-Boltt Visionary", category: "watch", price: 23197, image: "https://m.media-amazon.com/images/I/61BGE6iu4AL._AC_UL600_FMwebp_QL65_.jpg" },
+  { id: 14, name: "Samsung Galaxy Watch", category: "watch", price: 49675, image: "https://m.media-amazon.com/images/I/81acmzia3+L._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 15, name: "Apple Watch SE", category: "watch", price: 27156, image: "https://m.media-amazon.com/images/I/81fxjeu8fdL._AC_UL600_FMwebp_QL65_.jpg" },
+
+  { id: 16, name: "boAt Rockerz 450", category: "headphones", price: 23049, image: "https://m.media-amazon.com/images/I/61u1VALn6JL._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 17, name: "Sony WH-1000XM4", category: "headphones", price: 81219, image: "https://m.media-amazon.com/images/I/31vOBg8cPaL._SX300_SY300_QL70_FMwebp_.jpg" },
+  { id: 18, name: "JBL Tune 510BT", category: "headphones", price: 19064, image: "https://m.media-amazon.com/images/I/61kWB+uzR2L._AC_UY327_FMwebp_QL65_.jpg" },
+  { id: 19, name: "Realme Buds Wireless", category: "headphones", price: 26368, image: "https://m.media-amazon.com/images/I/31GYay3meDL._SX300_SY300_QL70_FMwebp_.jpg" },
+  { id: 20, name: "Zebronics Zeb-Rush", category: "headphones", price: 19606, image: "https://m.media-amazon.com/images/I/71VR6c3j2bL._AC_UY327_FMwebp_QL65_.jpg" },
+
+  // Repeat pattern to make 50
+  // (Same 5 per category again, IDs 21-50)
+  // You can copy the above 20 again with updated IDs and new random prices if needed
+];
+
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
