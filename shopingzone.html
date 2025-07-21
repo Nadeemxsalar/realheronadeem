@@ -191,6 +191,15 @@
       margin: 0 20px;
       vertical-align: middle;
     }
+   .orderbtn{
+     padding: 10px 20px;
+     background:green;
+     border-radius:20px;
+     color:white;
+     margin-top:20%;
+
+
+}
 
     #toast {
       position: fixed;
@@ -274,6 +283,10 @@
       <img src="https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg"/>
       <img src="https://m.media-amazon.com/images/I/61ofV82kMKL._AC_UY327_FMwebp_QL65_.jpg"/>
       <img src="https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg"/>
+     <img src="https://m.media-amazon.com/images/I/81acmzia3+L._AC_UY327_FMwebp_QL65_.jpg"/>
+      <img src="https://m.media-amazon.com/images/I/71VR6c3j2bL._AC_UY327_FMwebp_QL65_.jpg"/>
+      <img src="https://m.media-amazon.com/images/I/31GYay3meDL._SX300_SY300_QL70_FMwebp_.jpg"/>
+      <img src="https://m.media-amazon.com/images/I/61kWB+uzR2L._AC_UY327_FMwebp_QL65_.jpg"/>
     </marquee>
   </div>
 
@@ -291,7 +304,7 @@
   <div id="cart-panel" class="cart-panel">
     <h2>Your Cart <button class="close-btn" onclick="toggleCart()">×</button></h2>
     <ul id="cart-items"></ul><br>
-    <button onclick="checkout()"> Order Now </button>
+    <button class="orderbtn" onclick="checkout()"> Order Now </button>
   </div>
 
   <div id="payment-box">
@@ -338,7 +351,7 @@
   { id: 18, name: "JBL Tune 510BT", category: "headphones", price: 19064, image: "https://m.media-amazon.com/images/I/61kWB+uzR2L._AC_UY327_FMwebp_QL65_.jpg" },
   { id: 19, name: "Realme Buds Wireless", category: "headphones", price: 26368, image: "https://m.media-amazon.com/images/I/31GYay3meDL._SX300_SY300_QL70_FMwebp_.jpg" },
   { id: 20, name: "Zebronics Zeb-Rush", category: "headphones", price: 19606, image: "https://m.media-amazon.com/images/I/71VR6c3j2bL._AC_UY327_FMwebp_QL65_.jpg" },
-
+ 
   // Repeat pattern to make 50
   // (Same 5 per category again, IDs 21-50)
   // You can copy the above 20 again with updated IDs and new random prices if needed
