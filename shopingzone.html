@@ -45,7 +45,6 @@
       font-size: 18px;
       color: gray;
       cursor: pointer;
-      
     }
 
     .cart { font-size: 20px; cursor: pointer; }
@@ -54,7 +53,6 @@
       background: #37475a;
       padding: 10px;
       text-align: center;
-    
     }
 
     nav button {
@@ -64,7 +62,6 @@
       margin: 0 10px;
       font-size: 16px;
       cursor: pointer;
-      
     }
 
     .product-container {
@@ -72,7 +69,6 @@
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 20px;
       padding: 20px;
-      
     }
 
     .product {
@@ -107,6 +103,21 @@
 
     .icon-btn:hover {
       color: green;
+    }
+
+    .order-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      margin-top: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .order-btn:hover {
+      background: #218838;
     }
 
     .cart-panel {
@@ -303,14 +314,15 @@
   <div id="toast">Item Added</div>
 
   <script>
-     const products = [
-    { id: 1, name: "iPhone 14", category: "mobile", price: 89900, image: "https://m.media-amazon.com/images/I/71ZDY57yTQL._AC_UY327_FMwebp_QL65_.jpg" },
-    { id: 2, name: "Samsung S23", category: "mobile", price: 79999, image: "https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg" },
-    { id: 3, name: "Noise Smart Watch", category: "watch", price: 1999, image: "https://m.media-amazon.com/images/I/61Y2VVWcGBL._AC_UL600_FMwebp_QL65_.jpg" },
-    { id: 4, name: "HP Laptop", category: "laptop", price: 55999, image: "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg" },
-    { id: 5, name: "boAt Rockerz 450", category: "headphones", price: 1499, image: "https://m.media-amazon.com/images/I/61u1VALn6JL._AC_UY327_FMwebp_QL65_.jpg" },
-    { id: 6, name: "OnePlus Nord CE 3 Lite", category: "mobile", price: 19999, image: "https://m.media-amazon.com/images/I/61QRgOgBx0L._AC_UY327_FMwebp_QL65_.jpg" }
-  ];
+    const products = [
+      { id: 1, name: "iPhone 14", category: "mobile", price: 89900, image: "https://m.media-amazon.com/images/I/71ZDY57yTQL._AC_UY327_FMwebp_QL65_.jpg" },
+      { id: 2, name: "Samsung S23", category: "mobile", price: 79999, image: "https://m.media-amazon.com/images/I/81gC7frRJyL._AC_UY327_FMwebp_QL65_.jpg" },
+      { id: 3, name: "Noise Smart Watch", category: "watch", price: 1999, image: "https://m.media-amazon.com/images/I/61Y2VVWcGBL._AC_UL600_FMwebp_QL65_.jpg" },
+      { id: 4, name: "HP Laptop", category: "laptop", price: 55999, image: "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UY327_FMwebp_QL65_.jpg" },
+      { id: 5, name: "boAt Rockerz 450", category: "headphones", price: 1499, image: "https://m.media-amazon.com/images/I/61u1VALn6JL._AC_UY327_FMwebp_QL65_.jpg" },
+      { id: 6, name: "OnePlus Nord CE 3 Lite", category: "mobile", price: 19999, image: "https://m.media-amazon.com/images/I/61QRgOgBx0L._AC_UY327_FMwebp_QL65_.jpg" }
+    ];
+
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     function showToast(msg) {
@@ -331,7 +343,7 @@
             <h3>${p.name}</h3>
             <p>₹${p.price.toLocaleString()}</p>
             <button class="icon-btn" onclick="addToCart(${p.id})" title="Add to Cart">🛒</button>
-            <button class="icon-btn" onclick="orderNow(${p.id})" title="Order Now">🛍</button>
+            <button class="order-btn" onclick="orderNow(${p.id})">Order Now</button>
           </div>
         `;
       });
@@ -401,7 +413,7 @@
               <h3>${p.name}</h3>
               <p>₹${p.price.toLocaleString()}</p>
               <button class="icon-btn" onclick="addToCart(${p.id})">🛒</button>
-              <button class="icon-btn" onclick="orderNow(${p.id})">🛍️</button>
+              <button class="order-btn" onclick="orderNow(${p.id})">Order Now</button>
             </div>
           `;
         });
