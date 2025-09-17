@@ -415,6 +415,129 @@
         background: #3b82f6;
       }
 
+/* Advanced Search Styling */
+/* --- Container: Search + Sort --- */
+.search-sort-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* --- Search Box --- */
+.search-container {
+  flex: 1; /* barabar space le */
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 30px;
+  padding: 6px 100px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* 🔍 Icon */
+.search-icon {
+  font-size: 18px;
+  color: #ff0000;
+  margin-right: 10px;
+  pointer-events: none;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Input */
+#searchBar {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+  color: #111;
+  padding: 6px 0;
+}
+
+/* Placeholder centered and styled */
+#searchBar::placeholder {
+  color: rgba(0,0,0,0.5);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* Glow on focus */
+.search-container:focus-within {
+  animation: redPulse 1.5s infinite alternate;
+}
+
+/* Glow animation */
+@keyframes redPulse {
+  from {
+    box-shadow: 0 0 10px rgba(255,0,0,0.4), 0 0 20px rgba(255,0,0,0.3);
+  }
+  to {
+    box-shadow: 0 0 25px rgba(255,0,0,0.9), 0 0 50px rgba(255,0,0,0.7);
+  }
+}
+
+/* --- Suggestions --- */
+#searchSuggestions {
+  position: absolute;
+  top: 110%;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+#searchSuggestions div {
+  padding: 12px;
+  cursor: pointer;
+  color: #111;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s;
+}
+
+#searchSuggestions div:hover {
+  background: #f2f2f2;
+  color: #e60000;
+}
+
+/* --- Sort Dropdown --- */
+#sortOptions {
+  flex: 1; /* barabar space le search ke saath */
+  padding: 18px 15px;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Dropdown hover glow */
+#sortOptions:hover, #sortOptions:focus {
+  box-shadow: 0 0 15px rgba(255,0,0,0.4);
+  border-color: #ff0000;
+}
+
+/* Add small arrow */
+#sortOptions {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23111' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
       /* --- Responsive --- */
       @media (max-width: 768px) {
         header {
@@ -443,6 +566,15 @@
           display: block;
         }
       }
+       .search-sort-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #sortOptions {
+    flex: none;
+    width: 100%;
+  }
     </style>
   </head>
 
@@ -508,39 +640,28 @@
           margin-bottom: 20px;
         "
       >
-        <div class="search-container" style="position: relative; flex-grow: 1">
-          <input
-            type="text"
-            id="searchBar"
-            placeholder="Search food..."
-            oninput="handleSearchInput()"
-          />
-          <div
-            id="searchSuggestions"
-            style="
-              display: none;
-              position: absolute;
-              top: 100%;
-              left: 0;
-              right: 0;
-              background: var(--card-color);
-              border: 1px solid var(--border-color);
-              border-radius: 10px;
-              z-index: 100;
-              max-height: 200px;
-              overflow-y: auto;
-            "
-          ></div>
-        </div>
-        <select id="sortOptions" onchange="sortMenu()">
-          <option value="default">Sort By</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="rating-desc">Rating</option>
-        </select>
-      </div>
-      <div class="menu-items" id="menuItems"></div>
-    </section>
+      <div class="search-sort-container">
+  <div class="search-container">
+    <i class="fas fa-search search-icon"></i>
+    <input
+      type="text"
+      id="searchBar"
+      placeholder="Search food..."
+      oninput="handleSearchInput()"
+    />
+    <div id="searchSuggestions"></div>
+  </div>
+
+  <select id="sortOptions" onchange="sortMenu()">
+    <option value="default">Sort By</option>
+    <option value="price-asc">Price: Low to High</option>
+    <option value="price-desc">Price: High to Low</option>
+    <option value="rating-desc">Rating</option>
+  </select>
+</div>
+
+<div class="menu-items" id="menuItems"></div>
+
 
     <section id="cartSection" class="glass-card" style="display: none">
       <h2 class="text-contrast">Your Cart</h2>
