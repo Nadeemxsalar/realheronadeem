@@ -13,6 +13,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       /* --- Basic Setup & NEW Color Variables --- */
       :root {
@@ -28,6 +29,8 @@
         --border-color: rgba(51, 65, 85, 0.5);
         --shadow-color: rgba(255, 126, 95, 0.15);
         --header-bg: rgba(30, 41, 59, 0.7);
+        --success-color: #22c55e;
+        --danger-color: #ef4444;
       }
 
       body.light-mode {
@@ -121,7 +124,7 @@
       }
 
       /* --- General Components --- */
-      button {
+      button, .btn {
         padding: 10px 18px;
         border: none;
         border-radius: 10px;
@@ -129,6 +132,9 @@
         cursor: pointer;
         transition: all 0.3s;
         margin-top: 5px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
       }
 
       .btn-primary {
@@ -151,6 +157,14 @@
         background: var(--secondary-hover);
         transform: translateY(-2px);
       }
+      .btn-danger {
+        background: var(--danger-color);
+        color: white;
+      }
+      .btn-danger:hover {
+        opacity: 0.8;
+      }
+
 
       button:disabled {
         background: #94a3b8;
@@ -159,7 +173,8 @@
       }
 
       input,
-      select {
+      select,
+      textarea {
         padding: 10px 12px;
         border-radius: 10px;
         border: 1px solid var(--border-color);
@@ -172,7 +187,8 @@
       }
 
       input:focus,
-      select:focus {
+      select:focus,
+      textarea:focus {
         outline: none;
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px var(--shadow-color);
@@ -326,7 +342,7 @@
         position: absolute;
         top: 10px;
         right: 10px;
-        background-color: #ef4444;
+        background-color: var(--danger-color);
         color: white;
         padding: 4px 8px;
         border-radius: 20px;
@@ -445,6 +461,7 @@
         max-width: 500px;
         animation: fadeInUp 0.5s;
         position: relative;
+        text-align: left;
       }
 
       .close-btn {
@@ -483,22 +500,68 @@
         animation: slideInRight 0.5s;
       }
 
-      .toast.success {
-        background: #22c55e;
+      .toast.success { background: var(--success-color); }
+      .toast.error { background: var(--danger-color); }
+      .toast.info { background: #3b82f6; }
+
+      /* --- NEW: Admin Panel Styles --- */
+      .admin-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
       }
-      .toast.error {
-        background: #ef4444;
+      .admin-tabs button {
+        background: transparent;
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
       }
-      .toast.info {
-        background: #3b82f6;
+      .admin-tabs button.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+      .admin-tab-content { display: none; }
+      .admin-tab-content.active { display: block; }
+      .admin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .admin-card {
+        background: var(--bg-color);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+      }
+      .admin-card h4 { margin-top: 0; color: var(--text-muted); }
+      .admin-card p { font-size: 1.5em; font-weight: bold; margin-bottom: 0; }
+      .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        margin-top: 15px;
+      }
+      .admin-table th, .admin-table td {
+        padding: 10px;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .admin-table th { color: var(--text-muted); }
+      .admin-table td .btn { padding: 5px 10px; font-size: 12px; margin: 0 2px;}
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text-muted);
       }
 
       /* --- Responsive --- */
       @media (max-width: 768px) {
-        header {
-          padding: 15px;
-        }
-
+        header { padding: 15px; }
         .menu-links {
           display: none;
           flex-direction: column;
@@ -512,33 +575,18 @@
           width: 200px;
           text-align: center;
         }
+        .menu-links.active { display: flex; }
+        .hamburger { display: block; }
+        .menu-controls { justify-content: center; }
+        .sort-filters { justify-content: center; }
 
-        .menu-links.active {
-          display: flex;
-        }
-
-        .hamburger {
-          display: block;
-        }
-
-        .menu-controls {
-          justify-content: center; /* Center items on smaller screens */
-        }
-
-        .sort-filters {
-          justify-content: center;
-        }
-
-        /* --- THIS IS THE FIX --- */
-        /* Overriding glass-card styles for mobile to make it full-width */
         .glass-card {
-          margin: 10px 0; /* Removes side margins */
-          padding: 15px; /* Reduces padding for smaller screens */
-          border-radius: 0; /* Removes rounded corners */
-          box-shadow: none; /* Removes the card shadow */
-          border-left: none; /* Removes side borders */
+          margin: 10px 0;
+          padding: 15px;
+          border-radius: 0;
+          box-shadow: none;
+          border-left: none;
           border-right: none;
-          /* Top and bottom borders are kept for separation */
         }
       }
     </style>
@@ -549,41 +597,29 @@
       <h1><i class="fas fa-utensils"></i> Real Hero Restaurant 🍴</h1>
       <div class="hamburger" onclick="toggleMenu()">☰</div>
       <nav class="menu-links" id="menuLinks">
-        <a href="#" id="user-greeting" onclick="handleUserClick()">Login</a>
-        <a href="#" onclick="showSection('menuSection')" class="nav-link active"
-          >Menu</a
-        >
-        <a href="#" onclick="showSection('myOrdersSection')" class="nav-link"
-          >My Orders</a
-        >
-        <a href="#" onclick="showSection('adminSection')" class="nav-link"
-          >Admin</a
-        >
-        <a href="#" onclick="showSection('cartSection')" class="nav-link">
+        <a href="#" id="user-greeting" class="nav-link-item" onclick="handleUserClick()">Login</a>
+        <a href="#" class="nav-link nav-link-item" onclick="showSection('menuSection')">Menu</a>
+        <a href="#" class="nav-link nav-link-item" onclick="showSection('myOrdersSection')">My Orders</a>
+        <a href="#" class="nav-link nav-link-item" onclick="showSection('adminSection')">Admin</a>
+        <a href="#" class="nav-link nav-link-item" onclick="showSection('cartSection')">
           <i class="fas fa-shopping-cart"></i> Cart
           <span
             id="cartBadge"
             class="cart-badge"
             style="
-              background: var(--primary-color);
-              color: white;
-              padding: 2px 6px;
-              border-radius: 10px;
+              background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 10px;
             "
             >0</span
           >
         </a>
-        <span id="loyalty-points" style="margin-left: 10px; font-weight: bold"
+        <span id="loyalty-points" style="margin-left: 10px; font-weight: bold; color:var(--text-color); align-self: center;"
           >🏆 0 pts</span
         >
         <button
           id="theme-toggle"
           onclick="toggleTheme()"
           style="
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--text-color);
+            background: none; border: none; font-size: 20px; color: var(--text-color);
           "
         >
           <i class="fas fa-sun"></i>
@@ -639,9 +675,8 @@
         <h3 id="cartTotal">Total: ₹0</h3>
         <div class="checkout-buttons">
           <button
-            class="btn-secondary"
+            class="btn-danger"
             onclick="resetCart(true)"
-            style="background: #ef4444"
           >
             Clear Cart
           </button>
@@ -661,32 +696,56 @@
     </section>
 
     <section id="adminSection" class="glass-card" style="display: none">
-      <h2 class="text-contrast">Admin Panel</h2>
-      <div id="loginBox">
-        <input type="password" id="adminPass" placeholder="Enter Password" />
-        <button onclick="loginAdmin()" class="btn-primary">Login</button>
-      </div>
-      <div id="adminDashboard" style="display: none">
-        <h3 class="text-contrast">Stock Management</h3>
-        <div
-          id="stockManagement"
-          style="
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: left;
-          "
-        ></div>
-        <button
-          onclick="logoutAdmin()"
-          class="btn-primary"
-          style="margin-top: 20px"
-        >
-          Logout
-        </button>
-      </div>
+        <h2 class="text-contrast">Admin Panel</h2>
+        <div id="loginBox">
+            <input type="password" id="adminPass" placeholder="Enter Password" />
+            <button onclick="loginAdmin()" class="btn-primary">Login</button>
+        </div>
+        <div id="adminDashboard" style="display: none; text-align: left;">
+            <div class="admin-tabs">
+                <button class="active" onclick="showAdminTab('dashboardTab', this)">Dashboard</button>
+                <button onclick="showAdminTab('menuTab', this)">Menu Management</button>
+                <button onclick="showAdminTab('ordersTab', this)">Live Orders</button>
+                <button onclick="showAdminTab('couponsTab', this)">Coupons</button>
+                <button onclick="showAdminTab('usersTab', this)">Users</button>
+            </div>
+    
+            <div id="dashboardTab" class="admin-tab-content active">
+                <h3>Dashboard Overview</h3>
+                <div id="admin-analytics-grid" class="admin-grid"></div>
+                <div style="width: 100%; max-width: 600px; margin: 20px auto;">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+    
+            <div id="menuTab" class="admin-tab-content">
+                <h3>Menu Management</h3>
+                <button class="btn-primary" onclick="showAddItemForm()">+ Add New Item</button>
+                <table id="menuManagementTable" class="admin-table"></table>
+            </div>
+    
+            <div id="ordersTab" class="admin-tab-content">
+                <h3>Live Order Management</h3>
+                <table id="liveOrdersTable" class="admin-table"></table>
+            </div>
+    
+            <div id="couponsTab" class="admin-tab-content">
+                <h3>Coupon Management</h3>
+                <div class="form-group" style="display:flex; gap:10px; align-items:center;">
+                    <input type="text" id="newCouponCode" placeholder="Coupon Code" style="margin:0; width: 40%">
+                    <input type="number" id="newCouponValue" placeholder="Discount %" style="margin:0; width: 30%">
+                    <button class="btn-primary" onclick="addCoupon()">Add Coupon</button>
+                </div>
+                <table id="couponManagementTable" class="admin-table"></table>
+            </div>
+    
+            <div id="usersTab" class="admin-tab-content">
+                <h3>User Management</h3>
+                <table id="userManagementTable" class="admin-table"></table>
+            </div>
+    
+            <button onclick="logoutAdmin()" class="btn-danger" style="margin-top: 20px;">Logout</button>
+        </div>
     </section>
 
     <div id="loginModal" class="modal">
@@ -706,17 +765,24 @@
       </div>
     </div>
 
+    <div id="formModal" class="modal">
+        <div class="modal-content" id="formModal-content">
+            </div>
+    </div>
+
+
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
       // --- STATE & DATA ---
       let cart = [];
       let favorites = [];
       const ADMIN_PASS = "1234";
-      const COUPONS = { HERO10: 0.1, EAT20: 0.2 };
+      let COUPONS = { HERO10: 0.1, EAT20: 0.2 };
       let discount = 0;
+      let salesChart; // Chart instance
 
       // Upgraded Menu Data
-      const menuItemsData = [
+      let menuItemsData = [
         { id: 1, name: "Juicy Burger", price: 150, img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80", cat: "Non-Veg", rating: 5, stock: 10, desc: "A delicious, flame-grilled burger with all the fixings.", tags: ["Best Seller 🔥"] },
         { id: 2, name: "Margherita Pizza", price: 350, img: "https://safrescobaldistatic.blob.core.windows.net/media/2022/11/PIZZA-MARGHERITA.jpg", cat: "Veg", rating: 5, stock: 15, desc: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.", tags: [] },
         { id: 3, name: "Spicy Pasta", price: 250, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtGxJQNLQ_tpfDqgGfFpEARarc7qNGTDVEYg&s.jpg", cat: "Veg", rating: 4, stock: 20, desc: "Penne pasta in a spicy arrabbiata sauce, topped with parmesan.", tags: ["Spicy 🌶️"] },
@@ -733,8 +799,12 @@
 
       // --- INITIALIZATION ---
       document.addEventListener("DOMContentLoaded", () => {
+        // Load data from localStorage or use defaults
         cart = JSON.parse(localStorage.getItem("cart")) || [];
         favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        COUPONS = JSON.parse(localStorage.getItem("coupons")) || { HERO10: 0.1, EAT20: 0.2 };
+        menuItemsData = JSON.parse(localStorage.getItem("menuItems")) || menuItemsData;
+
         const savedTheme = localStorage.getItem("theme") || "dark";
         document.body.className = savedTheme + "-mode";
         document.getElementById("theme-toggle").innerHTML =
@@ -748,6 +818,15 @@
         renderMenu(); // Initial render
         updateCart();
         showSection("menuSection");
+
+        // *** NAVBAR FIX ***: Close mobile menu on link click
+        document.querySelectorAll('.nav-link-item').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    document.getElementById('menuLinks').classList.remove('active');
+                }
+            });
+        });
       });
 
       // --- CORE UI & THEME ---
@@ -763,6 +842,10 @@
           }
         });
         if (id === "myOrdersSection") showMyOrders();
+        // Auto-refresh admin data when shown
+        if (id === 'adminSection' && document.getElementById('adminDashboard').style.display === 'block') {
+             renderAdminDashboard();
+        }
       }
 
       function toggleMenu() {
@@ -779,6 +862,11 @@
             ? '<i class="fas fa-sun"></i>'
             : '<i class="fas fa-moon"></i>';
         updateFavicon(theme);
+        // Redraw chart with new theme colors
+        if(salesChart) {
+            salesChart.destroy();
+            renderAdminDashboard();
+        }
       }
 
       function updateFavicon(theme) {
@@ -798,35 +886,28 @@
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
       }
+      
+      function closeModal(modalId) { 
+        document.getElementById(modalId).style.display = "none";
+      }
 
       // --- REFACTORED: MENU, SEARCH, SORT, FILTER ---
-
-      // New central function to render the menu based on all active filters
       function renderMenu() {
         const activeCategoryBtn = document.querySelector('#categoryFilters button.active');
         const category = activeCategoryBtn ? activeCategoryBtn.innerText : 'All';
         const searchTerm = document.getElementById('searchBar').value.toLowerCase();
         const activeSortBtn = document.querySelector('#sortFilters button.active');
-        // A bit complex regex to extract the first parameter from the onclick attribute
         const sortBy = activeSortBtn ? activeSortBtn.getAttribute('onclick').match(/'([^']*)'/)[1] : 'default';
 
         let items = [...menuItemsData];
-
-        if (category !== 'All') {
-            items = items.filter(i => i.cat === category);
-        }
-
-        if (searchTerm) {
-            items = items.filter(i => i.name.toLowerCase().includes(searchTerm));
-        }
-
+        if (category !== 'All') items = items.filter(i => i.cat === category);
+        if (searchTerm) items = items.filter(i => i.name.toLowerCase().includes(searchTerm));
         if (sortBy === "price-asc") items.sort((a, b) => a.price - b.price);
         else if (sortBy === "price-desc") items.sort((a, b) => b.price - a.price);
         else if (sortBy === "rating-desc") items.sort((a, b) => b.rating - a.rating);
 
         displayMenu(items);
       }
-
 
       function displayMenu(items) {
         const container = document.getElementById("menuItems");
@@ -838,24 +919,24 @@
           div.className = "food-card";
           div.innerHTML = `
             <div>
-                ${ isOutOfStock ? '<div class="stock-badge">Out of Stock</div>' : "" }
-                <button class="fav-btn ${isFavorited ? "favorited" : ""}" onclick="toggleFavorite(event, ${item.id})">
-                    <i class="fas fa-heart"></i>
-                </button>
-                <img src="${item.img}" class="food-img" onclick="showItemModal(${item.id})">
-                <h3 class="text-contrast">${item.name}</h3>
-                <p style="color:var(--text-muted);">Rating: ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}</p>
-                <p class="text-contrast" style="font-size:1.2em; font-weight:bold;">₹${item.price}</p>
+              ${ isOutOfStock ? '<div class="stock-badge">Out of Stock</div>' : "" }
+              <button class="fav-btn ${isFavorited ? "favorited" : ""}" onclick="toggleFavorite(event, ${item.id})">
+                <i class="fas fa-heart"></i>
+              </button>
+              <img src="${item.img}" class="food-img" onclick="showItemModal(${item.id})">
+              <h3 class="text-contrast">${item.name}</h3>
+              <p style="color:var(--text-muted);">Rating: ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}</p>
+              <p class="text-contrast" style="font-size:1.2em; font-weight:bold;">₹${item.price}</p>
             </div>
             <div class="card-actions">
-                <button class="btn-secondary" onclick="addToCart(${item.id})" ${isOutOfStock ? "disabled" : ""}>
-                    <i class="fas fa-cart-plus"></i> Add
-                </button>
-                <button class="btn-primary" onclick="orderNow(${item.id})" ${isOutOfStock ? "disabled" : ""}>
-                    Order Now
-                </button>
+              <button class="btn-secondary" onclick="addToCart(${item.id})" ${isOutOfStock ? "disabled" : ""}>
+                <i class="fas fa-cart-plus"></i> Add
+              </button>
+              <button class="btn-primary" onclick="orderNow(${item.id})" ${isOutOfStock ? "disabled" : ""}>
+                Order Now
+              </button>
             </div>
-        `;
+          `;
           container.appendChild(div);
         });
       }
@@ -916,281 +997,592 @@
         renderMenu(); // Re-render to update all views
       }
       
-      // All other JavaScript functions (cart, order, user, admin, etc.) remain unchanged.
       // --- CART FUNCTIONS ---
-        function addToCart(id) {
-            const itemData = menuItemsData.find((i) => i.id === id);
-            const existingItem = cart.find((i) => i.id === id);
-            const currentQtyInCart = existingItem ? existingItem.qty : 0;
-            if (itemData.stock <= currentQtyInCart) {
-                showToast("Cannot add more, item is out of stock!", "error");
-                return;
-            }
-            if (existingItem) {
-                existingItem.qty++;
-            } else {
-                cart.push({ ...itemData, qty: 1 });
-            }
-            showToast(`${itemData.name} added to cart!`, "success");
-            updateCart();
+      function addToCart(id) {
+        const itemData = menuItemsData.find((i) => i.id === id);
+        const existingItem = cart.find((i) => i.id === id);
+        const currentQtyInCart = existingItem ? existingItem.qty : 0;
+        if (itemData.stock <= currentQtyInCart) {
+          showToast("Cannot add more, item is out of stock!", "error");
+          return;
         }
-        function updateCart() {
-            localStorage.setItem("cart", JSON.stringify(cart));
-            const cartDiv = document.getElementById("cartItems");
-            const cartSummary = document.getElementById("cartSummary");
-            if (cart.length === 0) {
-                cartDiv.innerHTML = "<p>Your cart is empty.</p>";
-                cartSummary.style.display = "none";
-                document.getElementById("cartBadge").innerText = 0;
-                return;
-            }
-            cartSummary.style.display = "block";
-            cartDiv.innerHTML = cart.map((item, index) => `
-                <div class="cart-item">
-                    <span>${item.name} (₹${item.price})</span>
-                    <div class="cart-item-controls">
-                        <button onclick="updateCartItemQty(${index}, -1)">-</button>
-                        <span>${item.qty}</span>
-                        <button onclick="updateCartItemQty(${index}, 1)">+</button>
-                        <button onclick="removeFromCart(${index})" style="background: #ef4444; color: white;"><i class="fas fa-trash"></i></button>
-                    </div>
-                    <span>₹${item.price * item.qty}</span>
-                </div>
-            `).join("");
-            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
-            const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-            const total = subtotal - subtotal * discount;
-            document.getElementById("cartBadge").innerText = totalQty;
-            document.getElementById("cartTotal").innerHTML = `
-            ${discount > 0 ? `<p style="font-size:0.9em; color:var(--text-muted);">Subtotal: ₹${subtotal.toFixed(2)}</p>
-            <p style="font-size:0.9em; color:#22c55e;">Discount: -₹${(subtotal * discount).toFixed(2)}</p>` : ""}
-            <h3>Total: ₹${total.toFixed(2)}</h3>
+        if (existingItem) {
+          existingItem.qty++;
+        } else {
+          cart.push({ ...itemData, qty: 1 });
+        }
+        showToast(`${itemData.name} added to cart!`, "success");
+        updateCart();
+      }
+      function updateCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        const cartDiv = document.getElementById("cartItems");
+        const cartSummary = document.getElementById("cartSummary");
+        if (cart.length === 0) {
+          cartDiv.innerHTML = "<p>Your cart is empty.</p>";
+          cartSummary.style.display = "none";
+          document.getElementById("cartBadge").innerText = 0;
+          return;
+        }
+        cartSummary.style.display = "block";
+        cartDiv.innerHTML = cart.map((item, index) => `
+          <div class="cart-item">
+            <span>${item.name} (₹${item.price})</span>
+            <div class="cart-item-controls">
+              <button onclick="updateCartItemQty(${index}, -1)">-</button>
+              <span>${item.qty}</span>
+              <button onclick="updateCartItemQty(${index}, 1)">+</button>
+              <button onclick="removeFromCart(${index})" style="background: var(--danger-color); color: white;"><i class="fas fa-trash"></i></button>
+            </div>
+            <span>₹${item.price * item.qty}</span>
+          </div>
+        `).join("");
+        const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const total = subtotal - subtotal * discount;
+        document.getElementById("cartBadge").innerText = totalQty;
+        document.getElementById("cartTotal").innerHTML = `
+        ${discount > 0 ? `<p style="font-size:0.9em; color:var(--text-muted);">Subtotal: ₹${subtotal.toFixed(2)}</p>
+        <p style="font-size:0.9em; color:var(--success-color);">Discount: -₹${(subtotal * discount).toFixed(2)}</p>` : ""}
+        <h3>Total: ₹${total.toFixed(2)}</h3>
         `;
+      }
+      function updateCartItemQty(index, delta) {
+        const itemData = menuItemsData.find((i) => i.id === cart[index].id);
+        if (delta > 0 && itemData.stock <= cart[index].qty) {
+          showToast("No more stock available!", "error");
+          return;
         }
-        function updateCartItemQty(index, delta) {
-            const itemData = menuItemsData.find((i) => i.id === cart[index].id);
-            if (delta > 0 && itemData.stock <= cart[index].qty) {
-                showToast("No more stock available!", "error");
-                return;
-            }
-            cart[index].qty += delta;
-            if (cart[index].qty <= 0) {
-                cart.splice(index, 1);
-            }
-            updateCart();
+        cart[index].qty += delta;
+        if (cart[index].qty <= 0) {
+          cart.splice(index, 1);
         }
-        function removeFromCart(index) {
-            showToast(`${cart[index].name} removed from cart.`, "info");
-            cart.splice(index, 1);
-            updateCart();
+        updateCart();
+      }
+      function removeFromCart(index) {
+        showToast(`${cart[index].name} removed from cart.`, "info");
+        cart.splice(index, 1);
+        updateCart();
+      }
+      function applyCoupon() {
+        const code = document.getElementById("couponCode").value.toUpperCase();
+        if (COUPONS[code]) {
+          discount = COUPONS[code];
+          showToast(`Coupon '${code}' applied!`, "success");
+        } else {
+          discount = 0;
+          showToast("Invalid coupon code.", "error");
         }
-        function applyCoupon() {
-            const code = document.getElementById("couponCode").value.toUpperCase();
-            if (COUPONS[code]) {
-                discount = COUPONS[code];
-                showToast(`Coupon '${code}' applied!`, "success");
-            } else {
-                discount = 0;
-                showToast("Invalid coupon code.", "error");
-            }
-            updateCart();
+        updateCart();
+      }
+      function resetCart(showNotification = false) {
+        cart = [];
+        discount = 0;
+        updateCart();
+        if (showNotification) showToast("Cart cleared!", "info");
+      }
+
+      // --- ORDER & PAYMENT ---
+      function orderNow(itemId) {
+        const itemData = menuItemsData.find((i) => i.id === itemId);
+        if (itemData.stock <= 0) {
+          showToast("Sorry, this item is out of stock.", "error");
+          return;
         }
-        function resetCart(showNotification = false) {
-            cart = [];
-            discount = 0;
-            updateCart();
-            if (showNotification) showToast("Cart cleared!", "info");
+        resetCart(false);
+        cart.push({ ...itemData, qty: 1 });
+        updateCart();
+        showToast(`Proceed to checkout for ${itemData.name}`, "info");
+        showSection("cartSection");
+      }
+      function placeOrder() {
+        if (!localStorage.getItem("userName")) {
+          showToast("Please login to place an order.", "error");
+          showLoginModal();
+          return;
         }
-    // --- ORDER & PAYMENT ---
-        function orderNow(itemId) {
-            const itemData = menuItemsData.find((i) => i.id === itemId);
-            if (itemData.stock <= 0) {
-                showToast("Sorry, this item is out of stock.", "error");
-                return;
-            }
-            resetCart(false);
-            cart.push({ ...itemData, qty: 1 });
-            updateCart();
-            showToast(`Proceed to checkout for ${itemData.name}`, "info");
-            showSection("cartSection");
+        if (cart.length === 0) {
+          showToast("Your cart is empty.", "error");
+          return;
         }
-        function placeOrder() {
-            if (!localStorage.getItem("userName")) {
-                showToast("Please login to place an order.", "error");
-                showLoginModal();
-                return;
-            }
-            if (cart.length === 0) {
-                showToast("Your cart is empty.", "error");
-                return;
-            }
-            const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-            const total = subtotal - subtotal * discount;
-            var options = {
-                key: "YOUR_RAZORPAY_KEY_ID",
-                amount: total * 100,
-                currency: "INR",
-                name: "Real Hero Restaurant",
-                description: "Food & Beverage Payment",
-                image: "https://i.ibb.co/b31Vjdc/burger.jpg",
-                handler: function (response) {
-                    processSuccessfulOrder(total, "Online (Paid)");
-                },
-                prefill: { name: localStorage.getItem("userName") },
-                theme: { color: getComputedStyle(document.documentElement).getPropertyValue("--primary-color") },
-            };
-            var rzp1 = new Razorpay(options);
-            rzp1.on("payment.failed", function (response) {
-                showToast("Payment Failed: " + response.error.description, "error");
-            });
-            rzp1.open();
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const total = subtotal - subtotal * discount;
+        var options = {
+          key: "YOUR_RAZORPAY_KEY_ID", // Replace with your key
+          amount: total * 100,
+          currency: "INR",
+          name: "Real Hero Restaurant",
+          description: "Food & Beverage Payment",
+          image: "https://i.ibb.co/b31Vjdc/burger.jpg",
+          handler: function (response) {
+            processSuccessfulOrder(total, "Online (Paid)");
+          },
+          prefill: { name: localStorage.getItem("userName") },
+          theme: { color: getComputedStyle(document.documentElement).getPropertyValue("--primary-color") },
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on("payment.failed", function (response) {
+          showToast("Payment Failed: " + response.error.description, "error");
+        });
+        rzp1.open();
+      }
+      function placeOfflineOrder() {
+        if (!localStorage.getItem("userName")) {
+          showToast("Please login to place an order.", "error");
+          showLoginModal();
+          return;
         }
-        function placeOfflineOrder() {
-            if (!localStorage.getItem("userName")) {
-                showToast("Please login to place an order.", "error");
-                showLoginModal();
-                return;
-            }
-            if (cart.length === 0) {
-                showToast("Your cart is empty.", "error");
-                return;
-            }
-            const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-            const total = subtotal - subtotal * discount;
-            processSuccessfulOrder(total, "Pay on Delivery");
+        if (cart.length === 0) {
+          showToast("Your cart is empty.", "error");
+          return;
         }
-        function processSuccessfulOrder(total, paymentMethod) {
-            cart.forEach((cartItem) => {
-                const itemInMenu = menuItemsData.find((menuItem) => menuItem.id === cartItem.id);
-                if (itemInMenu) itemInMenu.stock -= cartItem.qty;
-            });
-            const pointsEarned = Math.floor(total / 100) * 10;
-            let currentPoints = parseInt(localStorage.getItem("loyaltyPoints") || "0");
-            localStorage.setItem("loyaltyPoints", currentPoints + pointsEarned);
-            updateLoyaltyPointsDisplay();
-            const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-            const newOrder = { id: Date.now(), date: new Date().toLocaleDateString(), total: total.toFixed(2), items: [...cart], status: "Preparing", paymentMethod: paymentMethod };
-            allOrders.push(newOrder);
-            localStorage.setItem("allOrders", JSON.stringify(allOrders));
-            showToast(`Order placed successfully! You earned ${pointsEarned} points.`, "success");
-            resetCart();
-            renderMenu();
-            showSection("myOrdersSection");
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const total = subtotal - subtotal * discount;
+        processSuccessfulOrder(total, "Pay on Delivery");
+      }
+      function processSuccessfulOrder(total, paymentMethod) {
+        cart.forEach((cartItem) => {
+          const itemInMenu = menuItemsData.find((menuItem) => menuItem.id === cartItem.id);
+          if (itemInMenu) itemInMenu.stock -= cartItem.qty;
+        });
+        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+
+        const pointsEarned = Math.floor(total / 100) * 10;
+        let currentPoints = parseInt(localStorage.getItem("loyaltyPoints") || "0");
+        localStorage.setItem("loyaltyPoints", currentPoints + pointsEarned);
+        updateLoyaltyPointsDisplay();
+        
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const newOrder = { 
+            id: Date.now(), 
+            user: localStorage.getItem("userName") || "Guest",
+            date: new Date().toLocaleString(), 
+            total: total.toFixed(2), 
+            items: [...cart], 
+            status: "Preparing", 
+            paymentMethod: paymentMethod 
+        };
+        allOrders.push(newOrder);
+        localStorage.setItem("allOrders", JSON.stringify(allOrders));
+        showToast(`Order placed! You earned ${pointsEarned} points.`, "success");
+        resetCart();
+        renderMenu();
+        showSection("myOrdersSection");
+      }
+      // --- USER & LOYALTY ---
+      function showLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
+      function handleLogin() {
+        const name = document.getElementById("userNameInput").value.trim();
+        if (name) {
+          localStorage.setItem("userName", name);
+          let users = JSON.parse(localStorage.getItem("users") || "{}");
+          if(!users[name]) {
+              users[name] = { loyaltyPoints: 0 };
+              localStorage.setItem("users", JSON.stringify(users));
+          }
+          updateUserDisplay();
+          updateLoyaltyPointsDisplay();
+          closeModal("loginModal");
+          showToast(`Welcome, ${name}!`, "success");
         }
-    // --- USER & LOYALTY ---
-        function showLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
-        function handleLogin() {
-            const name = document.getElementById("userNameInput").value.trim();
-            if (name) {
-                localStorage.setItem("userName", name);
-                updateUserDisplay();
-                closeModal("loginModal");
-                showToast(`Welcome, ${name}!`, "success");
-            }
+      }
+      function logoutUser() {
+        localStorage.removeItem("userName");
+        updateUserDisplay();
+        updateLoyaltyPointsDisplay(true); // reset points display
+        showToast("You have been logged out.", "info");
+      }
+      function handleUserClick() {
+        if (localStorage.getItem("userName")) { logoutUser(); }
+        else { showLoginModal(); }
+      }
+      function updateUserDisplay() {
+        const name = localStorage.getItem("userName");
+        document.getElementById("user-greeting").innerText = name ? `👋 Logout, ${name}!` : "Login";
+      }
+      function updateLoyaltyPointsDisplay(reset = false) {
+        if (reset) {
+            document.getElementById("loyalty-points").innerText = `🏆 0 pts`;
+            return;
         }
-        function logoutUser() {
-            localStorage.removeItem("userName");
-            updateUserDisplay();
-            showToast("You have been logged out.", "info");
-        }
-        function handleUserClick() {
-            if (localStorage.getItem("userName")) { logoutUser(); }
-            else { showLoginModal(); }
-        }
-        function updateUserDisplay() {
-            const name = localStorage.getItem("userName");
-            document.getElementById("user-greeting").innerText = name ? `👋 Logout, ${name}!` : "Login";
-        }
-        function updateLoyaltyPointsDisplay() {
-            const points = localStorage.getItem("loyaltyPoints") || "0";
+        const name = localStorage.getItem("userName");
+        if(name) {
+            let users = JSON.parse(localStorage.getItem("users") || "{}");
+            const points = users[name] ? users[name].loyaltyPoints : 0;
             document.getElementById("loyalty-points").innerText = `🏆 ${points} pts`;
+        } else {
+             document.getElementById("loyalty-points").innerText = `🏆 0 pts`;
         }
-        function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
-    // --- ITEM DETAILS MODAL ---
-        function showItemModal(itemId) {
-            const item = menuItemsData.find((i) => i.id === itemId);
-            if (!item) return;
-            document.getElementById("itemModal-content").innerHTML = `
-            <span class="close-btn" onclick="closeModal('itemModal')">&times;</span>
-            <img src="${item.img}" alt="${item.name}">
-            <h2>${item.name}</h2>
-            <p>${item.desc}</p>
-            <p style="font-size:1.5em; font-weight:bold;">₹${item.price}</p>
-            <button class="btn-primary" onclick="addToCart(${item.id}); closeModal('itemModal');">
-                Add to Cart
-            </button>
+      }
+
+      // --- ITEM DETAILS MODAL ---
+      function showItemModal(itemId) {
+        const item = menuItemsData.find((i) => i.id === itemId);
+        if (!item) return;
+        document.getElementById("itemModal-content").innerHTML = `
+        <span class="close-btn" onclick="closeModal('itemModal')">&times;</span>
+        <img src="${item.img}" alt="${item.name}">
+        <h2>${item.name}</h2>
+        <p>${item.desc}</p>
+        <p style="font-size:1.5em; font-weight:bold;">₹${item.price}</p>
+        <button class="btn-primary" onclick="addToCart(${item.id}); closeModal('itemModal');">
+          Add to Cart
+        </button>
         `;
-            document.getElementById("itemModal").style.display = "flex";
+        document.getElementById("itemModal").style.display = "flex";
+      }
+      // --- MY ORDERS ---
+      function showMyOrders() {
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const currentUser = localStorage.getItem("userName");
+        const container = document.getElementById("myOrdersContainer");
+        if (!currentUser) {
+          container.innerHTML = "<p>Please login to see your orders.</p>";
+          return;
         }
-    // --- MY ORDERS ---
-        function showMyOrders() {
-            const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-            const container = document.getElementById("myOrdersContainer");
-            if (!localStorage.getItem("userName")) {
-                container.innerHTML = "<p>Please login to see your orders.</p>";
-                return;
-            }
-            container.innerHTML = allOrders.length ? "" : "<p>No past orders found.</p>";
-            allOrders.reverse().forEach((order) => {
-                if (order.status === "Preparing" && Date.now() - order.id > 60000) order.status = "Out for Delivery";
-                if (order.status === "Out for Delivery" && Date.now() - order.id > 120000) order.status = "Delivered";
-                const div = document.createElement("div");
-                div.className = "order-card";
-                div.innerHTML = `
-                    <div>
-                        <h4>Order on ${order.date} (ID: ${order.id})</h4>
-                        <p>Items: ${order.items.map((i) => `${i.name} (x${i.qty})`).join(", ")}</p>
-                        <p>Payment: <strong>${order.paymentMethod}</strong></p>
-                        <p>Total: <strong>₹${order.total}</strong></p>
-                        <p>Status: <strong style="color:var(--primary-color);">${order.status}</strong></p>
-                    </div>
-                    <button class="btn-secondary" onclick="reOrder(${order.id})">Re-order</button>
-                `;
-                container.appendChild(div);
+        const myOrders = allOrders.filter(o => o.user === currentUser);
+        container.innerHTML = myOrders.length ? "" : "<p>No past orders found.</p>";
+        myOrders.reverse().forEach((order) => {
+          if (order.status === "Preparing" && Date.now() - order.id > 60000) order.status = "Out for Delivery";
+          if (order.status === "Out for Delivery" && Date.now() - order.id > 120000) order.status = "Delivered";
+          
+          const div = document.createElement("div");
+          div.className = "order-card";
+          div.innerHTML = `
+            <div>
+              <h4>Order on ${order.date} (ID: ${order.id})</h4>
+              <p>Items: ${order.items.map((i) => `${i.name} (x${i.qty})`).join(", ")}</p>
+              <p>Payment: <strong>${order.paymentMethod}</strong></p>
+              <p>Total: <strong>₹${order.total}</strong></p>
+              <p>Status: <strong style="color:var(--primary-color);">${order.status}</strong></p>
+            </div>
+            <button class="btn-secondary" onclick="reOrder(${order.id})">Re-order</button>
+          `;
+          container.appendChild(div);
+        });
+      }
+      function reOrder(orderId) {
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const orderToReorder = allOrders.find((o) => o.id === orderId);
+        if (orderToReorder) {
+          cart = [...orderToReorder.items];
+          showToast("Items from your past order have been added to the cart!", "success");
+          updateCart();
+          showSection("cartSection");
+        }
+      }
+      
+      // --- ------------------------- ---
+      // --- NEW: ADMIN PANEL FUNCTIONS ---
+      // --- ------------------------- ---
+
+      function loginAdmin() {
+        if (document.getElementById("adminPass").value === ADMIN_PASS) {
+          document.getElementById("loginBox").style.display = "none";
+          document.getElementById("adminDashboard").style.display = "block";
+          showAdminTab('dashboardTab', document.querySelector('.admin-tabs button'));
+        } else {
+          showToast("Wrong Password", "error");
+        }
+      }
+
+      function logoutAdmin() {
+        document.getElementById("adminPass").value = "";
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("adminDashboard").style.display = "none";
+      }
+
+      function showAdminTab(tabId, btn) {
+        document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Render content for the active tab
+        if(tabId === 'dashboardTab') renderAdminDashboard();
+        if(tabId === 'menuTab') renderMenuManagement();
+        if(tabId === 'ordersTab') renderOrderManagement();
+        if(tabId === 'couponsTab') renderCouponManagement();
+        if(tabId === 'usersTab') renderUserManagement();
+      }
+
+      // --- Admin Dashboard Tab ---
+      function renderAdminDashboard() {
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const totalRevenue = allOrders.reduce((sum, order) => sum + parseFloat(order.total), 0);
+        const totalOrders = allOrders.length;
+
+        const itemCounts = {};
+        allOrders.forEach(order => {
+            order.items.forEach(item => {
+                itemCounts[item.name] = (itemCounts[item.name] || 0) + item.qty;
             });
+        });
+        const mostPopular = Object.keys(itemCounts).length > 0 ? Object.entries(itemCounts).sort((a,b) => b[1] - a[1])[0][0] : "N/A";
+
+        const grid = document.getElementById('admin-analytics-grid');
+        grid.innerHTML = `
+            <div class="admin-card"><h4>Total Revenue</h4><p>₹${totalRevenue.toFixed(2)}</p></div>
+            <div class="admin-card"><h4>Total Orders</h4><p>${totalOrders}</p></div>
+            <div class="admin-card"><h4>Most Popular</h4><p>${mostPopular}</p></div>
+        `;
+        renderSalesChart(allOrders);
+      }
+      
+      function renderSalesChart(orders) {
+          const ctx = document.getElementById('salesChart').getContext('2d');
+          const categorySales = {};
+          orders.forEach(order => {
+              order.items.forEach(item => {
+                  categorySales[item.cat] = (categorySales[item.cat] || 0) + (item.price * item.qty);
+              });
+          });
+
+          if(salesChart) salesChart.destroy(); // Destroy previous chart instance
+
+          const isDarkMode = document.body.classList.contains('dark-mode');
+          const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+          const textColor = isDarkMode ? '#e2e8f0' : '#0f172a';
+
+          salesChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: Object.keys(categorySales),
+                  datasets: [{
+                      label: 'Sales by Category',
+                      data: Object.values(categorySales),
+                      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  plugins: { legend: { labels: { color: textColor } } },
+                  scales: {
+                      y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } },
+                      x: { ticks: { color: textColor }, grid: { color: gridColor } }
+                  }
+              }
+          });
+      }
+
+      // --- Admin Menu Management ---
+      function renderMenuManagement() {
+        const table = document.getElementById('menuManagementTable');
+        table.innerHTML = `
+            <thead><tr><th>Name</th><th>Price</th><th>Stock</th><th>Featured</th><th>Actions</th></tr></thead>
+            <tbody>
+            ${menuItemsData.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>₹${item.price}</td>
+                    <td>${item.stock}</td>
+                    <td>
+                        <input type="checkbox" ${item.tags.includes("Best Seller 🔥") ? "checked" : ""} onchange="toggleFeatured(${item.id}, this.checked)">
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="showEditItemForm(${item.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteItem(${item.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('')}
+            </tbody>
+        `;
+      }
+      
+      function showAddItemForm() {
+        const content = `
+            <span class="close-btn" onclick="closeModal('formModal')">&times;</span>
+            <h2>Add New Menu Item</h2>
+            <div class="form-group"><label>Name</label><input type="text" id="itemName"></div>
+            <div class="form-group"><label>Price</label><input type="number" id="itemPrice"></div>
+            <div class="form-group"><label>Stock</label><input type="number" id="itemStock"></div>
+            <div class="form-group"><label>Category</label><input type="text" id="itemCat"></div>
+            <div class="form-group"><label>Image URL</label><input type="text" id="itemImg"></div>
+            <div class="form-group"><label>Description</label><textarea id="itemDesc"></textarea></div>
+            <button class="btn-primary" onclick="handleAddItem()">Save Item</button>
+        `;
+        document.getElementById('formModal-content').innerHTML = content;
+        document.getElementById('formModal').style.display = 'flex';
+      }
+
+      function handleAddItem() {
+        const newItem = {
+            id: Date.now(),
+            name: document.getElementById('itemName').value,
+            price: parseInt(document.getElementById('itemPrice').value),
+            stock: parseInt(document.getElementById('itemStock').value),
+            cat: document.getElementById('itemCat').value,
+            img: document.getElementById('itemImg').value,
+            desc: document.getElementById('itemDesc').value,
+            rating: 5, // Default rating
+            tags: []
+        };
+        menuItemsData.push(newItem);
+        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+        closeModal('formModal');
+        showToast("Item added successfully!", "success");
+        renderMenuManagement();
+        renderMenu(); // Update customer view
+        displayCategories(); // Update categories if new one added
+      }
+      
+      function showEditItemForm(itemId) {
+        const item = menuItemsData.find(i => i.id === itemId);
+        const content = `
+            <span class="close-btn" onclick="closeModal('formModal')">&times;</span>
+            <h2>Edit ${item.name}</h2>
+            <div class="form-group"><label>Name</label><input type="text" id="itemName" value="${item.name}"></div>
+            <div class="form-group"><label>Price</label><input type="number" id="itemPrice" value="${item.price}"></div>
+            <div class="form-group"><label>Stock</label><input type="number" id="itemStock" value="${item.stock}"></div>
+            <div class="form-group"><label>Category</label><input type="text" id="itemCat" value="${item.cat}"></div>
+            <div class="form-group"><label>Image URL</label><input type="text" id="itemImg" value="${item.img}"></div>
+            <div class="form-group"><label>Description</label><textarea id="itemDesc">${item.desc}</textarea></div>
+            <button class="btn-primary" onclick="handleEditItem(${itemId})">Update Item</button>
+        `;
+        document.getElementById('formModal-content').innerHTML = content;
+        document.getElementById('formModal').style.display = 'flex';
+      }
+      
+      function handleEditItem(itemId) {
+        const item = menuItemsData.find(i => i.id === itemId);
+        item.name = document.getElementById('itemName').value;
+        item.price = parseInt(document.getElementById('itemPrice').value);
+        item.stock = parseInt(document.getElementById('itemStock').value);
+        item.cat = document.getElementById('itemCat').value;
+        item.img = document.getElementById('itemImg').value;
+        item.desc = document.getElementById('itemDesc').value;
+        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+        closeModal('formModal');
+        showToast("Item updated successfully!", "success");
+        renderMenuManagement();
+        renderMenu();
+      }
+
+      function deleteItem(itemId) {
+        if(confirm("Are you sure you want to delete this item?")) {
+            menuItemsData = menuItemsData.filter(i => i.id !== itemId);
+            localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+            showToast("Item deleted!", "info");
+            renderMenuManagement();
+            renderMenu();
         }
-        function reOrder(orderId) {
-            const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-            const orderToReorder = allOrders.find((o) => o.id === orderId);
-            if (orderToReorder) {
-                cart = [...orderToReorder.items];
-                showToast("Items from your past order have been added to the cart!", "success");
-                updateCart();
-                showSection("cartSection");
-            }
+      }
+
+      function toggleFeatured(itemId, isChecked) {
+        const item = menuItemsData.find(i => i.id === itemId);
+        const tag = "Best Seller 🔥";
+        const tagIndex = item.tags.indexOf(tag);
+
+        if(isChecked && tagIndex === -1) {
+            item.tags.push(tag);
+        } else if (!isChecked && tagIndex > -1) {
+            item.tags.splice(tagIndex, 1);
         }
-    // --- ADMIN & STOCK ---
-        function loginAdmin() {
-            if (document.getElementById("adminPass").value === ADMIN_PASS) {
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("adminDashboard").style.display = "block";
-                displayStockManagement();
-            } else {
-                showToast("Wrong Password", "error");
-            }
+        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+        showToast(`${item.name} featured status updated.`, "info");
+      }
+
+      // --- Admin Order Management ---
+      function renderOrderManagement() {
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const table = document.getElementById('liveOrdersTable');
+        table.innerHTML = `
+            <thead><tr><th>Order ID</th><th>User</th><th>Total</th><th>Items</th><th>Status</th></tr></thead>
+            <tbody>
+            ${allOrders.reverse().map(order => `
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${order.user}</td>
+                    <td>₹${order.total}</td>
+                    <td>${order.items.map(i => i.name).join(', ')}</td>
+                    <td>
+                        <select onchange="updateOrderStatus(${order.id}, this.value)">
+                            <option value="Preparing" ${order.status === "Preparing" ? "selected" : ""}>Preparing</option>
+                            <option value="Out for Delivery" ${order.status === "Out for Delivery" ? "selected" : ""}>Out for Delivery</option>
+                            <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
+                            <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('')}
+            </tbody>
+        `;
+      }
+      
+      function updateOrderStatus(orderId, newStatus) {
+        let allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const order = allOrders.find(o => o.id === orderId);
+        if(order) {
+            order.status = newStatus;
+            localStorage.setItem("allOrders", JSON.stringify(allOrders));
+            showToast(`Order ${orderId} status updated to ${newStatus}`, "info");
         }
-        function logoutAdmin() {
-            document.getElementById("adminPass").value = "";
-            document.getElementById("loginBox").style.display = "block";
-            document.getElementById("adminDashboard").style.display = "none";
+      }
+      
+      // --- Admin Coupon Management ---
+      function renderCouponManagement() {
+        const table = document.getElementById('couponManagementTable');
+        table.innerHTML = `
+            <thead><tr><th>Code</th><th>Discount</th><th>Action</th></tr></thead>
+            <tbody>
+            ${Object.entries(COUPONS).map(([code, value]) => `
+                <tr>
+                    <td>${code}</td>
+                    <td>${value * 100}%</td>
+                    <td><button class="btn btn-danger" onclick="deleteCoupon('${code}')">Delete</button></td>
+                </tr>
+            `).join('')}
+            </tbody>
+        `;
+      }
+
+      function addCoupon() {
+        const code = document.getElementById('newCouponCode').value.toUpperCase();
+        const value = parseFloat(document.getElementById('newCouponValue').value);
+        if(code && value > 0 && value <= 100) {
+            COUPONS[code] = value / 100;
+            localStorage.setItem("coupons", JSON.stringify(COUPONS));
+            showToast(`Coupon ${code} added!`, "success");
+            document.getElementById('newCouponCode').value = '';
+            document.getElementById('newCouponValue').value = '';
+            renderCouponManagement();
+        } else {
+            showToast("Invalid code or discount value.", "error");
         }
-        function displayStockManagement() {
-            const container = document.getElementById("stockManagement");
-            container.innerHTML = menuItemsData.map((item) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding: 8px 0; border-bottom:1px solid var(--border-color);">
-                    <span>${item.name}</span>
-                    <input type="number" value="${item.stock}" min="0" onchange="updateStock(${item.id}, this.value)" style="width: 60px; margin:0;">
-                </div>
-            `).join("");
+      }
+
+      function deleteCoupon(code) {
+        if(confirm(`Are you sure you want to delete coupon ${code}?`)) {
+            delete COUPONS[code];
+            localStorage.setItem("coupons", JSON.stringify(COUPONS));
+            showToast(`Coupon ${code} deleted.`, "info");
+            renderCouponManagement();
         }
-        function updateStock(itemId, newStock) {
-            const item = menuItemsData.find((i) => i.id === itemId);
-            if (item) {
-                item.stock = parseInt(newStock);
-                showToast(`${item.name} stock updated to ${newStock}`, "info");
-                renderMenu();
-            }
-        }
+      }
+      
+      // --- Admin User Management ---
+      function renderUserManagement() {
+        const users = JSON.parse(localStorage.getItem("users") || "{}");
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+
+        const table = document.getElementById('userManagementTable');
+        table.innerHTML = `
+            <thead><tr><th>Username</th><th>Loyalty Points</th><th>Total Orders</th></tr></thead>
+            <tbody>
+            ${Object.entries(users).map(([name, data]) => {
+                const userOrderCount = allOrders.filter(o => o.user === name).length;
+                return `
+                    <tr>
+                        <td>${name}</td>
+                        <td>${data.loyaltyPoints}</td>
+                        <td>${userOrderCount}</td>
+                    </tr>
+                `
+            }).join('')}
+            </tbody>
+        `;
+      }
+
     </script>
   </body>
 </html>
