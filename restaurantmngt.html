@@ -171,7 +171,8 @@
         transition: all 0.3s ease;
       }
 
-      input:focus, select:focus {
+      input:focus,
+      select:focus {
         outline: none;
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px var(--shadow-color);
@@ -226,7 +227,7 @@
         padding-left: 45px; /* Make space for the icon */
         margin-bottom: 0;
       }
-      
+
       #searchSuggestions {
         display: none;
         position: absolute;
@@ -251,7 +252,6 @@
         background-color: var(--primary-color);
         color: white;
       }
-
 
       .sort-filters {
         display: flex;
@@ -520,13 +520,25 @@
         .hamburger {
           display: block;
         }
-        
+
         .menu-controls {
-            justify-content: center; /* Center items on smaller screens */
+          justify-content: center; /* Center items on smaller screens */
         }
-        
+
         .sort-filters {
-            justify-content: center;
+          justify-content: center;
+        }
+
+        /* --- THIS IS THE FIX --- */
+        /* Overriding glass-card styles for mobile to make it full-width */
+        .glass-card {
+          margin: 10px 0; /* Removes side margins */
+          padding: 15px; /* Reduces padding for smaller screens */
+          border-radius: 0; /* Removes rounded corners */
+          box-shadow: none; /* Removes the card shadow */
+          border-left: none; /* Removes side borders */
+          border-right: none;
+          /* Top and bottom borders are kept for separation */
         }
       }
     </style>
@@ -584,18 +596,31 @@
     <section id="menuSection" class="glass-card">
       <h2 class="text-contrast">Our Menu</h2>
       <div class="category-filters" id="categoryFilters"></div>
-      
+
       <div class="menu-controls">
         <div class="search-container">
-           <i class="fas fa-search search-icon"></i>
-           <input type="text" id="searchBar" placeholder="Search your favorite food..." oninput="handleSearchInput()">
-           <div id="searchSuggestions"></div>
+          <i class="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            id="searchBar"
+            placeholder="Search your favorite food..."
+            oninput="handleSearchInput()"
+          />
+          <div id="searchSuggestions"></div>
         </div>
         <div class="sort-filters" id="sortFilters">
-            <button class="active" onclick="applySort('default', this)">Default</button>
-            <button onclick="applySort('price-asc', this)"><i class="fas fa-arrow-up"></i> Price</button>
-            <button onclick="applySort('price-desc', this)"><i class="fas fa-arrow-down"></i> Price</button>
-            <button onclick="applySort('rating-desc', this)"><i class="fas fa-star"></i> Rating</button>
+          <button class="active" onclick="applySort('default', this)">
+            Default
+          </button>
+          <button onclick="applySort('price-asc', this)">
+            <i class="fas fa-arrow-up"></i> Price
+          </button>
+          <button onclick="applySort('price-desc', this)">
+            <i class="fas fa-arrow-down"></i> Price
+          </button>
+          <button onclick="applySort('rating-desc', this)">
+            <i class="fas fa-star"></i> Rating
+          </button>
         </div>
       </div>
 
@@ -603,84 +628,83 @@
     </section>
 
     <section id="cartSection" class="glass-card" style="display: none">
-        <h2 class="text-contrast">Your Cart</h2>
-        <div id="cartItems">Your cart is empty.</div>
-        <div id="cartSummary" class="cart-summary" style="display: none">
-          <p>Estimated Delivery: <strong>25-30 minutes</strong></p>
-          <div class="coupon-section">
-            <input type="text" id="couponCode" placeholder="Enter Coupon Code" />
-            <button class="btn-secondary" onclick="applyCoupon()">Apply</button>
-          </div>
-          <h3 id="cartTotal">Total: ₹0</h3>
-          <div class="checkout-buttons">
-            <button
-              class="btn-secondary"
-              onclick="resetCart(true)"
-              style="background: #ef4444"
-            >
-              Clear Cart
-            </button>
-            <button class="btn-secondary" onclick="placeOfflineOrder()">
-              Pay on Delivery
-            </button>
-            <button class="btn-primary" onclick="placeOrder()">
-              Checkout & Pay
-            </button>
-          </div>
+      <h2 class="text-contrast">Your Cart</h2>
+      <div id="cartItems">Your cart is empty.</div>
+      <div id="cartSummary" class="cart-summary" style="display: none">
+        <p>Estimated Delivery: <strong>25-30 minutes</strong></p>
+        <div class="coupon-section">
+          <input type="text" id="couponCode" placeholder="Enter Coupon Code" />
+          <button class="btn-secondary" onclick="applyCoupon()">Apply</button>
         </div>
-      </section>
-  
-      <section id="myOrdersSection" class="glass-card" style="display: none">
-        <h2 class="text-contrast">My Past Orders</h2>
-        <div id="myOrdersContainer"></div>
-      </section>
-  
-      <section id="adminSection" class="glass-card" style="display: none">
-        <h2 class="text-contrast">Admin Panel</h2>
-        <div id="loginBox">
-          <input type="password" id="adminPass" placeholder="Enter Password" />
-          <button onclick="loginAdmin()" class="btn-primary">Login</button>
-        </div>
-        <div id="adminDashboard" style="display: none">
-          <h3 class="text-contrast">Stock Management</h3>
-          <div
-            id="stockManagement"
-            style="
-              max-height: 300px;
-              overflow-y: auto;
-              border: 1px solid var(--border-color);
-              border-radius: 10px;
-              padding: 10px;
-              text-align: left;
-            "
-          ></div>
+        <h3 id="cartTotal">Total: ₹0</h3>
+        <div class="checkout-buttons">
           <button
-            onclick="logoutAdmin()"
-            class="btn-primary"
-            style="margin-top: 20px"
+            class="btn-secondary"
+            onclick="resetCart(true)"
+            style="background: #ef4444"
           >
-            Logout
+            Clear Cart
+          </button>
+          <button class="btn-secondary" onclick="placeOfflineOrder()">
+            Pay on Delivery
+          </button>
+          <button class="btn-primary" onclick="placeOrder()">
+            Checkout & Pay
           </button>
         </div>
-      </section>
-  
-      <div id="loginModal" class="modal">
-        <div class="modal-content">
-          <span class="close-btn" onclick="closeModal('loginModal')"
-            >&times;</span
-          >
-          <h2>Enter Your Name</h2>
-          <input type="text" id="userNameInput" placeholder="Your Name" />
-          <button class="btn-primary" onclick="handleLogin()">Login</button>
-        </div>
       </div>
-  
-      <div id="itemModal" class="modal">
-        <div class="modal-content" id="itemModal-content">
-          <span class="close-btn" onclick="closeModal('itemModal')">&times;</span>
-        </div>
-      </div>
+    </section>
 
+    <section id="myOrdersSection" class="glass-card" style="display: none">
+      <h2 class="text-contrast">My Past Orders</h2>
+      <div id="myOrdersContainer"></div>
+    </section>
+
+    <section id="adminSection" class="glass-card" style="display: none">
+      <h2 class="text-contrast">Admin Panel</h2>
+      <div id="loginBox">
+        <input type="password" id="adminPass" placeholder="Enter Password" />
+        <button onclick="loginAdmin()" class="btn-primary">Login</button>
+      </div>
+      <div id="adminDashboard" style="display: none">
+        <h3 class="text-contrast">Stock Management</h3>
+        <div
+          id="stockManagement"
+          style="
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: left;
+          "
+        ></div>
+        <button
+          onclick="logoutAdmin()"
+          class="btn-primary"
+          style="margin-top: 20px"
+        >
+          Logout
+        </button>
+      </div>
+    </section>
+
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('loginModal')"
+          >&times;</span
+        >
+        <h2>Enter Your Name</h2>
+        <input type="text" id="userNameInput" placeholder="Your Name" />
+        <button class="btn-primary" onclick="handleLogin()">Login</button>
+      </div>
+    </div>
+
+    <div id="itemModal" class="modal">
+      <div class="modal-content" id="itemModal-content">
+        <span class="close-btn" onclick="closeModal('itemModal')">&times;</span>
+      </div>
+    </div>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
