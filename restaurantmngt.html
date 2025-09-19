@@ -572,40 +572,71 @@
         gap: 10px;
         align-items: flex-end;
       }
+      
+      /* --- UPDATED RESPONSIVE SECTION --- */
+      body.no-scroll {
+        overflow: hidden; /* Background scroll ko rokne ke liye */
+      }
 
-
-      /* --- Responsive --- */
       @media (max-width: 768px) {
         header { padding: 15px; }
+
         .menu-links {
-          display: none;
-          flex-direction: column;
-          gap: 10px;
-          position: absolute;
-          top: 70px;
-          right: 10px;
-          background: var(--header-bg);
-          padding: 20px;
-          border-radius: 10px;
-          width: 200px;
-          text-align: center;
+            /* Layout and Positioning - Updated */
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-color);
+            
+            /* Centering and Items styling - Updated */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+
+            /* Animation and Initial State - Updated */
+            visibility: hidden;
+            transform: translateX(100%);
+            transition: transform 0.4s ease-in-out, visibility 0.4s;
+            
+            /* Resetting old styles to fit new design */
+            padding: 0;
+            border-radius: 0;
+            text-align: center;
         }
-        .menu-links.active { display: flex; }
-        .hamburger { display: block; }
+
+        .menu-links.active { 
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .menu-links a {
+            font-size: 1.2rem; /* Mobile par text thoda bada aur clear dikhega */
+        }
+
+        .hamburger { 
+            display: block; 
+            z-index: 1001; /* Ye menu ke upar rahega taki close kar sakein */
+        }
+
+        /* Kept other responsive rules */
         .menu-controls { justify-content: center; }
         .sort-filters { justify-content: center; }
         .glass-card {
-          margin: 10px 0;
-          padding: 15px;
-          border-radius: 0;
-          box-shadow: none;
-          border-left: none;
-          border-right: none;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 0;
+            box-shadow: none;
+            border-left: none;
+            border-right: none;
         }
         .cart-item {
-          flex-direction: column;
-          gap: 10px;
-          align-items: flex-start;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
         }
       }
 
@@ -677,10 +708,10 @@
             Default
           </button>
           <button onclick="applySort('price-asc', this)">
-            <i class="fas fa-arrow-up"></i> Price
+            <i class="fas fa-arrow-down"></i> Price
           </button>
           <button onclick="applySort('price-desc', this)">
-            <i class="fas fa-arrow-down"></i> Price
+            <i class="fas fa-arrow-up"></i> Price
           </button>
           <button onclick="applySort('rating-desc', this)">
             <i class="fas fa-star"></i> Rating
@@ -851,7 +882,11 @@
         document.querySelectorAll('.nav-link-item').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth <= 768) {
-                    document.getElementById('menuLinks').classList.remove('active');
+                    // Close the menu if it's active
+                    const menuLinks = document.getElementById('menuLinks');
+                    if (menuLinks.classList.contains('active')) {
+                        toggleMenu(); // Use toggleMenu to also reset icon and scroll
+                    }
                 }
             });
         });
@@ -875,8 +910,23 @@
         }
       }
 
+      // --- UPDATED JAVASCRIPT FUNCTION ---
       function toggleMenu() {
-        document.getElementById("menuLinks").classList.toggle("active");
+        const menuLinks = document.getElementById("menuLinks");
+        const hamburger = document.querySelector(".hamburger");
+        const isActive = menuLinks.classList.toggle("active");
+
+        // Body par scroll lock class lagayega/hatayega
+        document.body.classList.toggle("no-scroll", isActive);
+
+        // Icon ko hamburger (☰) se cross (×) mein badlega
+        if (isActive) {
+            hamburger.innerHTML = '&times;'; // Close Icon
+            hamburger.style.fontSize = '36px'; // Cross ko thoda bada dikhane ke liye
+        } else {
+            hamburger.innerHTML = '☰'; // Hamburger Icon
+            hamburger.style.fontSize = '28px';
+        }
       }
 
       function toggleTheme() {
