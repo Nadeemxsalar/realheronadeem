@@ -1,1283 +1,1176 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Real Hero Restaurant - Ultimate</title>
-  <link rel="icon" id="favicon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* --- Basic Setup & NEW Color Variables --- */
-    :root {
-      /* New Dark Theme */
-      --bg-color: #121828;
-      --card-color: rgba(30, 41, 59, 0.6);
-      --text-color: #e2e8f0;
-      --text-muted: #94a3b8;
-      --primary-color: #ff7e5f;
-      /* Coral */
-      --primary-hover: #feb47b;
-      /* Lighter Coral */
-      --secondary-color: #38bdf8;
-      /* Sky Blue */
-      --secondary-hover: #0ea5e9;
-      --border-color: rgba(51, 65, 85, 0.5);
-      --shadow-color: rgba(255, 126, 95, 0.15);
-      --header-bg: rgba(30, 41, 59, 0.7);
-      --success-color: #22c55e;
-      --danger-color: #ef4444;
-    }
-
-    body.light-mode {
-      /* New Light Theme */
-      --bg-color: #f1f5f9;
-      --card-color: rgba(255, 255, 255, 0.7);
-      --text-color: #0f172a;
-      --text-muted: #475569;
-      --primary-color: #ef4444;
-      /* Red */
-      --primary-hover: #dc2626;
-      --secondary-color: #2563eb;
-      /* Blue */
-      --secondary-hover: #1d4ed8;
-      --border-color: rgba(203, 213, 225, 0.8);
-      --shadow-color: rgba(239, 68, 68, 0.15);
-      --header-bg: rgba(255, 255, 255, 0.7);
-    }
-
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      transition: background 0.5s, color 0.5s;
-    }
-
-    /* --- NEW FEATURE 1: PRELOADER --- */
-    #preloader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg-color);
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid var(--border-color);
-      border-top: 5px solid var(--primary-color);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* --- Animations & Keyframes --- */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideInRight {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    /* --- NEW FEATURE 6: HERO SECTION --- */
-    #hero {
-      height: 40vh;
-      background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1170&q=80');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      /* Parallax effect */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-    }
-
-    #hero div {
-      background: rgba(0, 0, 0, 0.5);
-      padding: 20px 40px;
-      border-radius: 15px;
-    }
-
-    #hero h2 {
-      font-size: 2.5em;
-      margin: 0;
-    }
-
-    #hero p {
-      font-size: 1.2em;
-    }
-
-
-    /* --- Header & Navigation --- */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: var(--header-bg);
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      backdrop-filter: blur(15px);
-      transition: background 0.5s;
-    }
-
-    header h1 {
-      color: var(--primary-color);
-      font-size: 24px;
-      margin: 0;
-    }
-
-    nav a {
-      margin: 0 10px;
-      color: var(--text-color);
-      text-decoration: none;
-      font-weight: 500;
-      padding: 8px 15px;
-      border-radius: 8px;
-      transition: 0.3s;
-      position: relative;
-    }
-
-    nav a:hover,
-    nav a.active {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .hamburger {
-      display: none;
-      cursor: pointer;
-      font-size: 28px;
-    }
-
-    .cart-badge {
-      background: var(--primary-color);
-      color: white;
-      padding: 2px 6px;
-      border-radius: 10px;
-      font-size: 0.8em;
-      vertical-align: top;
-    }
-
-    /* --- General Components --- */
-    button,
-    .btn {
-      padding: 10px 18px;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin-top: 5px;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
-    }
-
-    .btn-primary {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-secondary {
-      background: var(--secondary-color);
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background: var(--secondary-hover);
-      transform: translateY(-2px);
-    }
-
-    .btn-danger {
-      background: var(--danger-color);
-      color: white;
-    }
-
-    .btn-danger:hover {
-      opacity: 0.8;
-    }
-
-    button:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-      color: #e2e8f0;
-    }
-
-    input,
-    select,
-    textarea {
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background: transparent;
-      color: var(--text-color);
-      margin-bottom: 10px;
-      width: 100%;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px var(--shadow-color);
-    }
-
-    .glass-card {
-        backdrop-filter: blur(12px);
-        background: var(--card-color);
-        border-radius: 0; /* Changed */
-        padding: 25px;
-        box-shadow: none; /* Changed */
-        border: 1px solid var(--border-color);
-        border-left: none; /* Added */
-        border-right: none; /* Added */
-        text-align: center;
-        position: relative;
-        animation: fadeInUp 0.6s ease forwards;
-        opacity: 0;
-        transition: background 0.5s;
-        margin: 10px 0; /* Changed */
-      }
-
-    .text-contrast {
-      color: var(--text-color);
-    }
-
-    /* --- NEW FEATURE 9: RECOMMENDATIONS --- */
-    #recommendations {
-      margin-bottom: 30px;
-      text-align: left;
-    }
-
-    #recommendations h3 {
-      color: var(--primary-color);
-    }
-
-    .recommendation-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 15px;
-    }
-
-    .rec-card {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
-      font-size: 0.9em;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .rec-card:hover {
-      transform: scale(1.05);
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .rec-card img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 5px;
-    }
-
-
-    /* --- Advanced Menu Controls --- */
-    .menu-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 25px;
-    }
-
-    .search-container {
-      position: relative;
-      flex-grow: 1;
-      min-width: 250px;
-    }
-
-    .search-icon {
-      position: absolute;
-      top: 50%;
-      left: 15px;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-
-    #searchBar {
-      width: 100%;
-      padding-left: 45px;
-      margin-bottom: 0;
-    }
-
-    #searchSuggestions {
-      display: none;
-      position: absolute;
-      top: 110%;
-      left: 0;
-      right: 0;
-      background: var(--card-color);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      z-index: 100;
-      max-height: 200px;
-      overflow-y: auto;
-      backdrop-filter: blur(10px);
-      text-align: left;
-    }
-
-    #searchSuggestions div {
-      padding: 10px 15px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    #searchSuggestions div:hover {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    .sort-filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .sort-filters button {
-      background: transparent;
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-      padding: 8px 15px;
-      border-radius: 8px;
-      font-size: 14px;
-      margin: 0;
-    }
-
-    .sort-filters button.active {
-      background: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
-    }
-
-    .sort-filters button i {
-      margin-right: 5px;
-    }
-
-    /* --- Menu & Food Cards --- */
-    .menu-items {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 25px;
-      margin-top: 20px;
-    }
-
-    .food-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      padding: 15px;
-      border-radius: 15px;
-      position: relative;
-      background: var(--card-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .food-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 40px var(--shadow-color);
-    }
-
-    .food-img {
-      width: 100%;
-      border-radius: 10px;
-      cursor: pointer;
-      aspect-ratio: 16/10;
-      object-fit: cover;
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .card-actions button {
-      flex-grow: 1;
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-
-    .stock-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: var(--danger-color);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .fav-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: rgba(255, 255, 255, 0.5);
-      padding: 0;
-      margin: 0;
-    }
-
-    .fav-btn.favorited {
-      color: #ff7e5f;
-    }
-
-    /* --- NEW FEATURE 7: DIETARY ICONS --- */
-    .dietary-info {
-      position: absolute;
-      bottom: 80px;
-      left: 10px;
-      display: flex;
-      gap: 5px;
-      font-size: 1.2em;
-    }
-
-    .dietary-info span {
-      background: rgba(0, 0, 0, 0.5);
-      padding: 2px 5px;
-      border-radius: 5px;
-    }
-
-
-    /* --- Category Filters --- */
-    .category-filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .category-filters button {
-      background: var(--card-color);
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-    }
-
-    .category-filters button.active {
-      background: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
-    }
-
-    /* --- NEW FEATURE 5: SIDE CART --- */
-    #side-cart {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      /* Start off-screen */
-      width: 320px;
-      height: 100%;
-      background: var(--card-color);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid var(--border-color);
-      z-index: 1500;
-      transition: right 0.4s ease-in-out;
-      display: flex;
-      flex-direction: column;
-    }
-
-    #side-cart.active {
-      right: 0;
-    }
-
-    .side-cart-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .side-cart-header h3 {
-      margin: 0;
-    }
-
-    .side-cart-items {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
-
-    .side-cart-item {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 0.9em;
-    }
-
-    .side-cart-item img {
-      width: 60px;
-      height: 60px;
-      border-radius: 5px;
-      object-fit: cover;
-    }
-
-    .side-cart-item-details {
-      flex-grow: 1;
-    }
-
-    .side-cart-footer {
-      padding: 20px;
-      border-top: 1px solid var(--border-color);
-      text-align: center;
-    }
-
-
-    /* --- Cart & Orders --- */
-    .cart-item,
-    .order-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .order-card {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 5px;
-      background: var(--card-color);
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-
-    .cart-item-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .cart-summary {
-      margin-top: 20px;
-      text-align: right;
-    }
-
-    .cart-summary .checkout-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .coupon-section {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .coupon-section input {
-      flex-grow: 1;
-    }
-
-    /* --- Modals (Login & Item Details) --- */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: var(--card-color);
-      backdrop-filter: blur(15px);
-      padding: 30px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 500px;
-      animation: fadeInUp 0.5s;
-      position: relative;
-      text-align: left;
-    }
-
-    .close-btn {
-      color: #aaa;
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #itemModal-content img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-
-    /* --- NEW FEATURE 2: STAR RATING --- */
-    .star-rating {
-      direction: rtl;
-      display: inline-block;
-      font-size: 2em;
-    }
-
-    .star-rating input {
-      display: none;
-    }
-
-    .star-rating label {
-      color: #ccc;
-      cursor: pointer;
-    }
-
-    .star-rating input:checked~label,
-    .star-rating label:hover,
-    .star-rating label:hover~label {
-      color: #ffca08;
-    }
-
-
-    /* --- Toast Notifications --- */
-    #toast-container {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      z-index: 3000;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .toast {
-      padding: 15px 20px;
-      border-radius: 10px;
-      color: white;
-      min-width: 250px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      animation: slideInRight 0.5s;
-    }
-
-    .toast.success {
-      background: var(--success-color);
-    }
-
-    .toast.error {
-      background: var(--danger-color);
-    }
-
-    .toast.info {
-      background: #3b82f6;
-    }
-
-    /* --- Admin Panel Styles --- */
-    .admin-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .admin-tabs button {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-    }
-
-    .admin-tabs button.active {
-      background: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
-    }
-
-    .admin-tab-content {
-      display: none;
-    }
-
-    .admin-tab-content.active {
-      display: block;
-    }
-
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .admin-card {
-      background: var(--bg-color);
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-    }
-
-    .admin-card h4 {
-      margin-top: 0;
-      color: var(--text-muted);
-    }
-
-    .admin-card p {
-      font-size: 1.5em;
-      font-weight: bold;
-      margin-bottom: 0;
-    }
-
-    .table-container {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      margin-top: 15px;
-      min-width: 600px;
-    }
-
-    .admin-table th,
-    .admin-table td {
-      padding: 12px 15px;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    .admin-table th {
-      color: var(--text-muted);
-    }
-
-    .admin-table td .btn {
-      padding: 5px 10px;
-      font-size: 12px;
-      margin: 0 2px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--text-muted);
-    }
-
-    .coupon-add-form {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    /* --- NEW FEATURE 3: SCROLL TO TOP BUTTON --- */
-    #scrollToTopBtn {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 100;
-      border: none;
-      outline: none;
-      background-color: var(--primary-color);
-      color: white;
-      cursor: pointer;
-      padding: 10px 15px;
-      border-radius: 50%;
-      font-size: 18px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    /* --- NEW FEATURE 10: CONFETTI --- */
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background-color: #f00;
-      opacity: 0.7;
-      animation: fall 3s linear forwards;
-      z-index: 9999;
-    }
-
-    @keyframes fall {
-      to {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
-
-    /* --- UPDATED RESPONSIVE SECTION --- */
-    body.no-scroll {
-      overflow: hidden;
-    }
-
-    @media (max-width: 768px) {
-      header {
-        padding: 15px;
-      }
-
-      .menu-links {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100vh;
-        background: var(--bg-color);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 25px;
-        visibility: hidden;
-        transform: translateX(100%);
-        transition: transform 0.4s ease-in-out, visibility 0.4s;
-        padding: 0;
-        border-radius: 0;
-        text-align: center;
-      }
-
-      .menu-links.active {
-        visibility: visible;
-        transform: translateX(0);
-      }
-
-      .menu-links a {
-        font-size: 1.2rem;
-      }
-
-      .hamburger {
-        display: block;
-        z-index: 1001;
-      }
-
-      .menu-controls {
-        justify-content: center;
-      }
-
-      .sort-filters {
-        justify-content: center;
-      }
-
-      .glass-card {
-        margin: 10px 0;
-        padding: 15px;
-        border-radius: 0;
-        box-shadow: none;
-        border-left: none;
-        border-right: none;
-      }
-
-      .cart-item {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .coupon-add-form {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      #hero h2 {
-        font-size: 1.8em;
-      }
-
-      #hero p {
-        font-size: 1em;
-      }
-
-      #side-cart {
-        width: 280px;
-      }
-    }
-  </style>
-</head>
-
-<body class="dark-mode">
-  <div id="preloader">
-    <div class="spinner"></div>
-  </div>
-
-  <header id="header">
-    <h1><i class="fas fa-utensils"></i> Real Hero Restaurant 🍴</h1>
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
-    <nav class="menu-links" id="menuLinks">
-      <a href="#" id="user-greeting" class="nav-link-item" onclick="handleUserClick()">Login</a>
-      <a href="#" class="nav-link nav-link-item" onclick="showSection('menuSection')">Menu</a>
-      <a href="#" class="nav-link nav-link-item" onclick="showSection('myOrdersSection')">My Orders</a>
-      <a href="#" class="nav-link nav-link-item" onclick="showSection('adminSection')">Admin</a>
-      <a href="#" class="nav-link-item" onclick="toggleSideCart()">
-        <i class="fas fa-shopping-cart"></i> Cart
-        <span id="cartBadge" class="cart-badge">0</span>
-      </a>
-      <span id="loyalty-points"
-        style="margin-left: 10px; font-weight: bold; color:var(--text-color); align-self: center;">🏆 0 pts</span>
-      <button id="theme-toggle" onclick="toggleTheme()" style="
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real Hero Restaurant - Ultimate</title>
+    <link
+      rel="icon"
+      id="favicon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* --- Basic Setup & NEW Color Variables --- */
+   /* --- Basic Setup & NEW Color Variables --- */
+:root {
+  /* New Dark Theme */
+  --bg-color: #121828;
+  --card-color: rgba(30, 41, 59, 0.6);
+  --text-color: #e2e8f0;
+  --text-muted: #94a3b8;
+  --primary-color: #ff7e5f; /* Coral */
+  --primary-hover: #feb47b; /* Lighter Coral */
+  --secondary-color: #38bdf8; /* Sky Blue */
+  --secondary-hover: #0ea5e9;
+  --border-color: rgba(51, 65, 85, 0.5);
+  --shadow-color: rgba(255, 126, 95, 0.15);
+  --header-bg: rgba(30, 41, 59, 0.7);
+  --success-color: #22c55e;
+  --danger-color: #ef4444;
+}
+
+body.light-mode {
+  /* New Light Theme */
+  --bg-color: #f1f5f9;
+  --card-color: rgba(255, 255, 255, 0.7);
+  --text-color: #0f172a;
+  --text-muted: #475569;
+  --primary-color: #ef4444; /* Red */
+  --primary-hover: #dc2626;
+  --secondary-color: #2563eb; /* Blue */
+  --secondary-hover: #1d4ed8;
+  --border-color: rgba(203, 213, 225, 0.8);
+  --shadow-color: rgba(239, 68, 68, 0.15);
+  --header-bg: rgba(255, 255, 255, 0.7);
+}
+
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.5s, color 0.5s;
+}
+
+/* --- NEW FEATURE 1: PRELOADER --- */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--border-color);
+  border-top: 5px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Animations & Keyframes --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* --- NEW FEATURE 6: HERO SECTION --- */
+#hero {
+  height: 40vh;
+  background-image: url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1170&q=80");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Parallax effect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+#hero div {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px 40px;
+  border-radius: 15px;
+}
+#hero h2 {
+  font-size: 2.5em;
+  margin: 0;
+}
+#hero p {
+  font-size: 1.2em;
+}
+
+/* --- Header & Navigation --- */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--header-bg);
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(15px);
+  transition: background 0.5s;
+}
+header h1 {
+  color: var(--primary-color);
+  font-size: 24px;
+  margin: 0;
+}
+nav a {
+  margin: 0 10px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 8px;
+  transition: 0.3s;
+  position: relative;
+}
+nav a:hover,
+nav a.active {
+  background: var(--primary-color);
+  color: white;
+}
+.hamburger {
+  display: none;
+  cursor: pointer;
+  font-size: 28px;
+}
+.cart-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  vertical-align: top;
+}
+
+/* --- General Components --- */
+button,
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 5px;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.btn-secondary {
+  background: var(--secondary-color);
+  color: white;
+}
+.btn-secondary:hover {
+  background: var(--secondary-hover);
+  transform: translateY(-2px);
+}
+.btn-danger {
+  background: var(--danger-color);
+  color: white;
+}
+.btn-danger:hover {
+  opacity: 0.8;
+}
+button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  color: #e2e8f0;
+}
+input,
+select,
+textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-color);
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--shadow-color);
+}
+
+/* === CSS FIX FOR LAPTOP SCREEN STARTS HERE === */
+.glass-card {
+  backdrop-filter: blur(12px);
+  background: var(--card-color);
+  padding: 25px 40px; /* Added more horizontal padding for laptops */
+  text-align: center;
+  position: relative;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transition: background 0.5s;
+  margin: 20px 0; /* Only vertical margin, no horizontal */
+  border-top: 1px solid var(--border-color); /* Separator lines */
+  border-bottom: 1px solid var(--border-color);
+  /* NOTE: Horizontal margin, box-shadow, border-radius are removed for a full-width look */
+}
+/* === CSS FIX ENDS HERE === */
+
+.text-contrast {
+  color: var(--text-color);
+}
+
+/* --- NEW FEATURE 9: RECOMMENDATIONS --- */
+#recommendations {
+  margin-bottom: 30px;
+  text-align: left;
+}
+#recommendations h3 {
+  color: var(--primary-color);
+}
+.recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+.rec-card {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.rec-card:hover {
+  transform: scale(1.05);
+  background: var(--primary-color);
+  color: white;
+}
+.rec-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+/* --- Advanced Menu Controls --- */
+.menu-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.search-container {
+  position: relative;
+  flex-grow: 1;
+  min-width: 250px;
+}
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+#searchBar {
+  width: 100%;
+  padding-left: 45px;
+  margin-bottom: 0;
+}
+#searchSuggestions {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0;
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+  text-align: left;
+}
+#searchSuggestions div {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#searchSuggestions div:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+.sort-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sort-filters button {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin: 0;
+}
+.sort-filters button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+.sort-filters button i {
+  margin-right: 5px;
+}
+
+/* --- Menu & Food Cards --- */
+.menu-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+.food-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 15px;
+  border-radius: 15px;
+  position: relative;
+  background: var(--card-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--border-color); /* Added border back to individual cards */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* Added shadow back to individual cards */
+}
+.food-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px var(--shadow-color);
+}
+.food-img {
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+}
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.card-actions button {
+  flex-grow: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+.stock-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--danger-color);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0;
+  margin: 0;
+}
+.fav-btn.favorited {
+  color: #ff7e5f;
+}
+/* --- NEW FEATURE 7: DIETARY ICONS --- */
+.dietary-info {
+  position: absolute;
+  bottom: 80px;
+  left: 10px;
+  display: flex;
+  gap: 5px;
+  font-size: 1.2em;
+}
+.dietary-info span {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+/* --- Category Filters --- */
+.category-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.category-filters button {
+  background: var(--card-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+.category-filters button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* --- NEW FEATURE 5: SIDE CART --- */
+#side-cart {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Start off-screen */
+  width: 320px;
+  height: 100%;
+  background: var(--card-color);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border-color);
+  z-index: 1500;
+  transition: right 0.4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+#side-cart.active {
+  right: 0;
+}
+.side-cart-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.side-cart-header h3 {
+  margin: 0;
+}
+.side-cart-items {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.side-cart-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+}
+.side-cart-item img {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+.side-cart-item-details {
+  flex-grow: 1;
+}
+.side-cart-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+/* --- Cart & Orders --- */
+.cart-item,
+.order-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+.order-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  background: var(--card-color);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+.cart-summary {
+  margin-top: 20px;
+  text-align: right;
+}
+.cart-summary .checkout-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.coupon-section {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+.coupon-section input {
+  flex-grow: 1;
+}
+
+/* --- Modals (Login & Item Details) --- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: var(--card-color);
+  backdrop-filter: blur(15px);
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  animation: fadeInUp 0.5s;
+  position: relative;
+  text-align: left;
+}
+.close-btn {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#itemModal-content img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+/* --- NEW FEATURE 2: STAR RATING --- */
+.star-rating {
+  direction: rtl;
+  display: inline-block;
+  font-size: 2em;
+}
+.star-rating input {
+  display: none;
+}
+.star-rating label {
+  color: #ccc;
+  cursor: pointer;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ffca08;
+}
+
+/* --- Toast Notifications --- */
+#toast-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: white;
+  min-width: 250px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: slideInRight 0.5s;
+}
+.toast.success {
+  background: var(--success-color);
+}
+.toast.error {
+  background: var(--danger-color);
+}
+.toast.info {
+  background: #3b82f6;
+}
+
+/* --- Admin Panel Styles --- */
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.admin-tabs button {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+.admin-tabs button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+.admin-tab-content {
+  display: none;
+}
+.admin-tab-content.active {
+  display: block;
+}
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.admin-card {
+  background: var(--bg-color);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+.admin-card h4 {
+  margin-top: 0;
+  color: var(--text-muted);
+}
+.admin-card p {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-top: 15px;
+  min-width: 600px;
+}
+.admin-table th,
+.admin-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+.admin-table th {
+  color: var(--text-muted);
+}
+.admin-table td .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  margin: 0 2px;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-muted);
+}
+.coupon-add-form {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+/* --- NEW FEATURE 3: SCROLL TO TOP BUTTON --- */
+#scrollToTopBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  border: none;
+  outline: none;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 50%;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* --- NEW FEATURE 10: CONFETTI --- */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background-color: #f00;
+  opacity: 0.7;
+  animation: fall 3s linear forwards;
+  z-index: 9999;
+}
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* --- UPDATED RESPONSIVE SECTION --- */
+body.no-scroll {
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  header {
+    padding: 15px;
+  }
+  .menu-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out, visibility 0.4s;
+    padding: 0;
+    border-radius: 0;
+    text-align: center;
+  }
+  .menu-links.active {
+    visibility: visible;
+    transform: translateX(0);
+  }
+  .menu-links a {
+    font-size: 1.2rem;
+  }
+  .hamburger {
+    display: block;
+    z-index: 1001;
+  }
+  .menu-controls {
+    justify-content: center;
+  }
+  .sort-filters {
+    justify-content: center;
+  }
+  .glass-card {
+    margin: 10px 0;
+    padding: 20px 15px; /* Adjusted padding for mobile */
+  }
+  .cart-item {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}
+@media (max-width: 480px) {
+  .coupon-add-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #hero h2 {
+    font-size: 1.8em;
+  }
+  #hero p {
+    font-size: 1em;
+  }
+  #side-cart {
+    width: 280px;
+  }
+}
+    </style>
+  </head>
+
+  <body class="dark-mode">
+    <div id="preloader"><div class="spinner"></div></div>
+
+    <header id="header">
+      <h1><i class="fas fa-utensils"></i> Real Hero Restaurant 🍴</h1>
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+      <nav class="menu-links" id="menuLinks">
+        <a href="#" id="user-greeting" class="nav-link-item" onclick="handleUserClick()">Login</a>
+        <a href="#" class="nav-link nav-link-item" onclick="showSection('menuSection')">Menu</a>
+        <a href="#" class="nav-link nav-link-item" onclick="showSection('myOrdersSection')">My Orders</a>
+        <a href="#" class="nav-link nav-link-item" onclick="showSection('adminSection')">Admin</a>
+        <a href="#" class="nav-link-item" onclick="toggleSideCart()">
+          <i class="fas fa-shopping-cart"></i> Cart
+          <span id="cartBadge" class="cart-badge">0</span>
+        </a>
+        <span id="loyalty-points" style="margin-left: 10px; font-weight: bold; color:var(--text-color); align-self: center;"
+          >🏆 0 pts</span
+        >
+        <button
+          id="theme-toggle"
+          onclick="toggleTheme()"
+          style="
             background: none; border: none; font-size: 20px; color: var(--text-color);
-          ">
-        <i class="fas fa-sun"></i>
-      </button>
-    </nav>
-  </header>
+          "
+        >
+          <i class="fas fa-sun"></i>
+        </button>
+      </nav>
+    </header>
 
-  <div id="toast-container"></div>
+    <div id="toast-container"></div>
 
-  <section id="hero">
-    <div>
-      <h2>Taste the Extraordinary</h2>
-      <p>Fresh Ingredients, Unforgettable Flavors.</p>
-    </div>
-  </section>
-
-  <section id="menuSection" class="glass-card">
-    <div id="recommendations"></div>
-
-    <h2 class="text-contrast">Our Menu</h2>
-    <div class="category-filters" id="categoryFilters"></div>
-
-    <div class="menu-controls">
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="searchBar" placeholder="Search your favorite food..." oninput="handleSearchInput()" />
-        <div id="searchSuggestions"></div>
-      </div>
-      <div class="sort-filters" id="sortFilters">
-        <button class="active" onclick="applySort('default', this)">Default</button>
-        <button onclick="applySort('price-asc', this)"><i class="fas fa-arrow-down"></i> Price</button>
-        <button onclick="applySort('price-desc', this)"><i class="fas fa-arrow-up"></i> Price</button>
-        <button onclick="applySort('rating-desc', this)"><i class="fas fa-star"></i> Rating</button>
-      </div>
-    </div>
-    <div class="menu-items" id="menuItems"></div>
-  </section>
-
-  <section id="cartSection" class="glass-card" style="display: none">
-    <h2 class="text-contrast">Your Cart</h2>
-    <div id="cartItems">Your cart is empty.</div>
-    <div id="cartSummary" class="cart-summary" style="display: none">
-      <p>Estimated Delivery: <strong>25-30 minutes</strong></p>
-      <div class="coupon-section">
-        <input type="text" id="couponCode" placeholder="Enter Coupon Code" />
-        <button class="btn-secondary" onclick="applyCoupon()">Apply</button>
-      </div>
-      <h3 id="cartTotal">Total: ₹0</h3>
-      <div class="checkout-buttons">
-        <button class="btn-danger" onclick="resetCart(true)">Clear Cart</button>
-        <button class="btn-secondary" onclick="placeOfflineOrder()">Pay on Delivery</button>
-        <button class="btn-primary" onclick="placeOrder()">Checkout & Pay</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="myOrdersSection" class="glass-card" style="display: none">
-    <h2 class="text-contrast">My Past Orders</h2>
-    <div id="myOrdersContainer"></div>
-  </section>
-
-  <section id="adminSection" class="glass-card" style="display: none">
-    <h2 class="text-contrast">Admin Panel</h2>
-    <div id="loginBox">
-      <input type="password" id="adminPass" placeholder="Enter Password" />
-      <button onclick="loginAdmin()" class="btn-primary">Login</button>
-    </div>
-    <div id="adminDashboard" style="display: none; text-align: left;">
-      <div class="admin-tabs">
-        <button class="active" onclick="showAdminTab('dashboardTab', this)">Dashboard</button>
-        <button onclick="showAdminTab('menuTab', this)">Menu</button>
-        <button onclick="showAdminTab('ordersTab', this)">Orders</button>
-        <button onclick="showAdminTab('couponsTab', this)">Coupons</button>
-        <button onclick="showAdminTab('usersTab', this)">Users</button>
-      </div>
-      <div id="dashboardTab" class="admin-tab-content active">
-        <h3>Dashboard Overview</h3>
-        <div id="admin-analytics-grid" class="admin-grid"></div>
-        <div style="width: 100%; max-width: 600px; margin: 20px auto;"><canvas id="salesChart"></canvas></div>
-      </div>
-      <div id="menuTab" class="admin-tab-content">
-        <h3>Menu Management</h3>
-        <button class="btn-primary" onclick="showAddItemForm()">+ Add New Item</button>
-        <div class="table-container" id="menuManagementContainer"></div>
-      </div>
-      <div id="ordersTab" class="admin-tab-content">
-        <h3>Live Order Management</h3>
-        <button class="btn-secondary" onclick="exportOrdersToCSV()">Export Orders to CSV</button>
-        <div class="table-container" id="liveOrdersContainer"></div>
-      </div>
-      <div id="couponsTab" class="admin-tab-content">
-        <h3>Coupon Management</h3>
-        <div class="coupon-add-form">
-          <div class="form-group" style="flex-grow:1; margin:0;"><label>Code</label><input type="text"
-              id="newCouponCode" placeholder="e.g. SAVE10" style="margin:0;"></div>
-          <div class="form-group" style="flex-grow:1; margin:0;"><label>Discount %</label><input type="number"
-              id="newCouponValue" placeholder="e.g. 10" style="margin:0;"></div>
-          <button class="btn-primary" onclick="addCoupon()" style="margin:0;">Add</button>
+    <section id="hero">
+        <div>
+            <h2>Taste the Extraordinary</h2>
+            <p>Fresh Ingredients, Unforgettable Flavors.</p>
         </div>
-        <div class="table-container" id="couponManagementContainer"></div>
+    </section>
+
+    <section id="menuSection" class="glass-card">
+      <div id="recommendations"></div>
+      
+      <h2 class="text-contrast">Our Menu</h2>
+      <div class="category-filters" id="categoryFilters"></div>
+
+      <div class="menu-controls">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            id="searchBar"
+            placeholder="Search your favorite food..."
+            oninput="handleSearchInput()"
+          />
+          <div id="searchSuggestions"></div>
+        </div>
+        <div class="sort-filters" id="sortFilters">
+          <button class="active" onclick="applySort('default', this)">Default</button>
+          <button onclick="applySort('price-asc', this)"><i class="fas fa-arrow-down"></i> Price</button>
+          <button onclick="applySort('price-desc', this)"><i class="fas fa-arrow-up"></i> Price</button>
+          <button onclick="applySort('rating-desc', this)"><i class="fas fa-star"></i> Rating</button>
+        </div>
       </div>
-      <div id="usersTab" class="admin-tab-content">
-        <h3>User Management</h3>
-        <button class="btn-secondary" onclick="exportUsersToCSV()">Export Users to CSV</button>
-        <div class="table-container" id="userManagementContainer"></div>
+      <div class="menu-items" id="menuItems"></div>
+    </section>
+
+    <section id="cartSection" class="glass-card" style="display: none">
+      <h2 class="text-contrast">Your Cart</h2>
+      <div id="cartItems">Your cart is empty.</div>
+      <div id="cartSummary" class="cart-summary" style="display: none">
+        <p>Estimated Delivery: <strong>25-30 minutes</strong></p>
+        <div class="coupon-section">
+          <input type="text" id="couponCode" placeholder="Enter Coupon Code" />
+          <button class="btn-secondary" onclick="applyCoupon()">Apply</button>
+        </div>
+        <h3 id="cartTotal">Total: ₹0</h3>
+        <div class="checkout-buttons">
+          <button class="btn-danger" onclick="resetCart(true)">Clear Cart</button>
+          <button class="btn-secondary" onclick="placeOfflineOrder()">Pay on Delivery</button>
+          <button class="btn-primary" onclick="placeOrder()">Checkout & Pay</button>
+        </div>
       </div>
-      <button onclick="logoutAdmin()" class="btn-danger" style="margin-top: 20px;">Logout</button>
+    </section>
+
+    <section id="myOrdersSection" class="glass-card" style="display: none">
+      <h2 class="text-contrast">My Past Orders</h2>
+      <div id="myOrdersContainer"></div>
+    </section>
+
+    <section id="adminSection" class="glass-card" style="display: none">
+        <h2 class="text-contrast">Admin Panel</h2>
+        <div id="loginBox">
+            <input type="password" id="adminPass" placeholder="Enter Password" />
+            <button onclick="loginAdmin()" class="btn-primary">Login</button>
+        </div>
+        <div id="adminDashboard" style="display: none; text-align: left;">
+            <div class="admin-tabs">
+                <button class="active" onclick="showAdminTab('dashboardTab', this)">Dashboard</button>
+                <button onclick="showAdminTab('menuTab', this)">Menu</button>
+                <button onclick="showAdminTab('ordersTab', this)">Orders</button>
+                <button onclick="showAdminTab('couponsTab', this)">Coupons</button>
+                <button onclick="showAdminTab('usersTab', this)">Users</button>
+            </div>
+            <div id="dashboardTab" class="admin-tab-content active">
+                <h3>Dashboard Overview</h3>
+                <div id="admin-analytics-grid" class="admin-grid"></div>
+                <div style="width: 100%; max-width: 600px; margin: 20px auto;"><canvas id="salesChart"></canvas></div>
+            </div>
+            <div id="menuTab" class="admin-tab-content">
+                <h3>Menu Management</h3>
+                <button class="btn-primary" onclick="showAddItemForm()">+ Add New Item</button>
+                <div class="table-container" id="menuManagementContainer"></div>
+            </div>
+            <div id="ordersTab" class="admin-tab-content">
+                <h3>Live Order Management</h3>
+                <button class="btn-secondary" onclick="exportOrdersToCSV()">Export Orders to CSV</button>
+                <div class="table-container" id="liveOrdersContainer"></div>
+            </div>
+            <div id="couponsTab" class="admin-tab-content">
+                <h3>Coupon Management</h3>
+                <div class="coupon-add-form">
+                    <div class="form-group" style="flex-grow:1; margin:0;"><label>Code</label><input type="text" id="newCouponCode" placeholder="e.g. SAVE10" style="margin:0;"></div>
+                    <div class="form-group" style="flex-grow:1; margin:0;"><label>Discount %</label><input type="number" id="newCouponValue" placeholder="e.g. 10" style="margin:0;"></div>
+                    <button class="btn-primary" onclick="addCoupon()" style="margin:0;">Add</button>
+                </div>
+                <div class="table-container" id="couponManagementContainer"></div>
+            </div>
+            <div id="usersTab" class="admin-tab-content">
+                <h3>User Management</h3>
+                 <button class="btn-secondary" onclick="exportUsersToCSV()">Export Users to CSV</button>
+                <div class="table-container" id="userManagementContainer"></div>
+            </div>
+            <button onclick="logoutAdmin()" class="btn-danger" style="margin-top: 20px;">Logout</button>
+        </div>
+    </section>
+    
+    <div id="side-cart">
+        <div class="side-cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-btn" style="position: static; font-size: 24px;" onclick="toggleSideCart()">&times;</button>
+        </div>
+        <div id="side-cart-items" class="side-cart-items"></div>
+        <div class="side-cart-footer">
+            <h4 id="side-cart-total">Total: ₹0</h4>
+            <a href="#" class="btn btn-primary" onclick="showSection('cartSection'); toggleSideCart();">Go to Checkout</a>
+        </div>
     </div>
-  </section>
 
-  <div id="side-cart">
-    <div class="side-cart-header">
-      <h3>Your Cart</h3>
-      <button class="close-btn" style="position: static; font-size: 24px;" onclick="toggleSideCart()">&times;</button>
-    </div>
-    <div id="side-cart-items" class="side-cart-items"></div>
-    <div class="side-cart-footer">
-      <h4 id="side-cart-total">Total: ₹0</h4>
-      <a href="#" class="btn btn-primary" onclick="showSection('cartSection'); toggleSideCart();">Go to Checkout</a>
-    </div>
-  </div>
+    <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
-  <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+    <div id="loginModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('loginModal')">&times;</span><h2>Enter Your Name</h2><input type="text" id="userNameInput" placeholder="Your Name" /><button class="btn-primary" onclick="handleLogin()">Login</button></div></div>
+    <div id="itemModal" class="modal"><div class="modal-content" id="itemModal-content"><span class="close-btn" onclick="closeModal('itemModal')">&times;</span></div></div>
+    <div id="formModal" class="modal"><div class="modal-content" id="formModal-content"></div></div>
 
-  <div id="loginModal" class="modal">
-    <div class="modal-content"><span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
-      <h2>Enter Your Name</h2><input type="text" id="userNameInput" placeholder="Your Name" /><button
-        class="btn-primary" onclick="handleLogin()">Login</button>
-    </div>
-  </div>
-  <div id="itemModal" class="modal">
-    <div class="modal-content" id="itemModal-content"><span class="close-btn"
-        onclick="closeModal('itemModal')">&times;</span></div>
-  </div>
-  <div id="formModal" class="modal">
-    <div class="modal-content" id="formModal-content"></div>
-  </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      // --- STATE & DATA ---
+      let cart = [];
+      let favorites = [];
+      const ADMIN_PASS = "Nadeem20";
+      let COUPONS = { HERO10: 0.1, EAT20: 0.2 };
+      let discount = 0;
+      let salesChart;
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script>
-    // --- STATE & DATA ---
-    let cart = [];
-    let favorites = [];
-    const ADMIN_PASS = "Nadeem20";
-    let COUPONS = { HERO10: 0.1, EAT20: 0.2 };
-    let discount = 0;
-    let salesChart;
+      // Upgraded Menu Data with ratings array
+      let menuItemsData = [
+        { id: 1, name: "Juicy Burger", price: 150, img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80", cat: "Non-Veg", ratings: [5], stock: 10, desc: "A delicious, flame-grilled burger with all the fixings.", tags: ["Best Seller 🔥"] },
+        { id: 2, name: "Margherita Pizza", price: 350, img: "https://safrescobaldistatic.blob.core.windows.net/media/2022/11/PIZZA-MARGHERITA.jpg", cat: "Veg", ratings: [5], stock: 15, desc: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.", tags: [] },
+        { id: 3, name: "Spicy Pasta", price: 250, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtGxJQNLQ_tpfDqgGfFpEARarc7qNGTDVEYg&s.jpg", cat: "Veg", ratings: [4], stock: 20, desc: "Penne pasta in a spicy arrabbiata sauce, topped with parmesan.", tags: ["Spicy 🌶️"] },
+        { id: 4, name: "Chilled Coke", price: 50, img: "https://mir-s3-cdn-cf.behance.net/project_modules/hd_webp/53cf4d12641901.56270d7c1fb09.jpg", cat: "Drinks", ratings: [3], stock: 50, desc: "A refreshing, chilled bottle of Coca-Cola.", tags: [] },
+        { id: 5, name: "Club Sandwich", price: 120, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfVnVChbaixLmZEptZzMRGqkthPeSpsXb8Yg&s.jpg", cat: "Veg", ratings: [4], stock: 25, desc: "A triple-layered sandwich with fresh veggies and mayonnaise.", tags: [] },
+        { id: 6, name: "Golden Fries", price: 100, img: "https://www.bakingo.com/blog/wp-content/uploads/2022/06/best-choco-lava-cake-recipe-ever.jpg", cat: "Veg", ratings: [5], stock: 30, desc: "Crispy, golden-brown French fries, lightly salted.", tags: [] },
+        { id: 7, name: "Choco Lava Cake", price: 110, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkD7OSbyvoEzYoqjoEAjzRxlV0QUXQ7E2M9g&s.jpg", cat: "Veg", ratings: [5], stock: 18, desc: "Warm chocolate cake with a gooey, molten center.", tags: ["Dessert 🍰"] },
+        { id: 8, name: "Chicken Biryani", price: 280, img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80", cat: "Non-Veg", ratings: [5], stock: 12, desc: "Aromatic basmati rice cooked with chicken and exotic spices.", tags: ["Best Seller 🔥"] },
+        { id: 9, name: "Paneer Tikka", price: 220, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx4JCtjJnuFSXTEBClNiJCykZsOl_DYYmNPQ&s.jpg", cat: "Veg", ratings: [4], stock: 22, desc: "Cubes of paneer marinated in spices and grilled in a tandoor.", tags: ["Spicy 🌶️"] },
+        { id: 10, name: "Veg Spring Rolls", price: 140, img: "https://www.womansworld.com/wp-content/uploads/2023/09/airfryer13.jpg?quality=86&strip=all", cat: "Veg", ratings: [4], stock: 0, desc: "Crispy fried rolls stuffed with mixed vegetables.", tags: [] },
+        { id: 11, name: "Oreo Milkshake", price: 160, img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", cat: "Drinks", ratings: [5], stock: 30, desc: "A thick and creamy milkshake made with Oreo cookies.", tags: ["Drinks 🥤"] },
+        { id: 12, name: "Veg Hakka Noodles", price: 180, img: "https://www.sharmispassions.com/wp-content/uploads/2012/09/HakkaNoodles4-e1689045142580-500x500.jpg", cat: "Veg", ratings: [4], stock: 25, desc: "Stir-fried noodles with a mix of fresh vegetables.", tags: [] },
+      ];
 
-    // Upgraded Menu Data with ratings array
-    let menuItemsData = [
-      { id: 1, name: "Juicy Burger", price: 150, img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80", cat: "Non-Veg", ratings: [5], stock: 10, desc: "A delicious, flame-grilled burger with all the fixings.", tags: ["Best Seller 🔥"] },
-      { id: 2, name: "Margherita Pizza", price: 350, img: "https://safrescobaldistatic.blob.core.windows.net/media/2022/11/PIZZA-MARGHERITA.jpg", cat: "Veg", ratings: [5], stock: 15, desc: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.", tags: [] },
-      { id: 3, name: "Spicy Pasta", price: 250, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtGxJQNLQ_tpfDqgGfFpEARarc7qNGTDVEYg&s.jpg", cat: "Veg", ratings: [4], stock: 20, desc: "Penne pasta in a spicy arrabbiata sauce, topped with parmesan.", tags: ["Spicy 🌶️"] },
-      { id: 4, name: "Chilled Coke", price: 50, img: "https://mir-s3-cdn-cf.behance.net/project_modules/hd_webp/53cf4d12641901.56270d7c1fb09.jpg", cat: "Drinks", ratings: [3], stock: 50, desc: "A refreshing, chilled bottle of Coca-Cola.", tags: [] },
-      { id: 5, name: "Club Sandwich", price: 120, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfVnVChbaixLmZEptZzMRGqkthPeSpsXb8Yg&s.jpg", cat: "Veg", ratings: [4], stock: 25, desc: "A triple-layered sandwich with fresh veggies and mayonnaise.", tags: [] },
-      { id: 6, name: "Golden Fries", price: 100, img: "https://www.bakingo.com/blog/wp-content/uploads/2022/06/best-choco-lava-cake-recipe-ever.jpg", cat: "Veg", ratings: [5], stock: 30, desc: "Crispy, golden-brown French fries, lightly salted.", tags: [] },
-      { id: 7, name: "Choco Lava Cake", price: 110, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkD7OSbyvoEzYoqjoEAjzRxlV0QUXQ7E2M9g&s.jpg", cat: "Veg", ratings: [5], stock: 18, desc: "Warm chocolate cake with a gooey, molten center.", tags: ["Dessert 🍰"] },
-      { id: 8, name: "Chicken Biryani", price: 280, img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80", cat: "Non-Veg", ratings: [5], stock: 12, desc: "Aromatic basmati rice cooked with chicken and exotic spices.", tags: ["Best Seller 🔥"] },
-      { id: 9, name: "Paneer Tikka", price: 220, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx4JCtjJnuFSXTEBClNiJCykZsOl_DYYmNPQ&s.jpg", cat: "Veg", ratings: [4], stock: 22, desc: "Cubes of paneer marinated in spices and grilled in a tandoor.", tags: ["Spicy 🌶️"] },
-      { id: 10, name: "Veg Spring Rolls", price: 140, img: "https://www.womansworld.com/wp-content/uploads/2023/09/airfryer13.jpg?quality=86&strip=all", cat: "Veg", ratings: [4], stock: 0, desc: "Crispy fried rolls stuffed with mixed vegetables.", tags: [] },
-      { id: 11, name: "Oreo Milkshake", price: 160, img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", cat: "Drinks", ratings: [5], stock: 30, desc: "A thick and creamy milkshake made with Oreo cookies.", tags: ["Drinks 🥤"] },
-      { id: 12, name: "Veg Hakka Noodles", price: 180, img: "https://www.sharmispassions.com/wp-content/uploads/2012/09/HakkaNoodles4-e1689045142580-500x500.jpg", cat: "Veg", ratings: [4], stock: 25, desc: "Stir-fried noodles with a mix of fresh vegetables.", tags: [] },
-    ];
+      // --- INITIALIZATION ---
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- MODIFIED for Feature 1 ---
+        document.getElementById('preloader').style.display = 'none';
 
-    // --- INITIALIZATION ---
-    document.addEventListener("DOMContentLoaded", () => {
-      // --- MODIFIED for Feature 1 ---
-      document.getElementById('preloader').style.display = 'none';
+        cart = JSON.parse(localStorage.getItem("cart")) || [];
+        favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        COUPONS = JSON.parse(localStorage.getItem("coupons")) || { HERO10: 0.1, EAT20: 0.2 };
+        menuItemsData = JSON.parse(localStorage.getItem("menuItems")) || menuItemsData;
 
-      cart = JSON.parse(localStorage.getItem("cart")) || [];
-      favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-      COUPONS = JSON.parse(localStorage.getItem("coupons")) || { HERO10: 0.1, EAT20: 0.2 };
-      menuItemsData = JSON.parse(localStorage.getItem("menuItems")) || menuItemsData;
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        document.body.className = savedTheme + "-mode";
+        document.getElementById("theme-toggle").innerHTML = savedTheme === "dark" ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        updateFavicon(savedTheme);
+        updateUserDisplay();
+        updateLoyaltyPointsDisplay();
+        displayCategories();
+        renderRecommendations(); // NEW for Feature 9
+        renderMenu();
+        updateCart();
+        showSection("menuSection");
 
-      const savedTheme = localStorage.getItem("theme") || "dark";
-      document.body.className = savedTheme + "-mode";
-      document.getElementById("theme-toggle").innerHTML = savedTheme === "dark" ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-      updateFavicon(savedTheme);
-      updateUserDisplay();
-      updateLoyaltyPointsDisplay();
-      displayCategories();
-      renderRecommendations(); // NEW for Feature 9
-      renderMenu();
-      updateCart();
-      showSection("menuSection");
-
-      document.querySelectorAll('.nav-link-item').forEach(link => {
-        link.addEventListener('click', () => {
-          if (window.innerWidth <= 768) {
-            const menuLinks = document.getElementById('menuLinks');
-            if (menuLinks.classList.contains('active')) {
-              toggleMenu();
-            }
-          }
+        document.querySelectorAll('.nav-link-item').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    const menuLinks = document.getElementById('menuLinks');
+                    if (menuLinks.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                }
+            });
         });
       });
-    });
 
-    // --- CORE UI & THEME ---
-    function showSection(id) {
-      ["menuSection", "cartSection", "adminSection", "myOrdersSection"].forEach((secId) => {
-        document.getElementById(secId).style.display = secId === id ? "block" : "none";
-      });
-      document.querySelectorAll(".nav-link").forEach((link) => {
-        link.classList.remove("active");
-        if (link.getAttribute("onclick").includes(id)) link.classList.add("active");
-      });
-      if (id === "myOrdersSection") showMyOrders();
-      if (id === 'adminSection' && document.getElementById('adminDashboard').style.display === 'block') {
-        renderAdminDashboard();
+      // --- CORE UI & THEME ---
+      function showSection(id) {
+        ["menuSection", "cartSection", "adminSection", "myOrdersSection"].forEach((secId) => {
+          document.getElementById(secId).style.display = secId === id ? "block" : "none";
+        });
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("onclick").includes(id)) link.classList.add("active");
+        });
+        if (id === "myOrdersSection") showMyOrders();
+        if (id === 'adminSection' && document.getElementById('adminDashboard').style.display === 'block') {
+             renderAdminDashboard();
+        }
       }
-    }
 
-    function toggleMenu() {
-      const menuLinks = document.getElementById("menuLinks");
-      const hamburger = document.querySelector(".hamburger");
-      const isActive = menuLinks.classList.toggle("active");
-      document.body.classList.toggle("no-scroll", isActive);
-      if (isActive) {
-        hamburger.innerHTML = '&times;';
-        hamburger.style.fontSize = '36px';
-      } else {
-        hamburger.innerHTML = '☰';
-        hamburger.style.fontSize = '28px';
+      function toggleMenu() {
+        const menuLinks = document.getElementById("menuLinks");
+        const hamburger = document.querySelector(".hamburger");
+        const isActive = menuLinks.classList.toggle("active");
+        document.body.classList.toggle("no-scroll", isActive);
+        if (isActive) {
+            hamburger.innerHTML = '&times;';
+            hamburger.style.fontSize = '36px';
+        } else {
+            hamburger.innerHTML = '☰';
+            hamburger.style.fontSize = '28px';
+        }
       }
-    }
 
-    function toggleTheme() {
-      const isDark = document.body.classList.toggle("dark-mode");
-      document.body.classList.toggle("light-mode", !isDark);
-      const theme = document.body.classList.contains("dark-mode") ? "dark" : "light";
-      localStorage.setItem("theme", theme);
-      document.getElementById("theme-toggle").innerHTML = theme === "dark" ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-      updateFavicon(theme);
-      if (salesChart) {
-        salesChart.destroy();
-        renderAdminDashboard();
+      function toggleTheme() {
+        const isDark = document.body.classList.toggle("dark-mode");
+        document.body.classList.toggle("light-mode", !isDark);
+        const theme = document.body.classList.contains("dark-mode") ? "dark" : "light";
+        localStorage.setItem("theme", theme);
+        document.getElementById("theme-toggle").innerHTML = theme === "dark" ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        updateFavicon(theme);
+        if(salesChart) {
+            salesChart.destroy();
+            renderAdminDashboard();
+        }
       }
-    }
 
-    function updateFavicon(theme) {
-      const favicon = document.getElementById("favicon");
-      favicon.href = theme === "dark"
-        ? "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>"
-        : "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>";
-    }
-    function showToast(message, type = "info") {
-      const container = document.getElementById("toast-container");
-      const toast = document.createElement("div");
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
-    function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
+      function updateFavicon(theme) {
+        const favicon = document.getElementById("favicon");
+        favicon.href = theme === "dark"
+          ? "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>"
+          : "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>";
+      }
+      function showToast(message, type = "info") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+      function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
 
-    // --- MENU, SEARCH, SORT, FILTER ---
-    function renderMenu() {
-      const activeCategoryBtn = document.querySelector('#categoryFilters button.active');
-      const category = activeCategoryBtn ? activeCategoryBtn.innerText : 'All';
-      const searchTerm = document.getElementById('searchBar').value.toLowerCase();
-      const activeSortBtn = document.querySelector('#sortFilters button.active');
-      const sortBy = activeSortBtn ? activeSortBtn.getAttribute('onclick').match(/'([^']*)'/)[1] : 'default';
-      let items = [...menuItemsData];
-      if (category !== 'All') items = items.filter(i => i.cat === category);
-      if (searchTerm) items = items.filter(i => i.name.toLowerCase().includes(searchTerm));
-      if (sortBy === "price-asc") items.sort((a, b) => a.price - b.price);
-      else if (sortBy === "price-desc") items.sort((a, b) => b.price - a.price);
-      // MODIFIED for Feature 2: Sort by average rating
-      else if (sortBy === "rating-desc") items.sort((a, b) => getAverageRating(b.id) - getAverageRating(a.id));
-      displayMenu(items);
-    }
-
-    // NEW for Feature 7: Function to get dietary icons
-    function getDietaryIcons(item) {
-      let icons = '';
-      if (item.cat === 'Veg') icons += '<span>🟢</span>';
-      if (item.cat === 'Non-Veg') icons += '<span>🔴</span>';
-      if (item.tags.includes('Spicy 🌶️')) icons += '<span>🌶️</span>';
-      return icons;
-    }
-
-    // MODIFIED for Feature 2 & 7
-    function displayMenu(items) {
-      const container = document.getElementById("menuItems");
-      container.innerHTML = items.length ? "" : "<p>No items match your criteria.</p>";
-      items.forEach((item) => {
-        const isOutOfStock = item.stock <= 0;
-        const isFavorited = favorites.includes(item.id);
-        const averageRating = getAverageRating(item.id); // Get average rating
-        const div = document.createElement("div");
-        div.className = "food-card";
-        div.innerHTML = `
+      // --- MENU, SEARCH, SORT, FILTER ---
+      function renderMenu() {
+        const activeCategoryBtn = document.querySelector('#categoryFilters button.active');
+        const category = activeCategoryBtn ? activeCategoryBtn.innerText : 'All';
+        const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+        const activeSortBtn = document.querySelector('#sortFilters button.active');
+        const sortBy = activeSortBtn ? activeSortBtn.getAttribute('onclick').match(/'([^']*)'/)[1] : 'default';
+        let items = [...menuItemsData];
+        if (category !== 'All') items = items.filter(i => i.cat === category);
+        if (searchTerm) items = items.filter(i => i.name.toLowerCase().includes(searchTerm));
+        if (sortBy === "price-asc") items.sort((a, b) => a.price - b.price);
+        else if (sortBy === "price-desc") items.sort((a, b) => b.price - a.price);
+        // MODIFIED for Feature 2: Sort by average rating
+        else if (sortBy === "rating-desc") items.sort((a, b) => getAverageRating(b.id) - getAverageRating(a.id));
+        displayMenu(items);
+      }
+      
+      // NEW for Feature 7: Function to get dietary icons
+      function getDietaryIcons(item) {
+          let icons = '';
+          if (item.cat === 'Veg') icons += '<span>🟢</span>';
+          if (item.cat === 'Non-Veg') icons += '<span>🔴</span>';
+          if (item.tags.includes('Spicy 🌶️')) icons += '<span>🌶️</span>';
+          return icons;
+      }
+      
+      // MODIFIED for Feature 2 & 7
+      function displayMenu(items) {
+        const container = document.getElementById("menuItems");
+        container.innerHTML = items.length ? "" : "<p>No items match your criteria.</p>";
+        items.forEach((item) => {
+          const isOutOfStock = item.stock <= 0;
+          const isFavorited = favorites.includes(item.id);
+          const averageRating = getAverageRating(item.id); // Get average rating
+          const div = document.createElement("div");
+          div.className = "food-card";
+          div.innerHTML = `
             <div>
-              ${isOutOfStock ? '<div class="stock-badge">Out of Stock</div>' : ""}
+              ${ isOutOfStock ? '<div class="stock-badge">Out of Stock</div>' : "" }
               <button class="fav-btn ${isFavorited ? "favorited" : ""}" onclick="toggleFavorite(event, ${item.id})"><i class="fas fa-heart"></i></button>
               <img src="${item.img}" class="food-img" onclick="showItemModal(${item.id})">
               <div class="dietary-info">${getDietaryIcons(item)}</div>
@@ -1289,87 +1182,87 @@
               <button class="btn-secondary" onclick="addToCart(${item.id})" ${isOutOfStock ? "disabled" : ""}><i class="fas fa-cart-plus"></i> Add</button>
               <button class="btn-primary" onclick="orderNow(${item.id})" ${isOutOfStock ? "disabled" : ""}>Order Now</button>
             </div>`;
-        container.appendChild(div);
-      });
-    }
-    function displayCategories() {
-      const categories = ["All", ...new Set(menuItemsData.map((item) => item.cat))];
-      const container = document.getElementById("categoryFilters");
-      container.innerHTML = categories.map((cat) => `<button class="${cat === "All" ? "active" : ""}" onclick="filterByCategory(this, '${cat}')">${cat}</button>`).join("");
-    }
-    function filterByCategory(btn, category) {
-      document.querySelectorAll("#categoryFilters button").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderMenu();
-    }
-    function handleSearchInput() {
-      renderMenu();
-      const searchTerm = document.getElementById("searchBar").value.toLowerCase();
-      const suggestionsContainer = document.getElementById("searchSuggestions");
-      if (searchTerm.length > 1) {
-        const filtered = menuItemsData.filter((i) => i.name.toLowerCase().includes(searchTerm));
-        suggestionsContainer.innerHTML = filtered.slice(0, 5).map((s) => `<div onclick="selectSuggestion('${s.name}')">${s.name}</div>`).join("");
-        suggestionsContainer.style.display = filtered.length > 0 ? "block" : "none";
-      } else {
-        suggestionsContainer.style.display = "none";
+          container.appendChild(div);
+        });
       }
-    }
-    function selectSuggestion(name) {
-      document.getElementById("searchBar").value = name;
-      document.getElementById("searchSuggestions").style.display = "none";
-      renderMenu();
-    }
-    function applySort(sortBy, btn) {
-      document.querySelectorAll('#sortFilters button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderMenu();
-    }
-    function toggleFavorite(event, itemId) {
-      event.stopPropagation();
-      const index = favorites.indexOf(itemId);
-      if (index > -1) {
-        favorites.splice(index, 1);
-        showToast("Removed from favorites.", "info");
-      } else {
-        favorites.push(itemId);
-        showToast("Added to favorites!", "success");
+      function displayCategories() {
+        const categories = ["All", ...new Set(menuItemsData.map((item) => item.cat))];
+        const container = document.getElementById("categoryFilters");
+        container.innerHTML = categories.map((cat) => `<button class="${cat === "All" ? "active" : ""}" onclick="filterByCategory(this, '${cat}')">${cat}</button>`).join("");
       }
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-      renderMenu();
-    }
-
-    // --- CART FUNCTIONS ---
-    function addToCart(id) {
-      const itemData = menuItemsData.find((i) => i.id === id);
-      const existingItem = cart.find((i) => i.id === id);
-      const currentQtyInCart = existingItem ? existingItem.qty : 0;
-      if (itemData.stock <= currentQtyInCart) {
-        showToast("Cannot add more, item is out of stock!", "error");
-        return;
+      function filterByCategory(btn, category) {
+        document.querySelectorAll("#categoryFilters button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderMenu();
       }
-      if (existingItem) existingItem.qty++;
-      else cart.push({ ...itemData, qty: 1 });
-      showToast(`${itemData.name} added to cart!`, "success");
-      updateCart();
-    }
+      function handleSearchInput() {
+        renderMenu();
+        const searchTerm = document.getElementById("searchBar").value.toLowerCase();
+        const suggestionsContainer = document.getElementById("searchSuggestions");
+        if (searchTerm.length > 1) {
+          const filtered = menuItemsData.filter((i) => i.name.toLowerCase().includes(searchTerm));
+          suggestionsContainer.innerHTML = filtered.slice(0, 5).map((s) => `<div onclick="selectSuggestion('${s.name}')">${s.name}</div>`).join("");
+          suggestionsContainer.style.display = filtered.length > 0 ? "block" : "none";
+        } else {
+          suggestionsContainer.style.display = "none";
+        }
+      }
+      function selectSuggestion(name) {
+        document.getElementById("searchBar").value = name;
+        document.getElementById("searchSuggestions").style.display = "none";
+        renderMenu();
+      }
+      function applySort(sortBy, btn) {
+        document.querySelectorAll('#sortFilters button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMenu();
+      }
+      function toggleFavorite(event, itemId) {
+        event.stopPropagation();
+        const index = favorites.indexOf(itemId);
+        if (index > -1) {
+          favorites.splice(index, 1);
+          showToast("Removed from favorites.", "info");
+        } else {
+          favorites.push(itemId);
+          showToast("Added to favorites!", "success");
+        }
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        renderMenu();
+      }
 
-    // MODIFIED for Feature 5: Update both carts
-    function updateCart() {
-      localStorage.setItem("cart", JSON.stringify(cart));
-      const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
-      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-      const total = subtotal - subtotal * discount;
-
-      // Update main cart page
-      const cartDiv = document.getElementById("cartItems");
-      const cartSummary = document.getElementById("cartSummary");
-      if (cart.length === 0) {
-        cartDiv.innerHTML = "<p>Your cart is empty.</p>";
-        cartSummary.style.display = "none";
-        document.getElementById("cartBadge").innerText = 0;
-      } else {
-        cartSummary.style.display = "block";
-        cartDiv.innerHTML = cart.map((item, index) => `
+      // --- CART FUNCTIONS ---
+      function addToCart(id) {
+        const itemData = menuItemsData.find((i) => i.id === id);
+        const existingItem = cart.find((i) => i.id === id);
+        const currentQtyInCart = existingItem ? existingItem.qty : 0;
+        if (itemData.stock <= currentQtyInCart) {
+          showToast("Cannot add more, item is out of stock!", "error");
+          return;
+        }
+        if (existingItem) existingItem.qty++;
+        else cart.push({ ...itemData, qty: 1 });
+        showToast(`${itemData.name} added to cart!`, "success");
+        updateCart();
+      }
+      
+      // MODIFIED for Feature 5: Update both carts
+      function updateCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const total = subtotal - subtotal * discount;
+        
+        // Update main cart page
+        const cartDiv = document.getElementById("cartItems");
+        const cartSummary = document.getElementById("cartSummary");
+        if (cart.length === 0) {
+            cartDiv.innerHTML = "<p>Your cart is empty.</p>";
+            cartSummary.style.display = "none";
+            document.getElementById("cartBadge").innerText = 0;
+        } else {
+            cartSummary.style.display = "block";
+            cartDiv.innerHTML = cart.map((item, index) => `
                 <div class="cart-item">
                     <span>${item.name} (₹${item.price})</span>
                     <div class="cart-item-controls">
@@ -1380,19 +1273,19 @@
                     </div>
                     <span>₹${item.price * item.qty}</span>
                 </div>`).join("");
-        document.getElementById("cartBadge").innerText = totalQty;
-        document.getElementById("cartTotal").innerHTML = `
+            document.getElementById("cartBadge").innerText = totalQty;
+            document.getElementById("cartTotal").innerHTML = `
                 ${discount > 0 ? `<p style="font-size:0.9em; color:var(--text-muted);">Subtotal: ₹${subtotal.toFixed(2)}</p>
                 <p style="font-size:0.9em; color:var(--success-color);">Discount: -₹${(subtotal * discount).toFixed(2)}</p>` : ""}
                 <h3>Total: ₹${total.toFixed(2)}</h3>`;
-      }
-
-      // Update side cart
-      const sideCartDiv = document.getElementById("side-cart-items");
-      if (cart.length === 0) {
-        sideCartDiv.innerHTML = "<p style='text-align:center;'>Your cart is empty.</p>";
-      } else {
-        sideCartDiv.innerHTML = cart.map((item, index) => `
+        }
+        
+        // Update side cart
+        const sideCartDiv = document.getElementById("side-cart-items");
+        if (cart.length === 0) {
+            sideCartDiv.innerHTML = "<p style='text-align:center;'>Your cart is empty.</p>";
+        } else {
+            sideCartDiv.innerHTML = cart.map((item, index) => `
             <div class="side-cart-item">
                 <img src="${item.img}" alt="${item.name}">
                 <div class="side-cart-item-details">
@@ -1401,178 +1294,178 @@
                 </div>
                 <button onclick="removeFromCart(${index})" style="background:none; border:none; color:var(--danger-color); cursor:pointer;">&times;</button>
             </div>`).join('');
+        }
+        document.getElementById("side-cart-total").innerText = `Total: ₹${total.toFixed(2)}`;
       }
-      document.getElementById("side-cart-total").innerText = `Total: ₹${total.toFixed(2)}`;
-    }
-    function updateCartItemQty(index, delta) {
-      const itemData = menuItemsData.find((i) => i.id === cart[index].id);
-      if (delta > 0 && itemData.stock <= cart[index].qty) {
-        showToast("No more stock available!", "error");
-        return;
+      function updateCartItemQty(index, delta) {
+        const itemData = menuItemsData.find((i) => i.id === cart[index].id);
+        if (delta > 0 && itemData.stock <= cart[index].qty) {
+          showToast("No more stock available!", "error");
+          return;
+        }
+        cart[index].qty += delta;
+        if (cart[index].qty <= 0) cart.splice(index, 1);
+        updateCart();
       }
-      cart[index].qty += delta;
-      if (cart[index].qty <= 0) cart.splice(index, 1);
-      updateCart();
-    }
-    function removeFromCart(index) {
-      showToast(`${cart[index].name} removed from cart.`, "info");
-      cart.splice(index, 1);
-      updateCart();
-    }
-    function applyCoupon() {
-      const code = document.getElementById("couponCode").value.toUpperCase();
-      if (COUPONS[code]) {
-        discount = COUPONS[code];
-        showToast(`Coupon '${code}' applied!`, "success");
-      } else {
+      function removeFromCart(index) {
+        showToast(`${cart[index].name} removed from cart.`, "info");
+        cart.splice(index, 1);
+        updateCart();
+      }
+      function applyCoupon() {
+        const code = document.getElementById("couponCode").value.toUpperCase();
+        if (COUPONS[code]) {
+          discount = COUPONS[code];
+          showToast(`Coupon '${code}' applied!`, "success");
+        } else {
+          discount = 0;
+          showToast("Invalid coupon code.", "error");
+        }
+        updateCart();
+      }
+      function resetCart(showNotification = false) {
+        cart = [];
         discount = 0;
-        showToast("Invalid coupon code.", "error");
+        updateCart();
+        if (showNotification) showToast("Cart cleared!", "info");
       }
-      updateCart();
-    }
-    function resetCart(showNotification = false) {
-      cart = [];
-      discount = 0;
-      updateCart();
-      if (showNotification) showToast("Cart cleared!", "info");
-    }
 
-    // --- ORDER & PAYMENT ---
-    function orderNow(itemId) {
-      const itemData = menuItemsData.find((i) => i.id === itemId);
-      if (itemData.stock <= 0) {
-        showToast("Sorry, this item is out of stock.", "error");
-        return;
+      // --- ORDER & PAYMENT ---
+      function orderNow(itemId) {
+        const itemData = menuItemsData.find((i) => i.id === itemId);
+        if (itemData.stock <= 0) {
+          showToast("Sorry, this item is out of stock.", "error");
+          return;
+        }
+        resetCart(false);
+        cart.push({ ...itemData, qty: 1 });
+        updateCart();
+        showToast(`Proceed to checkout for ${itemData.name}`, "info");
+        showSection("cartSection");
       }
-      resetCart(false);
-      cart.push({ ...itemData, qty: 1 });
-      updateCart();
-      showToast(`Proceed to checkout for ${itemData.name}`, "info");
-      showSection("cartSection");
-    }
-    function placeOrder() {
-      if (!localStorage.getItem("userName")) {
-        showToast("Please login to place an order.", "error");
-        showLoginModal();
-        return;
+      function placeOrder() {
+        if (!localStorage.getItem("userName")) {
+          showToast("Please login to place an order.", "error");
+          showLoginModal();
+          return;
+        }
+        if (cart.length === 0) {
+          showToast("Your cart is empty.", "error");
+          return;
+        }
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const total = subtotal - subtotal * discount;
+        var options = {
+          key: "YOUR_RAZORPAY_KEY_ID", // Replace with your key
+          amount: total * 100,
+          currency: "INR",
+          name: "Real Hero Restaurant",
+          description: "Food & Beverage Payment",
+          image: "https://i.ibb.co/b31Vjdc/burger.jpg",
+          handler: function (response) {
+            processSuccessfulOrder(total, "Online (Paid)");
+          },
+          prefill: { name: localStorage.getItem("userName") },
+          theme: { color: getComputedStyle(document.documentElement).getPropertyValue("--primary-color") },
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on("payment.failed", (response) => showToast("Payment Failed: " + response.error.description, "error"));
+        rzp1.open();
       }
-      if (cart.length === 0) {
-        showToast("Your cart is empty.", "error");
-        return;
+      function placeOfflineOrder() {
+        if (!localStorage.getItem("userName")) {
+          showToast("Please login to place an order.", "error");
+          showLoginModal();
+          return;
+        }
+        if (cart.length === 0) {
+          showToast("Your cart is empty.", "error");
+          return;
+        }
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const total = subtotal - subtotal * discount;
+        processSuccessfulOrder(total, "Pay on Delivery");
       }
-      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-      const total = subtotal - subtotal * discount;
-      var options = {
-        key: "YOUR_RAZORPAY_KEY_ID", // Replace with your key
-        amount: total * 100,
-        currency: "INR",
-        name: "Real Hero Restaurant",
-        description: "Food & Beverage Payment",
-        image: "https://i.ibb.co/b31Vjdc/burger.jpg",
-        handler: function (response) {
-          processSuccessfulOrder(total, "Online (Paid)");
-        },
-        prefill: { name: localStorage.getItem("userName") },
-        theme: { color: getComputedStyle(document.documentElement).getPropertyValue("--primary-color") },
-      };
-      var rzp1 = new Razorpay(options);
-      rzp1.on("payment.failed", (response) => showToast("Payment Failed: " + response.error.description, "error"));
-      rzp1.open();
-    }
-    function placeOfflineOrder() {
-      if (!localStorage.getItem("userName")) {
-        showToast("Please login to place an order.", "error");
-        showLoginModal();
-        return;
-      }
-      if (cart.length === 0) {
-        showToast("Your cart is empty.", "error");
-        return;
-      }
-      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-      const total = subtotal - subtotal * discount;
-      processSuccessfulOrder(total, "Pay on Delivery");
-    }
-    function processSuccessfulOrder(total, paymentMethod) {
-      // NEW for Feature 10: Trigger confetti
-      triggerConfetti();
+      function processSuccessfulOrder(total, paymentMethod) {
+        // NEW for Feature 10: Trigger confetti
+        triggerConfetti();
 
-      cart.forEach((cartItem) => {
-        const itemInMenu = menuItemsData.find((menuItem) => menuItem.id === cartItem.id);
-        if (itemInMenu) itemInMenu.stock -= cartItem.qty;
-      });
-      localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
-      const name = localStorage.getItem("userName");
-      const pointsEarned = Math.floor(total / 100) * 10;
-      let users = JSON.parse(localStorage.getItem("users") || "{}");
-      if (users[name]) users[name].loyaltyPoints += pointsEarned;
-      localStorage.setItem("users", JSON.stringify(users));
-      updateLoyaltyPointsDisplay();
-      const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      const newOrder = { id: Date.now(), user: name, date: new Date().toLocaleString(), total: total.toFixed(2), items: [...cart], status: "Preparing", paymentMethod: paymentMethod };
-      allOrders.push(newOrder);
-      localStorage.setItem("allOrders", JSON.stringify(allOrders));
-      showToast(`Order placed! You earned ${pointsEarned} points.`, "success");
-      resetCart();
-      renderMenu();
-      showSection("myOrdersSection");
-    }
-
-    // --- USER & LOYALTY ---
-    function showLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
-    function handleLogin() {
-      const name = document.getElementById("userNameInput").value.trim();
-      if (name) {
-        localStorage.setItem("userName", name);
+        cart.forEach((cartItem) => {
+          const itemInMenu = menuItemsData.find((menuItem) => menuItem.id === cartItem.id);
+          if (itemInMenu) itemInMenu.stock -= cartItem.qty;
+        });
+        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+        const name = localStorage.getItem("userName");
+        const pointsEarned = Math.floor(total / 100) * 10;
         let users = JSON.parse(localStorage.getItem("users") || "{}");
-        if (!users[name]) users[name] = { loyaltyPoints: 0 };
+        if(users[name]) users[name].loyaltyPoints += pointsEarned;
         localStorage.setItem("users", JSON.stringify(users));
-        updateUserDisplay();
         updateLoyaltyPointsDisplay();
-        renderRecommendations(); // NEW for Feature 9
-        closeModal("loginModal");
-        showToast(`Welcome, ${name}!`, "success");
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const newOrder = { id: Date.now(), user: name, date: new Date().toLocaleString(), total: total.toFixed(2), items: [...cart], status: "Preparing", paymentMethod: paymentMethod };
+        allOrders.push(newOrder);
+        localStorage.setItem("allOrders", JSON.stringify(allOrders));
+        showToast(`Order placed! You earned ${pointsEarned} points.`, "success");
+        resetCart();
+        renderMenu();
+        showSection("myOrdersSection");
       }
-    }
-    function logoutUser() {
-      localStorage.removeItem("userName");
-      updateUserDisplay();
-      updateLoyaltyPointsDisplay(true);
-      renderRecommendations(); // NEW for Feature 9
-      showToast("You have been logged out.", "info");
-    }
-    function handleUserClick() {
-      if (localStorage.getItem("userName")) logoutUser();
-      else showLoginModal();
-    }
-    function updateUserDisplay() {
-      const name = localStorage.getItem("userName");
-      document.getElementById("user-greeting").innerText = name ? `👋 Logout, ${name}!` : "Login";
-    }
-    // MODIFIED for Feature 4
-    function updateLoyaltyPointsDisplay(reset = false) {
-      const pointsEl = document.getElementById("loyalty-points");
-      if (reset) {
-        pointsEl.innerHTML = `🏆 0 pts`;
-        return;
-      }
-      const name = localStorage.getItem("userName");
-      if (name) {
-        let users = JSON.parse(localStorage.getItem("users") || "{}");
-        const points = users[name] ? users[name].loyaltyPoints : 0;
-        const tier = getLoyaltyTier(points);
-        pointsEl.innerHTML = `<span style="color:${tier.color};">${tier.icon} ${tier.name}</span> | 🏆 ${points} pts`;
-      } else {
-        pointsEl.innerHTML = `🏆 0 pts`;
-      }
-    }
 
-    // --- ITEM DETAILS MODAL ---
-    // MODIFIED for Feature 2
-    function showItemModal(itemId) {
-      const item = menuItemsData.find((i) => i.id === itemId);
-      if (!item) return;
-      document.getElementById("itemModal-content").innerHTML = `
+      // --- USER & LOYALTY ---
+      function showLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
+      function handleLogin() {
+        const name = document.getElementById("userNameInput").value.trim();
+        if (name) {
+          localStorage.setItem("userName", name);
+          let users = JSON.parse(localStorage.getItem("users") || "{}");
+          if(!users[name]) users[name] = { loyaltyPoints: 0 };
+          localStorage.setItem("users", JSON.stringify(users));
+          updateUserDisplay();
+          updateLoyaltyPointsDisplay();
+          renderRecommendations(); // NEW for Feature 9
+          closeModal("loginModal");
+          showToast(`Welcome, ${name}!`, "success");
+        }
+      }
+      function logoutUser() {
+        localStorage.removeItem("userName");
+        updateUserDisplay();
+        updateLoyaltyPointsDisplay(true);
+        renderRecommendations(); // NEW for Feature 9
+        showToast("You have been logged out.", "info");
+      }
+      function handleUserClick() {
+        if (localStorage.getItem("userName")) logoutUser();
+        else showLoginModal();
+      }
+      function updateUserDisplay() {
+        const name = localStorage.getItem("userName");
+        document.getElementById("user-greeting").innerText = name ? `👋 Logout, ${name}!` : "Login";
+      }
+      // MODIFIED for Feature 4
+      function updateLoyaltyPointsDisplay(reset = false) {
+        const pointsEl = document.getElementById("loyalty-points");
+        if (reset) {
+            pointsEl.innerHTML = `🏆 0 pts`;
+            return;
+        }
+        const name = localStorage.getItem("userName");
+        if(name) {
+            let users = JSON.parse(localStorage.getItem("users") || "{}");
+            const points = users[name] ? users[name].loyaltyPoints : 0;
+            const tier = getLoyaltyTier(points);
+            pointsEl.innerHTML = `<span style="color:${tier.color};">${tier.icon} ${tier.name}</span> | 🏆 ${points} pts`;
+        } else {
+             pointsEl.innerHTML = `🏆 0 pts`;
+        }
+      }
+
+      // --- ITEM DETAILS MODAL ---
+      // MODIFIED for Feature 2
+      function showItemModal(itemId) {
+        const item = menuItemsData.find((i) => i.id === itemId);
+        if (!item) return;
+        document.getElementById("itemModal-content").innerHTML = `
         <span class="close-btn" onclick="closeModal('itemModal')">&times;</span>
         <img src="${item.img}" alt="${item.name}">
         <h2>${item.name}</h2> <p>${item.desc}</p>
@@ -1587,26 +1480,26 @@
         <br><br>
         <p style="font-size:1.5em; font-weight:bold;">₹${item.price}</p>
         <button class="btn-primary" onclick="addToCart(${item.id}); closeModal('itemModal');">Add to Cart</button>`;
-      document.getElementById("itemModal").style.display = "flex";
-    }
-
-    // --- MY ORDERS ---
-    function showMyOrders() {
-      const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      const currentUser = localStorage.getItem("userName");
-      const container = document.getElementById("myOrdersContainer");
-      if (!currentUser) {
-        container.innerHTML = "<p>Please login to see your orders.</p>";
-        return;
+        document.getElementById("itemModal").style.display = "flex";
       }
-      const myOrders = allOrders.filter(o => o.user === currentUser);
-      container.innerHTML = myOrders.length ? "" : "<p>No past orders found.</p>";
-      myOrders.reverse().forEach((order) => {
-        if (order.status === "Preparing" && Date.now() - order.id > 60000) order.status = "Out for Delivery";
-        if (order.status === "Out for Delivery" && Date.now() - order.id > 120000) order.status = "Delivered";
-        const div = document.createElement("div");
-        div.className = "order-card";
-        div.innerHTML = `
+
+      // --- MY ORDERS ---
+      function showMyOrders() {
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const currentUser = localStorage.getItem("userName");
+        const container = document.getElementById("myOrdersContainer");
+        if (!currentUser) {
+          container.innerHTML = "<p>Please login to see your orders.</p>";
+          return;
+        }
+        const myOrders = allOrders.filter(o => o.user === currentUser);
+        container.innerHTML = myOrders.length ? "" : "<p>No past orders found.</p>";
+        myOrders.reverse().forEach((order) => {
+          if (order.status === "Preparing" && Date.now() - order.id > 60000) order.status = "Out for Delivery";
+          if (order.status === "Out for Delivery" && Date.now() - order.id > 120000) order.status = "Delivered";
+          const div = document.createElement("div");
+          div.className = "order-card";
+          div.innerHTML = `
             <div>
               <h4>Order on ${order.date} (ID: ${order.id})</h4>
               <p>Items: ${order.items.map((i) => `${i.name} (x${i.qty})`).join(", ")}</p>
@@ -1616,67 +1509,67 @@
             </div>
             <button class="btn-secondary" onclick="reOrder(${order.id})">Re-order</button>
           `;
-        container.appendChild(div);
-      });
-    }
-    function reOrder(orderId) {
-      const orderToReorder = JSON.parse(localStorage.getItem("allOrders") || "[]").find((o) => o.id === orderId);
-      if (orderToReorder) {
-        cart = [...orderToReorder.items];
-        showToast("Items from your past order have been added to the cart!", "success");
-        updateCart();
-        showSection("cartSection");
+          container.appendChild(div);
+        });
       }
-    }
+      function reOrder(orderId) {
+        const orderToReorder = JSON.parse(localStorage.getItem("allOrders") || "[]").find((o) => o.id === orderId);
+        if (orderToReorder) {
+          cart = [...orderToReorder.items];
+          showToast("Items from your past order have been added to the cart!", "success");
+          updateCart();
+          showSection("cartSection");
+        }
+      }
 
-    // --- ADMIN PANEL FUNCTIONS ---
-    function loginAdmin() {
-      if (document.getElementById("adminPass").value === ADMIN_PASS) {
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("adminDashboard").style.display = "block";
-        showAdminTab('dashboardTab', document.querySelector('.admin-tabs button'));
-      } else {
-        showToast("Wrong Password", "error");
+      // --- ADMIN PANEL FUNCTIONS ---
+      function loginAdmin() {
+        if (document.getElementById("adminPass").value === ADMIN_PASS) {
+          document.getElementById("loginBox").style.display = "none";
+          document.getElementById("adminDashboard").style.display = "block";
+          showAdminTab('dashboardTab', document.querySelector('.admin-tabs button'));
+        } else {
+          showToast("Wrong Password", "error");
+        }
       }
-    }
-    function logoutAdmin() {
-      document.getElementById("adminPass").value = "";
-      document.getElementById("loginBox").style.display = "block";
-      document.getElementById("adminDashboard").style.display = "none";
-    }
-    function showAdminTab(tabId, btn) {
-      document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      if (tabId === 'dashboardTab') renderAdminDashboard();
-      if (tabId === 'menuTab') renderMenuManagement();
-      if (tabId === 'ordersTab') renderOrderManagement();
-      if (tabId === 'couponsTab') renderCouponManagement();
-      if (tabId === 'usersTab') renderUserManagement();
-    }
-    function renderAdminDashboard() {
-      const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      const totalRevenue = allOrders.reduce((sum, order) => sum + parseFloat(order.total), 0);
-      const itemCounts = allOrders.flatMap(o => o.items).reduce((acc, i) => { acc[i.name] = (acc[i.name] || 0) + i.qty; return acc; }, {});
-      const mostPopular = Object.keys(itemCounts).length ? Object.entries(itemCounts).sort((a, b) => b[1] - a[1])[0][0] : "N/A";
-      document.getElementById('admin-analytics-grid').innerHTML = `
+      function logoutAdmin() {
+        document.getElementById("adminPass").value = "";
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("adminDashboard").style.display = "none";
+      }
+      function showAdminTab(tabId, btn) {
+        document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if(tabId === 'dashboardTab') renderAdminDashboard();
+        if(tabId === 'menuTab') renderMenuManagement();
+        if(tabId === 'ordersTab') renderOrderManagement();
+        if(tabId === 'couponsTab') renderCouponManagement();
+        if(tabId === 'usersTab') renderUserManagement();
+      }
+      function renderAdminDashboard() {
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const totalRevenue = allOrders.reduce((sum, order) => sum + parseFloat(order.total), 0);
+        const itemCounts = allOrders.flatMap(o => o.items).reduce((acc, i) => { acc[i.name] = (acc[i.name] || 0) + i.qty; return acc; }, {});
+        const mostPopular = Object.keys(itemCounts).length ? Object.entries(itemCounts).sort((a,b) => b[1] - a[1])[0][0] : "N/A";
+        document.getElementById('admin-analytics-grid').innerHTML = `
             <div class="admin-card"><h4>Total Revenue</h4><p>₹${totalRevenue.toFixed(2)}</p></div>
             <div class="admin-card"><h4>Total Orders</h4><p>${allOrders.length}</p></div>
             <div class="admin-card"><h4>Most Popular</h4><p>${mostPopular}</p></div>`;
-      renderSalesChart(allOrders);
-    }
-    function renderSalesChart(orders) {
-      const ctx = document.getElementById('salesChart').getContext('2d');
-      const categorySales = orders.flatMap(o => o.items).reduce((acc, i) => { acc[i.cat] = (acc[i.cat] || 0) + (i.price * i.qty); return acc; }, {});
-      if (salesChart) salesChart.destroy();
-      const isDarkMode = document.body.classList.contains('dark-mode');
-      const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
-      const textColor = isDarkMode ? '#e2e8f0' : '#0f172a';
-      salesChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(categorySales), datasets: [{ label: 'Sales by Category', data: Object.values(categorySales), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'] }] }, options: { responsive: true, plugins: { legend: { labels: { color: textColor } } }, scales: { y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } }, x: { ticks: { color: textColor }, grid: { color: gridColor } } } } });
-    }
-    function renderMenuManagement() {
-      document.getElementById('menuManagementContainer').innerHTML = `
+        renderSalesChart(allOrders);
+      }
+      function renderSalesChart(orders) {
+          const ctx = document.getElementById('salesChart').getContext('2d');
+          const categorySales = orders.flatMap(o => o.items).reduce((acc, i) => { acc[i.cat] = (acc[i.cat] || 0) + (i.price * i.qty); return acc; }, {});
+          if(salesChart) salesChart.destroy();
+          const isDarkMode = document.body.classList.contains('dark-mode');
+          const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+          const textColor = isDarkMode ? '#e2e8f0' : '#0f172a';
+          salesChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(categorySales), datasets: [{ label: 'Sales by Category', data: Object.values(categorySales), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'] }] }, options: { responsive: true, plugins: { legend: { labels: { color: textColor } } }, scales: { y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } }, x: { ticks: { color: textColor }, grid: { color: gridColor } } } } });
+      }
+      function renderMenuManagement() {
+        document.getElementById('menuManagementContainer').innerHTML = `
             <table class="admin-table">
             <thead><tr><th>Name</th><th>Price</th><th>Stock</th><th>Featured</th><th>Actions</th></tr></thead>
             <tbody>${menuItemsData.map(item => `
@@ -1685,9 +1578,9 @@
                     <td><input type="checkbox" ${item.tags.includes("Best Seller 🔥") ? "checked" : ""} onchange="toggleFeatured(${item.id}, this.checked)"></td>
                     <td><button class="btn btn-secondary" onclick="showEditItemForm(${item.id})">Edit</button> <button class="btn btn-danger" onclick="deleteItem(${item.id})">Del</button></td>
                 </tr>`).join('')}</tbody></table>`;
-    }
-    function showAddItemForm() {
-      document.getElementById('formModal-content').innerHTML = `
+      }
+      function showAddItemForm() {
+        document.getElementById('formModal-content').innerHTML = `
             <span class="close-btn" onclick="closeModal('formModal')">&times;</span><h2>Add New Menu Item</h2>
             <div class="form-group"><label>Name</label><input type="text" id="itemName"></div>
             <div class="form-group"><label>Price</label><input type="number" id="itemPrice"></div>
@@ -1696,18 +1589,18 @@
             <div class="form-group"><label>Image URL</label><input type="text" id="itemImg"></div>
             <div class="form-group"><label>Description</label><textarea id="itemDesc"></textarea></div>
             <button class="btn-primary" onclick="handleAddItem()">Save Item</button>`;
-      document.getElementById('formModal').style.display = 'flex';
-    }
-    function handleAddItem() {
-      menuItemsData.push({ id: Date.now(), name: document.getElementById('itemName').value, price: parseInt(document.getElementById('itemPrice').value), stock: parseInt(document.getElementById('itemStock').value), cat: document.getElementById('itemCat').value, img: document.getElementById('itemImg').value, desc: document.getElementById('itemDesc').value, ratings: [], tags: [] });
-      localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
-      closeModal('formModal');
-      showToast("Item added successfully!", "success");
-      renderMenuManagement(); renderMenu(); displayCategories();
-    }
-    function showEditItemForm(itemId) {
-      const item = menuItemsData.find(i => i.id === itemId);
-      document.getElementById('formModal-content').innerHTML = `
+        document.getElementById('formModal').style.display = 'flex';
+      }
+      function handleAddItem() {
+        menuItemsData.push({ id: Date.now(), name: document.getElementById('itemName').value, price: parseInt(document.getElementById('itemPrice').value), stock: parseInt(document.getElementById('itemStock').value), cat: document.getElementById('itemCat').value, img: document.getElementById('itemImg').value, desc: document.getElementById('itemDesc').value, ratings: [], tags: [] });
+        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+        closeModal('formModal');
+        showToast("Item added successfully!", "success");
+        renderMenuManagement(); renderMenu(); displayCategories();
+      }
+      function showEditItemForm(itemId) {
+        const item = menuItemsData.find(i => i.id === itemId);
+        document.getElementById('formModal-content').innerHTML = `
             <span class="close-btn" onclick="closeModal('formModal')">&times;</span><h2>Edit ${item.name}</h2>
             <div class="form-group"><label>Name</label><input type="text" id="itemName" value="${item.name}"></div>
             <div class="form-group"><label>Price</label><input type="number" id="itemPrice" value="${item.price}"></div>
@@ -1716,36 +1609,36 @@
             <div class="form-group"><label>Image URL</label><input type="text" id="itemImg" value="${item.img}"></div>
             <div class="form-group"><label>Description</label><textarea id="itemDesc">${item.desc}</textarea></div>
             <button class="btn-primary" onclick="handleEditItem(${itemId})">Update Item</button>`;
-      document.getElementById('formModal').style.display = 'flex';
-    }
-    function handleEditItem(itemId) {
-      const item = menuItemsData.find(i => i.id === itemId);
-      Object.assign(item, { name: document.getElementById('itemName').value, price: parseInt(document.getElementById('itemPrice').value), stock: parseInt(document.getElementById('itemStock').value), cat: document.getElementById('itemCat').value, img: document.getElementById('itemImg').value, desc: document.getElementById('itemDesc').value });
-      localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
-      closeModal('formModal');
-      showToast("Item updated successfully!", "success");
-      renderMenuManagement(); renderMenu();
-    }
-    function deleteItem(itemId) {
-      if (confirm("Are you sure you want to delete this item?")) {
-        menuItemsData = menuItemsData.filter(i => i.id !== itemId);
+        document.getElementById('formModal').style.display = 'flex';
+      }
+      function handleEditItem(itemId) {
+        const item = menuItemsData.find(i => i.id === itemId);
+        Object.assign(item, { name: document.getElementById('itemName').value, price: parseInt(document.getElementById('itemPrice').value), stock: parseInt(document.getElementById('itemStock').value), cat: document.getElementById('itemCat').value, img: document.getElementById('itemImg').value, desc: document.getElementById('itemDesc').value });
         localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
-        showToast("Item deleted!", "info");
+        closeModal('formModal');
+        showToast("Item updated successfully!", "success");
         renderMenuManagement(); renderMenu();
       }
-    }
-    function toggleFeatured(itemId, isChecked) {
-      const item = menuItemsData.find(i => i.id === itemId);
-      const tag = "Best Seller 🔥";
-      const tagIndex = item.tags.indexOf(tag);
-      if (isChecked && tagIndex === -1) item.tags.push(tag);
-      else if (!isChecked && tagIndex > -1) item.tags.splice(tagIndex, 1);
-      localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
-      showToast(`${item.name} featured status updated.`, "info");
-    }
-    function renderOrderManagement() {
-      const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      document.getElementById('liveOrdersContainer').innerHTML = `<table class="admin-table">
+      function deleteItem(itemId) {
+        if(confirm("Are you sure you want to delete this item?")) {
+            menuItemsData = menuItemsData.filter(i => i.id !== itemId);
+            localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+            showToast("Item deleted!", "info");
+            renderMenuManagement(); renderMenu();
+        }
+      }
+      function toggleFeatured(itemId, isChecked) {
+        const item = menuItemsData.find(i => i.id === itemId);
+        const tag = "Best Seller 🔥";
+        const tagIndex = item.tags.indexOf(tag);
+        if(isChecked && tagIndex === -1) item.tags.push(tag);
+        else if (!isChecked && tagIndex > -1) item.tags.splice(tagIndex, 1);
+        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+        showToast(`${item.name} featured status updated.`, "info");
+      }
+      function renderOrderManagement() {
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        document.getElementById('liveOrdersContainer').innerHTML = `<table class="admin-table">
             <thead><tr><th>Order ID</th><th>User</th><th>Total</th><th>Items</th><th>Status</th></tr></thead>
             <tbody>${allOrders.reverse().map(order => `
                 <tr>
@@ -1758,157 +1651,157 @@
                         <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
                     </select></td>
                 </tr>`).join('')}</tbody></table>`;
-    }
-    function updateOrderStatus(orderId, newStatus) {
-      let allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      const order = allOrders.find(o => o.id === orderId);
-      if (order) {
-        order.status = newStatus;
-        localStorage.setItem("allOrders", JSON.stringify(allOrders));
-        showToast(`Order ${orderId} status updated to ${newStatus}`, "info");
       }
-    }
-    function renderCouponManagement() {
-      document.getElementById('couponManagementContainer').innerHTML = `<table class="admin-table">
+      function updateOrderStatus(orderId, newStatus) {
+        let allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        const order = allOrders.find(o => o.id === orderId);
+        if(order) {
+            order.status = newStatus;
+            localStorage.setItem("allOrders", JSON.stringify(allOrders));
+            showToast(`Order ${orderId} status updated to ${newStatus}`, "info");
+        }
+      }
+      function renderCouponManagement() {
+        document.getElementById('couponManagementContainer').innerHTML = `<table class="admin-table">
             <thead><tr><th>Code</th><th>Discount</th><th>Action</th></tr></thead>
             <tbody>${Object.entries(COUPONS).map(([code, value]) => `
                 <tr><td>${code}</td><td>${value * 100}%</td>
                 <td><button class="btn btn-danger" onclick="deleteCoupon('${code}')">Delete</button></td>
                 </tr>`).join('')}</tbody></table>`;
-    }
-    function addCoupon() {
-      const code = document.getElementById('newCouponCode').value.toUpperCase();
-      const value = parseFloat(document.getElementById('newCouponValue').value);
-      if (code && value > 0 && value <= 100) {
-        COUPONS[code] = value / 100;
-        localStorage.setItem("coupons", JSON.stringify(COUPONS));
-        showToast(`Coupon ${code} added!`, "success");
-        document.getElementById('newCouponCode').value = '';
-        document.getElementById('newCouponValue').value = '';
-        renderCouponManagement();
-      } else showToast("Invalid code or discount value.", "error");
-    }
-    function deleteCoupon(code) {
-      if (confirm(`Are you sure you want to delete coupon ${code}?`)) {
-        delete COUPONS[code];
-        localStorage.setItem("coupons", JSON.stringify(COUPONS));
-        showToast(`Coupon ${code} deleted.`, "info");
-        renderCouponManagement();
       }
-    }
-    function renderUserManagement() {
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
-      const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      document.getElementById('userManagementContainer').innerHTML = `<table class="admin-table">
+      function addCoupon() {
+        const code = document.getElementById('newCouponCode').value.toUpperCase();
+        const value = parseFloat(document.getElementById('newCouponValue').value);
+        if(code && value > 0 && value <= 100) {
+            COUPONS[code] = value / 100;
+            localStorage.setItem("coupons", JSON.stringify(COUPONS));
+            showToast(`Coupon ${code} added!`, "success");
+            document.getElementById('newCouponCode').value = '';
+            document.getElementById('newCouponValue').value = '';
+            renderCouponManagement();
+        } else showToast("Invalid code or discount value.", "error");
+      }
+      function deleteCoupon(code) {
+        if(confirm(`Are you sure you want to delete coupon ${code}?`)) {
+            delete COUPONS[code];
+            localStorage.setItem("coupons", JSON.stringify(COUPONS));
+            showToast(`Coupon ${code} deleted.`, "info");
+            renderCouponManagement();
+        }
+      }
+      function renderUserManagement() {
+        const users = JSON.parse(localStorage.getItem("users") || "{}");
+        const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+        document.getElementById('userManagementContainer').innerHTML = `<table class="admin-table">
             <thead><tr><th>Username</th><th>Loyalty Points</th><th>Total Orders</th></tr></thead>
             <tbody>${Object.entries(users).map(([name, data]) => `
                 <tr><td>${name}</td><td>${data.loyaltyPoints}</td><td>${allOrders.filter(o => o.user === name).length}</td></tr>`).join('')}
             </tbody></table>`;
-    }
-
-    // --- NEW FEATURE 2: INTERACTIVE STAR RATING ---
-    function handleRating(itemId, rating) {
-      const item = menuItemsData.find(i => i.id === itemId);
-      if (item) {
-        if (!item.ratings) item.ratings = [];
-        item.ratings.push(rating);
-        localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
-        showToast(`You rated ${item.name} ${rating} stars!`, 'success');
-        renderMenu(); // Re-render menu to show updated average
-        closeModal('itemModal');
       }
-    }
-    function getAverageRating(itemId) {
-      const item = menuItemsData.find(i => i.id === itemId);
-      if (!item || !item.ratings || item.ratings.length === 0) return 3; // Default rating
-      const sum = item.ratings.reduce((a, b) => a + b, 0);
-      return sum / item.ratings.length;
-    }
 
-    // --- NEW FEATURE 3: SCROLL TO TOP ---
-    window.onscroll = function () { scrollFunction() };
-    function scrollFunction() {
-      const btn = document.getElementById("scrollToTopBtn");
-      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        btn.style.display = "block";
-      } else {
-        btn.style.display = "none";
+      // --- NEW FEATURE 2: INTERACTIVE STAR RATING ---
+      function handleRating(itemId, rating) {
+          const item = menuItemsData.find(i => i.id === itemId);
+          if (item) {
+              if (!item.ratings) item.ratings = [];
+              item.ratings.push(rating);
+              localStorage.setItem("menuItems", JSON.stringify(menuItemsData));
+              showToast(`You rated ${item.name} ${rating} stars!`, 'success');
+              renderMenu(); // Re-render menu to show updated average
+              closeModal('itemModal');
+          }
       }
-    }
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // --- NEW FEATURE 4: LOYALTY TIERS ---
-    function getLoyaltyTier(points) {
-      if (points >= 1000) return { name: "Gold", icon: "🥇", color: "#FFD700" };
-      if (points >= 500) return { name: "Silver", icon: "🥈", color: "#C0C0C0" };
-      if (points >= 100) return { name: "Bronze", icon: "🥉", color: "#CD7F32" };
-      return { name: "Newbie", icon: "👋", color: "var(--text-muted)" };
-    }
-
-    // --- NEW FEATURE 5: SIDE CART ---
-    function toggleSideCart() {
-      document.getElementById('side-cart').classList.toggle('active');
-    }
-
-    // --- NEW FEATURE 8: EXPORT TO CSV ---
-    function exportToCSV(data, filename) {
-      const replacer = (key, value) => value === null ? '' : value;
-      const header = Object.keys(data[0]);
-      let csv = data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
-      csv.unshift(header.join(','));
-      csv = csv.join('\r\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+      function getAverageRating(itemId) {
+          const item = menuItemsData.find(i => i.id === itemId);
+          if (!item || !item.ratings || item.ratings.length === 0) return 3; // Default rating
+          const sum = item.ratings.reduce((a, b) => a + b, 0);
+          return sum / item.ratings.length;
       }
-    }
-    function exportOrdersToCSV() {
-      const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      if (allOrders.length === 0) { showToast("No orders to export.", "info"); return; }
-      const simplifiedOrders = allOrders.map(o => ({
-        order_id: o.id, user: o.user, date: o.date, total: o.total,
-        items: o.items.map(i => `${i.name}(${i.qty})`).join(' | '),
-        status: o.status, payment_method: o.paymentMethod
-      }));
-      exportToCSV(simplifiedOrders, 'orders.csv');
-    }
-    function exportUsersToCSV() {
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
-      if (Object.keys(users).length === 0) { showToast("No users to export.", "info"); return; }
-      const usersArray = Object.entries(users).map(([name, data]) => ({ username: name, loyalty_points: data.loyaltyPoints }));
-      exportToCSV(usersArray, 'users.csv');
-    }
 
-    // --- NEW FEATURE 9: RECOMMENDATIONS ---
-    function renderRecommendations() {
-      const container = document.getElementById('recommendations');
-      const user = localStorage.getItem('userName');
-      if (!user) { container.innerHTML = ""; return; }
+      // --- NEW FEATURE 3: SCROLL TO TOP ---
+      window.onscroll = function() { scrollFunction() };
+      function scrollFunction() {
+          const btn = document.getElementById("scrollToTopBtn");
+          if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+              btn.style.display = "block";
+          } else {
+              btn.style.display = "none";
+          }
+      }
+      function scrollToTop() {
+          window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+      
+      // --- NEW FEATURE 4: LOYALTY TIERS ---
+      function getLoyaltyTier(points) {
+          if (points >= 1000) return { name: "Gold", icon: "🥇", color: "#FFD700" };
+          if (points >= 500) return { name: "Silver", icon: "🥈", color: "#C0C0C0" };
+          if (points >= 100) return { name: "Bronze", icon: "🥉", color: "#CD7F32" };
+          return { name: "Newbie", icon: "👋", color: "var(--text-muted)" };
+      }
 
-      const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
-      const myOrders = allOrders.filter(o => o.user === user);
-      if (myOrders.length === 0) { container.innerHTML = ""; return; }
+      // --- NEW FEATURE 5: SIDE CART ---
+      function toggleSideCart() {
+          document.getElementById('side-cart').classList.toggle('active');
+      }
 
-      const categoryCounts = myOrders.flatMap(o => o.items).reduce((acc, item) => {
-        acc[item.cat] = (acc[item.cat] || 0) + 1;
-        return acc;
-      }, {});
+      // --- NEW FEATURE 8: EXPORT TO CSV ---
+      function exportToCSV(data, filename) {
+          const replacer = (key, value) => value === null ? '' : value;
+          const header = Object.keys(data[0]);
+          let csv = data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
+          csv.unshift(header.join(','));
+          csv = csv.join('\r\n');
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const link = document.createElement("a");
+          if (link.download !== undefined) {
+              const url = URL.createObjectURL(blob);
+              link.setAttribute("href", url);
+              link.setAttribute("download", filename);
+              link.style.visibility = 'hidden';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+          }
+      }
+      function exportOrdersToCSV() {
+          const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+          if(allOrders.length === 0) { showToast("No orders to export.", "info"); return; }
+          const simplifiedOrders = allOrders.map(o => ({
+              order_id: o.id, user: o.user, date: o.date, total: o.total,
+              items: o.items.map(i => `${i.name}(${i.qty})`).join(' | '),
+              status: o.status, payment_method: o.paymentMethod
+          }));
+          exportToCSV(simplifiedOrders, 'orders.csv');
+      }
+      function exportUsersToCSV() {
+          const users = JSON.parse(localStorage.getItem("users") || "{}");
+          if(Object.keys(users).length === 0) { showToast("No users to export.", "info"); return; }
+          const usersArray = Object.entries(users).map(([name, data]) => ({ username: name, loyalty_points: data.loyaltyPoints }));
+          exportToCSV(usersArray, 'users.csv');
+      }
 
-      const topCategory = Object.keys(categoryCounts).sort((a, b) => categoryCounts[b] - categoryCounts[a])[0];
-
-      if (topCategory) {
-        const recommendedItems = menuItemsData.filter(item => item.cat === topCategory && item.stock > 0).slice(0, 4);
-        if (recommendedItems.length > 0) {
-          container.innerHTML = `
+      // --- NEW FEATURE 9: RECOMMENDATIONS ---
+      function renderRecommendations() {
+          const container = document.getElementById('recommendations');
+          const user = localStorage.getItem('userName');
+          if (!user) { container.innerHTML = ""; return; }
+          
+          const allOrders = JSON.parse(localStorage.getItem("allOrders") || "[]");
+          const myOrders = allOrders.filter(o => o.user === user);
+          if (myOrders.length === 0) { container.innerHTML = ""; return; }
+          
+          const categoryCounts = myOrders.flatMap(o => o.items).reduce((acc, item) => {
+              acc[item.cat] = (acc[item.cat] || 0) + 1;
+              return acc;
+          }, {});
+          
+          const topCategory = Object.keys(categoryCounts).sort((a,b) => categoryCounts[b] - categoryCounts[a])[0];
+          
+          if(topCategory) {
+              const recommendedItems = menuItemsData.filter(item => item.cat === topCategory && item.stock > 0).slice(0, 4);
+              if(recommendedItems.length > 0) {
+                  container.innerHTML = `
                       <h3>👍 Recommended For You</h3>
                       <div class="recommendation-grid">
                           ${recommendedItems.map(item => `
@@ -1918,26 +1811,25 @@
                               </div>
                           `).join('')}
                       </div>`;
-        }
+              }
+          }
       }
-    }
 
-    // --- NEW FEATURE 10: CONFETTI ON ORDER ---
-    function triggerConfetti() {
-      const colors = ['#ff7e5f', '#feb47b', '#38bdf8', '#22c55e', '#ffffff'];
-      for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-        document.body.appendChild(confetti);
-        setTimeout(() => { confetti.remove(); }, 5000);
+      // --- NEW FEATURE 10: CONFETTI ON ORDER ---
+      function triggerConfetti() {
+          const colors = ['#ff7e5f', '#feb47b', '#38bdf8', '#22c55e', '#ffffff'];
+          for (let i = 0; i < 100; i++) {
+              const confetti = document.createElement('div');
+              confetti.classList.add('confetti');
+              confetti.style.left = Math.random() * 100 + 'vw';
+              confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
+              confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+              confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+              document.body.appendChild(confetti);
+              setTimeout(() => { confetti.remove(); }, 5000);
+          }
       }
-    }
 
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
