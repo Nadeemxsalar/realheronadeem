@@ -245,6 +245,11 @@
       cursor: pointer;
     }
 
+    .link-btn.disabled {
+      color: #999;
+      cursor: not-allowed;
+    }
+
     .spinner {
       display: none;
       width: 32px;
@@ -312,26 +317,37 @@
       <form onsubmit="handleSubmit(); return false;">
         <h2 id="formTitle">Login</h2>
         <div class="input-group" id="usernameGroup" style="display:none;">
-          <input type="text" id="username" placeholder="Username">
+          <input type="text" id="username" placeholder="Username" autocomplete="username">
           <div class="error" id="usernameError"></div>
         </div>
         <div class="input-group">
-          <input type="email" id="email" placeholder="Email">
+          <input type="email" id="email" placeholder="Email" autocomplete="email">
           <div class="error" id="emailError"></div>
         </div>
-        <div class="input-group">
-          <input type="password" id="password" placeholder="Password">
+        <div class="input-group" id="passwordGroup">
+          <input type="password" id="password" placeholder="Password" autocomplete="current-password">
           <div class="error" id="passwordError"></div>
         </div>
+        <div class="input-group" id="otpGroup" style="display:none;">
+          <input type="text" id="otp" placeholder="Enter OTP received in email" autocomplete="one-time-code">
+          <div class="error" id="otpError"></div>
+        </div>
+        <div class="link-btn" id="resendOtpLink" style="display:none;" onclick="resendOtp()">Resend OTP</div>
+
         <div class="spinner" id="spinner"></div>
         <button type="submit" id="submitButton">Login</button>
       </form>
 
       <div class="or-divider">Or</div>
-
       <button class="google" onclick="handleGoogle()">Sign in with Google <span>G</span></button>
-      <div class="link-btn" onclick="toggleMode()">Don't have an account? Sign up</div>
-      <div class="link-btn" onclick="forgotPassword()">Forgot Password?</div>
+
+      <div id="auth-links">
+        <div class="link-btn" id="signupLink" onclick="toggleMode()">Don't have an account? Sign up</div>
+        <div class="link-btn" id="forgotPasswordLink" onclick="forgotPassword()">Forgot Password?</div>
+        <div class="link-btn" id="otpModeLink" onclick="toggleOtpMode()">Login with Email OTP instead</div>
+        <div class="link-btn" id="passwordModeLink" style="display:none;" onclick="toggleOtpMode()">Login with Password
+          instead</div>
+      </div>
       <div class="tick" id="successTick">✔️</div>
     </div>
   </div>
@@ -339,110 +355,235 @@
   <div class="snackbar" id="snackbar"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    // **FIX 3**: Get createClient from the global 'supabase' object
     const { createClient } = supabase;
-
-    // Supabase Setup from your details
     const SUPABASE_URL = "https://htrpbywoaxqymgwilvot.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0cnBieXdvYXhxeW1nd2lsdm90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2MDQxOTksImV4cCI6MjA2NzE4MDE5OX0.Wo_UyilZsPcuefw8RIMU4CPJS6JKrawLwUcxNYEWxeg";
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY); // Renamed to avoid conflict
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // --- STATE VARIABLES ---
     let isLoginMode = true;
+    let isOtpMode = false;
+    let otpSent = false;
+    let isVerifyingSignup = false;
+    let resendTimer; // NEW: Timer variable
 
-    // --- UI Helper Functions ---
-    // No 'window.' needed anymore, but it doesn't harm to keep it. 
-    // It's good practice to make it explicit what is global.
+    // --- UI HELPER FUNCTIONS ---
     window.toggleMenu = () => document.getElementById('navLinks').classList.toggle('active');
-
-    window.toggleMode = () => {
-      isLoginMode = !isLoginMode;
-      document.getElementById('formTitle').innerText = isLoginMode ? 'Login' : 'Sign Up';
-      document.getElementById('submitButton').innerText = isLoginMode ? 'Login' : 'Sign Up';
-      document.getElementById('usernameGroup').style.display = isLoginMode ? 'none' : 'block';
-    };
-
-    const showSpinner = val => {
-      document.getElementById('spinner').style.display = val ? 'block' : 'none';
-    };
-
+    const showSpinner = val => document.getElementById('spinner').style.display = val ? 'block' : 'none';
     const showSnackbar = msg => {
       const sb = document.getElementById('snackbar');
       sb.innerText = msg;
       sb.classList.add('show');
       setTimeout(() => sb.classList.remove('show'), 3000);
     };
-
     const showSuccess = () => {
       showSpinner(false);
       document.getElementById('successTick').style.display = 'block';
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 1200);
+      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
     };
 
-    // --- Authentication Logic ---
+    // --- MODE TOGGLING & UI ---
+    window.toggleMode = () => {
+      isLoginMode = !isLoginMode;
+      document.getElementById('formTitle').innerText = isLoginMode ? 'Login' : 'Sign Up';
+      document.getElementById('submitButton').innerText = isLoginMode ? 'Login' : 'Sign Up';
+      document.getElementById('usernameGroup').style.display = isLoginMode ? 'none' : 'block';
+      document.getElementById('forgotPasswordLink').style.display = isLoginMode ? 'block' : 'none';
+      document.getElementById('signupLink').innerHTML = isLoginMode ? "Don't have an account? Sign up" : "Already have an account? Login";
+    };
+
+    window.toggleOtpMode = () => {
+      isOtpMode = !isOtpMode;
+      otpSent = false;
+      const formTitle = document.getElementById('formTitle');
+      const submitButton = document.getElementById('submitButton');
+      const passwordGroup = document.getElementById('passwordGroup');
+      const otpGroup = document.getElementById('otpGroup');
+      const passwordModeLink = document.getElementById('passwordModeLink');
+      const otpModeLink = document.getElementById('otpModeLink');
+      const signupLink = document.getElementById('signupLink');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const emailInput = document.getElementById('email');
+      const resendOtpLink = document.getElementById('resendOtpLink');
+
+      clearInterval(resendTimer); // Clear timer when switching modes
+      resendOtpLink.style.display = 'none';
+
+      if (isOtpMode) {
+        formTitle.innerText = 'Login with OTP';
+        submitButton.innerText = 'Send OTP';
+        passwordGroup.style.display = 'none';
+        otpGroup.style.display = 'none';
+        signupLink.style.display = 'none';
+        forgotPasswordLink.style.display = 'none';
+        otpModeLink.style.display = 'none';
+        passwordModeLink.style.display = 'block';
+        emailInput.disabled = false;
+      } else {
+        formTitle.innerText = 'Login';
+        submitButton.innerText = 'Login';
+        passwordGroup.style.display = 'block';
+        otpGroup.style.display = 'none';
+        signupLink.style.display = 'block';
+        forgotPasswordLink.style.display = 'block';
+        otpModeLink.style.display = 'block';
+        passwordModeLink.style.display = 'none';
+        emailInput.disabled = false;
+        if (!isLoginMode) toggleMode();
+      }
+    }
+
+    const switchToOtpVerificationView = (email) => {
+      isVerifyingSignup = true;
+      document.getElementById('formTitle').innerText = 'Verify Your Account';
+      document.getElementById('usernameGroup').style.display = 'none';
+      document.getElementById('passwordGroup').style.display = 'none';
+      document.getElementById('otpGroup').style.display = 'block';
+      document.getElementById('auth-links').style.display = 'none';
+      document.getElementById('submitButton').innerText = 'Verify Account';
+      const emailInput = document.getElementById('email');
+      emailInput.value = email;
+      emailInput.disabled = true;
+      document.getElementById('resendOtpLink').style.display = 'block';
+      startResendTimer();
+    }
+
+    // --- NEW: OTP Timer and Resend Logic ---
+    const startResendTimer = () => {
+      let seconds = 30;
+      const resendLink = document.getElementById('resendOtpLink');
+      resendLink.classList.add('disabled');
+      resendLink.onclick = null; // Disable click
+
+      resendTimer = setInterval(() => {
+        if (seconds > 0) {
+          resendLink.innerText = `Resend OTP in ${seconds}s`;
+          seconds--;
+        } else {
+          clearInterval(resendTimer);
+          resendLink.innerText = 'Resend OTP';
+          resendLink.classList.remove('disabled');
+          resendLink.onclick = resendOtp; // Re-enable click
+        }
+      }, 1000);
+    };
+
+    window.resendOtp = async () => {
+      const email = document.getElementById('email').value.trim();
+      showSnackbar('Resending OTP...');
+      // The type of OTP to resend depends on the context
+      const otpType = isVerifyingSignup ? 'signup' : 'email';
+      const { error } = await supabaseClient.auth.signInWithOtp({ email, options: { channel: otpType } });
+
+      if (error) {
+        showSnackbar(error.message);
+      } else {
+        showSnackbar('OTP has been resent to your email!');
+        startResendTimer(); // Restart the timer
+      }
+    };
+
+
+    // --- MAIN SUBMIT FUNCTION ---
     window.handleSubmit = async () => {
       document.querySelectorAll('.error').forEach(e => e.textContent = '');
+      showSpinner(true);
+      if (isVerifyingSignup) {
+        await handleSignupVerification();
+      } else if (isOtpMode) {
+        await handleOtpLogin();
+      } else {
+        await handlePasswordLogin();
+      }
+      showSpinner(false);
+    };
+
+    // --- AUTH LOGIC FUNCTIONS ---
+    const handlePasswordLogin = async () => {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
 
-      if (!email) return document.getElementById('emailError').innerText = 'Required';
-      if (!password) return document.getElementById('passwordError').innerText = 'Required';
+      if (!email) { document.getElementById('emailError').innerText = 'Required'; return; }
+      if (!password && isLoginMode) { document.getElementById('passwordError').innerText = 'Required'; return; }
 
-      showSpinner(true);
-
-      let response;
       if (isLoginMode) {
-        response = await supabaseClient.auth.signInWithPassword({ email, password });
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) showSnackbar(error.message);
+        else showSuccess();
       } else {
-        response = await supabaseClient.auth.signUp({ email, password });
-      }
-
-      showSpinner(false);
-
-      if (response.error) {
-        showSnackbar(response.error.message);
-      } else {
-        if (!isLoginMode && response.data.user) {
-          showSnackbar('Sign up successful! Please check your email to verify your account.');
+        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+        if (error) {
+          showSnackbar(error.message);
         } else {
-          showSuccess();
+          const { error: otpError } = await supabaseClient.auth.signInWithOtp({ email });
+          if (otpError) {
+            showSnackbar(otpError.message)
+          } else {
+            showSnackbar('Sign up successful! Check your email for an OTP to verify.');
+            switchToOtpVerificationView(email);
+          }
         }
+      }
+    };
+
+    const handleOtpLogin = async () => {
+      const email = document.getElementById('email').value.trim();
+      if (!email) { document.getElementById('emailError').innerText = 'Email is required'; return; }
+
+      if (!otpSent) {
+        const { error } = await supabaseClient.auth.signInWithOtp({ email });
+        if (error) {
+          showSnackbar(error.message);
+        } else {
+          showSnackbar('OTP has been sent to your email!');
+          otpSent = true;
+          document.getElementById('otpGroup').style.display = 'block';
+          document.getElementById('email').disabled = true;
+          document.getElementById('submitButton').innerText = 'Verify OTP';
+          document.getElementById('resendOtpLink').style.display = 'block';
+          startResendTimer();
+        }
+      } else {
+        const otp = document.getElementById('otp').value.trim();
+        if (!otp) { document.getElementById('otpError').innerText = 'OTP is required'; return; }
+        const { error } = await supabaseClient.auth.verifyOtp({ email, token: otp, type: 'email' });
+        if (error) showSnackbar(error.message);
+        else showSuccess();
+      }
+    };
+
+    const handleSignupVerification = async () => {
+      const email = document.getElementById('email').value.trim();
+      const otp = document.getElementById('otp').value.trim();
+      if (!otp) { document.getElementById('otpError').innerText = 'OTP is required'; return; }
+
+      const { data, error } = await supabaseClient.auth.verifyOtp({ email: email, token: otp, type: 'signup' });
+      if (error) {
+        showSnackbar(error.message);
+      } else {
+        showSnackbar('Account verified successfully!');
+        showSuccess();
       }
     };
 
     window.handleGoogle = async () => {
       showSpinner(true);
-      const { data, error } = await supabaseClient.auth.signInWithOAuth({
-        provider: 'google',
-      });
-
-      if (error) {
-        showSpinner(false);
-        showSnackbar('Google Sign-In failed: ' + error.message);
-      }
+      const { data, error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+      if (error) { showSnackbar('Google Sign-In failed: ' + error.message); }
+      showSpinner(false);
     };
 
     window.forgotPassword = async () => {
       const email = document.getElementById('email').value.trim();
       if (!email) return showSnackbar('Please enter your email to reset the password.');
-
       showSpinner(true);
-      const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin,
-      });
+      const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+      if (error) { showSnackbar(error.message); }
+      else { showSnackbar('Password reset link has been sent to your email.'); }
       showSpinner(false);
-
-      if (error) {
-        showSnackbar(error.message);
-      } else {
-        showSnackbar('Password reset link has been sent to your email.');
-      }
     };
   </script>
-
 </body>
 
 </html>
