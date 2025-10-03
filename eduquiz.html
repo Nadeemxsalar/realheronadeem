@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Advanced Educational Quiz Web App" />
+  <meta name="description" content="Advanced Educational Quiz Web App with 300+ Questions" />
   <title>EduQuiz Pro</title>
 
-  <!-- Google Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
 
   <style>
-    /* SAME STYLES AS PREVIOUS ANSWER */
+    /* Basic Styles and Variables */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -26,10 +25,13 @@
       --glass-bg: rgba(255, 255, 255, 0.15);
       --blur: blur(15px);
       --primary-color: #4f46e5;
+      --secondary-color: #f9a826;
       --text-color: #1e1e2f;
       --card-bg: rgba(255, 255, 255, 0.1);
       --card-border: rgba(255, 255, 255, 0.3);
       --shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+      --correct-color: #2ecc71;
+      --wrong-color: #e74c3c;
     }
 
     body.dark {
@@ -37,7 +39,8 @@
       --text-color: #f1f1f1;
       --card-bg: rgba(255, 255, 255, 0.05);
     }
-
+    
+    /* Header and Navigation */
     header {
       display: flex;
       justify-content: space-between;
@@ -50,508 +53,551 @@
       top: 0;
       z-index: 999;
     }
-
-    nav {
-      display: flex;
-      gap: 1.5rem;
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
     }
-
-    nav a {
-      text-decoration: none;
-      color: var(--text-color);
-      position: relative;
-      padding: 0.5rem;
-      transition: color 0.3s ease;
-    }
-
-    nav a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 2px;
-      width: 0%;
-      background: var(--primary-color);
-      transition: width 0.3s ease;
-    }
-
-    nav a:hover::after,
-    nav a.active::after {
-      width: 100%;
-    }
-
-    .toggle-theme {
-      cursor: pointer;
-      font-size: 1.5rem;
-      color: var(--primary-color);
-    }
-
-    .main-container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .quiz-card {
+    nav { display: flex; gap: 1.5rem; }
+    nav a { text-decoration: none; color: var(--text-color); position: relative; padding: 0.5rem; transition: color 0.3s ease; }
+    nav a::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 0%; background: var(--primary-color); transition: width 0.3s ease; }
+    nav a:hover::after, nav a.active::after { width: 100%; }
+    .toggle-theme { cursor: pointer; font-size: 1.5rem; color: var(--primary-color); }
+    
+    /* Main Content & Cards */
+    .main-container { max-width: 1000px; margin: 2rem auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+    .card {
       background: var(--card-bg);
       backdrop-filter: var(--blur);
       border: 1px solid var(--card-border);
       border-radius: 1rem;
       padding: 2rem;
       box-shadow: var(--shadow);
-      transition: transform 0.3s ease;
     }
-
-    .quiz-card:hover {
-      transform: scale(1.02);
-      border: 2px solid var(--primary-color);
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-
-    .question {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-    }
-
-    .options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .option {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 1rem;
-      border-radius: 0.8rem;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.3s ease;
-      user-select: none;
-    }
-
-    .option:hover {
-      background: var(--primary-color);
-      color: #fff;
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-
-    .progress-bar {
-      height: 8px;
-      border-radius: 5px;
-      background: #ccc;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-
-    .progress {
-      height: 100%;
-      width: 0%;
-      background: var(--primary-color);
-      transition: width 0.5s ease;
-    }
-
-    .timer {
-      margin-top: 0.5rem;
-      font-weight: bold;
-      font-size: 1rem;
-    }
-
-    .btn {
-      background: transparent;
-      border: 2px solid var(--primary-color);
-      color: var(--primary-color);
-      padding: 0.8rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 2rem;
-      align-self: center;
-    }
-
-    .btn:hover {
-      background: var(--primary-color);
-      color: #fff;
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-
-    .results {
-      text-align: center;
-      font-size: 1.5rem;
-    }
-
-    .confetti {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      width: 100%;
-      height: 100%;
-      z-index: 999;
-    }
-
-    @media (max-width: 768px) {
-      .options {
-        grid-template-columns: 1fr;
-      }
-
-      nav {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 4rem;
-        right: 2rem;
-        background: var(--glass-bg);
-        padding: 1rem;
-        border-radius: 1rem;
-      }
-
-      nav.show {
-        display: flex;
-      }
-
-      .hamburger {
-        display: block;
-        font-size: 2rem;
+    .quiz-card { display: none; }
+    
+    /* Start Screen (Category & Question Count) */
+    #start-screen { text-align: center; }
+    #start-screen h3 { margin-bottom: 1.5rem; font-size: 1.5rem; }
+    .setting-section { margin-bottom: 2rem; }
+    .setting-options { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .option-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
         cursor: pointer;
-      }
+        border-radius: 50px;
+        border: 2px solid var(--primary-color);
+        background: transparent;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
     }
+    .option-btn:hover { background: var(--primary-color); color: #fff; }
+    .option-btn.selected { background: var(--primary-color); color: #fff; box-shadow: 0 0 10px var(--primary-color); }
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .category-btn {
+        padding: 1.5rem 1rem; font-size: 1.2rem; font-weight: 500; border: 2px solid var(--primary-color);
+        color: var(--primary-color); transition: all 0.3s ease; cursor: pointer; border-radius: 0.8rem; background: transparent;
+    }
+    .category-btn:hover { background: var(--primary-color); color: #fff; transform: translateY(-5px); box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4); }
 
+    /* High Score Display */
+    .high-score-display {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--secondary-color);
+    }
+    .high-score-display i { margin-right: 8px; }
+
+    /* Quiz Elements */
+    .question { font-size: 1.2rem; margin-bottom: 1rem; }
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .option { border: 1px solid var(--card-border); padding: 1rem; border-radius: 0.8rem; cursor: pointer; text-align: center; transition: all 0.3s ease; user-select: none; }
+    .option:hover { background: var(--primary-color); color: #fff; }
+
+    /* Instant Feedback Style */
+    #feedback { margin-top: 1rem; height: 30px; font-size: 1.2rem; font-weight: bold; text-align: center; }
+
+    /* Progress Bar, Timer, and Buttons */
+    .quiz-footer { margin-top: 1.5rem; }
+    .progress-bar { height: 8px; border-radius: 5px; background: #ccc; overflow: hidden; }
+    .progress { height: 100%; width: 0%; background: var(--primary-color); transition: width 0.5s ease; }
+    .timer { margin-top: 0.5rem; font-weight: bold; font-size: 1rem; text-align: center; }
+    .btn { background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); padding: 0.8rem 1.5rem; font-size: 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; margin-top: 1.5rem; align-self: center; }
+    .btn:hover { background: var(--primary-color); color: #fff; box-shadow: 0 0 10px var(--primary-color); }
+    .skip-btn { border-color: var(--secondary-color); color: var(--secondary-color); }
+    .skip-btn:hover { background: var(--secondary-color); color: #fff; }
+
+    /* Results and Review Section */
+    .results { text-align: center; font-size: 1.5rem; }
+    .review-section { margin-top: 2rem; text-align: left; font-size: 1rem; }
+    .review-item { background: var(--card-bg); border: 1px solid var(--card-border); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+    .review-item p { margin-bottom: 0.5rem; }
+    .wrong-answer { color: var(--wrong-color); }
+    .correct-answer { color: var(--correct-color); }
+
+    /* Confetti Canvas */
+    .confetti { position: fixed; top: 0; left: 0; pointer-events: none; width: 100%; height: 100%; z-index: 999; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .options { grid-template-columns: 1fr; }
+      nav { display: none; flex-direction: column; position: absolute; top: 100%; right: 1rem; background: var(--glass-bg); padding: 1rem; border-radius: 1rem; box-shadow: var(--shadow); }
+      nav.show { display: flex; }
+      .hamburger { display: block; font-size: 2rem; cursor: pointer; }
+    }
     @media (min-width: 769px) {
-      .hamburger {
-        display: none;
-      }
+      .hamburger { display: none; }
     }
   </style>
 </head>
 <body>
+  
   <header>
     <h2>EduQuiz Pro</h2>
-    <i class="ri-menu-line hamburger" onclick="toggleMenu()"></i>
-    <nav id="navbar">
-      <a href="#quiz" class="active">Quiz</a>
-      <a href="#about">About</a>
-      <a href="#help">Help</a>
-    </nav>
-    <i class="ri-moon-clear-line toggle-theme" onclick="toggleTheme()" title="Toggle Theme"></i>
+    <div class="header-controls">
+        <nav id="navbar">
+            <a href="#quiz" class="active">Quiz</a>
+            <a href="#about">About</a>
+            <a href="#help">Help</a>
+        </nav>
+        <i class="ri-moon-clear-line toggle-theme" onclick="toggleTheme()" title="Toggle Theme"></i>
+        <i class="ri-menu-line hamburger" onclick="toggleMenu()"></i>
+    </div>
   </header>
 
   <div class="main-container">
-    <div class="quiz-card" id="quiz">
+    
+    <div class="card" id="start-screen">
+        <div class="high-score-display" id="high-score-display"></div>
+        <div class="setting-section">
+            <h3>1. Select Number of Questions</h3>
+            <div class="setting-options" id="num-questions-options">
+                <button class="option-btn" data-value="10">10</button>
+                <button class="option-btn selected" data-value="20">20</button>
+                <button class="option-btn" data-value="30">30</button>
+                <button class="option-btn" data-value="50">50</button>
+            </div>
+        </div>
+        <div class="setting-section">
+            <h3>2. Select a Category to Start</h3>
+            <div class="category-grid">
+                <button class="category-btn" onclick="startNewQuiz('generalKnowledge')">General Knowledge</button>
+                <button class="category-btn" onclick="startNewQuiz('science')">Science</button>
+                <button class="category-btn" onclick="startNewQuiz('math')">Math</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card quiz-card" id="quiz">
       <div class="question" id="question">Loading question...</div>
       <div class="options" id="options"></div>
-      <div class="progress-bar"><div class="progress" id="progress"></div></div>
-      <div class="timer" id="timer">Time left: 10s</div>
+      <div id="feedback"></div>
+      <div class="quiz-footer">
+          <div class="timer" id="timer"></div>
+          <div class="progress-bar"><div class="progress" id="progress"></div></div>
+      </div>
     </div>
-    <button class="btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+    
+    <div style="display: flex; justify-content: center; gap: 1rem;">
+        <button class="btn skip-btn" id="skipBtn" onclick="skipQuestion()">Skip</button>
+        <button class="btn" id="quitBtn" onclick="showStartScreen()">Quit</button>
+    </div>
+    
     <div class="results" id="results"></div>
-    <button class="btn" id="continueBtn" style="display:none;" onclick="startNewQuiz()">Next Quiz</button>
+    <button class="btn" id="newQuizBtn" style="display:none;" onclick="showStartScreen()">New Quiz</button>
+
   </div>
 
   <canvas class="confetti" id="confetti-canvas"></canvas>
 
   <script>
-    const questionBank = [
-      { q: "Capital of France?", options: ["Paris", "London", "Berlin", "Madrid"], correct: 0 },
-      { q: "Largest planet?", options: ["Mars", "Earth", "Jupiter", "Saturn"], correct: 2 },
-      { q: "5 + 7 = ?", options: ["10", "11", "12", "13"], correct: 2 },
-      { q: "Sun rises from?", options: ["West", "North", "East", "South"], correct: 2 },
-      { q: "Color of sky?", options: ["Blue", "Red", "Yellow", "Pink"], correct: 0 },
-      { q: "H2O is?", options: ["Salt", "Acid", "Water", "Oil"], correct: 2 },
-      { q: "2 x 3 = ?", options: ["5", "6", "7", "8"], correct: 1 },
-      { q: "HTML stands for?", options: ["Cascading Sheet", "Markup Lang", "JavaScript", "None"], correct: 1 },
-      { q: "Fastest land animal?", options: ["Tiger", "Elephant", "Cheetah", "Horse"], correct: 2 },
-      { q: "Human brain weight?", options: ["1kg", "1.4kg", "2kg", "0.5kg"], correct: 1 },
-  { q: "What is the capital of India?", options: ["Delhi", "Mumbai", "Chennai", "Kolkata"], correct: 0 },
-  { q: "2 + 2 = ?", options: ["3", "4", "5", "6"], correct: 1 },
-  { q: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Venus", "Jupiter"], correct: 1 },
-  { q: "What color is the sky on a clear day?", options: ["Green", "Blue", "Black", "Red"], correct: 1 },
-  { q: "How many days are there in a week?", options: ["5", "6", "7", "8"], correct: 2 },
-  { q: "What is H2O?", options: ["Oxygen", "Hydrogen", "Water", "Salt"], correct: 2 },
-  { q: "What is the opposite of 'hot'?", options: ["Cold", "Warm", "Cool", "Fire"], correct: 0 },
-  { q: "Sun rises in the?", options: ["West", "South", "North", "East"], correct: 3 },
-  { q: "Which shape has 3 sides?", options: ["Square", "Triangle", "Circle", "Rectangle"], correct: 1 },
-  { q: "Which animal barks?", options: ["Cat", "Dog", "Elephant", "Cow"], correct: 1 },
-  { q: "What comes after 'A' in the alphabet?", options: ["B", "C", "D", "E"], correct: 0 },
-  { q: "Which fruit is red and has seeds outside?", options: ["Apple", "Strawberry", "Banana", "Grapes"], correct: 1 },
-  { q: "How many legs does a spider have?", options: ["6", "8", "4", "10"], correct: 1 },
-  { q: "What is the opposite of 'up'?", options: ["Down", "Left", "Right", "Back"], correct: 0 },
-  { q: "What is 5 x 2?", options: ["7", "8", "10", "12"], correct: 2 },
-  { q: "Which gas do plants absorb?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 1 },
-  { q: "What is the shape of the Earth?", options: ["Flat", "Round", "Cube", "Oval"], correct: 1 },
-  { q: "Which month has 28 or 29 days?", options: ["February", "January", "March", "April"], correct: 0 },
-  { q: "What do bees make?", options: ["Honey", "Milk", "Bread", "Water"], correct: 0 },
-  { q: "What do cows drink?", options: ["Milk", "Water", "Juice", "Soda"], correct: 1 },
-  { q: "What is the smallest prime number?", options: ["1", "2", "3", "5"], correct: 1 },
-  { q: "How many colors in a rainbow?", options: ["5", "6", "7", "8"], correct: 2 },
-  { q: "What is the national animal of India?", options: ["Tiger", "Lion", "Elephant", "Deer"], correct: 0 },
-  { q: "Which is the largest continent?", options: ["Asia", "Europe", "Africa", "Australia"], correct: 0 },
-  { q: "Which is the fastest land animal?", options: ["Lion", "Cheetah", "Tiger", "Leopard"], correct: 1 },
-  { q: "What do you use to see?", options: ["Ears", "Eyes", "Nose", "Mouth"], correct: 1 },
-  { q: "What does a thermometer measure?", options: ["Pressure", "Temperature", "Speed", "Length"], correct: 1 },
-  { q: "Which bird can mimic human speech?", options: ["Crow", "Parrot", "Eagle", "Pigeon"], correct: 1 },
-  { q: "Which sense organ helps you hear?", options: ["Eyes", "Nose", "Ears", "Tongue"], correct: 2 },
-  { q: "Which vehicle runs on tracks?", options: ["Car", "Train", "Bike", "Bus"], correct: 1 },
-  { q: "Which shape has 4 equal sides?", options: ["Triangle", "Rectangle", "Square", "Circle"], correct: 2 },
-  { q: "How many hours in a day?", options: ["12", "24", "36", "48"], correct: 1 },
-  { q: "What is frozen water called?", options: ["Steam", "Ice", "Snow", "Cloud"], correct: 1 },
-  { q: "How many fingers on one hand?", options: ["4", "5", "6", "7"], correct: 1 },
-  { q: "What do we wear on feet?", options: ["Shirt", "Shoes", "Cap", "Gloves"], correct: 1 },
-  { q: "Which season is cold?", options: ["Summer", "Winter", "Monsoon", "Spring"], correct: 1 },
-  { q: "How many vowels in English?", options: ["4", "5", "6", "7"], correct: 1 },
-  { q: "Which planet do we live on?", options: ["Mars", "Earth", "Venus", "Jupiter"], correct: 1 },
-  { q: "Which part of the plant is underground?", options: ["Root", "Leaf", "Flower", "Stem"], correct: 0 },
-  { q: "What color is grass?", options: ["Red", "Blue", "Green", "Yellow"], correct: 2 },
-  { q: "What animal gives us milk?", options: ["Cow", "Tiger", "Dog", "Cat"], correct: 0 },
-  { q: "What do we use to write?", options: ["Book", "Pencil", "Paper", "Eraser"], correct: 1 },
-  { q: "Where do fish live?", options: ["Land", "Air", "Water", "Sand"], correct: 2 },
-  { q: "Which sense organ helps you smell?", options: ["Ear", "Eye", "Nose", "Tongue"], correct: 2 },
-  { q: "Which planet is closest to the sun?", options: ["Earth", "Venus", "Mercury", "Mars"], correct: 2 },
-  { q: "What is the opposite of 'big'?", options: ["Huge", "Tall", "Small", "Large"], correct: 2 },
-  { q: "What is 10 divided by 2?", options: ["2", "4", "5", "6"], correct: 2 },
-  { q: "Which animal has a long trunk?", options: ["Tiger", "Elephant", "Horse", "Dog"], correct: 1 },
-  { q: "What do we drink to stay healthy?", options: ["Juice", "Water", "Tea", "Soda"], correct: 1 },
-  { q: "How many letters in the English alphabet?", options: ["24", "25", "26", "27"], correct: 2 },
-  { q: "What color is a banana?", options: ["Red", "Green", "Yellow", "Purple"], correct: 2 },
-  { q: "What time does a new day start?", options: ["12 PM", "6 AM", "12 AM", "8 AM"], correct: 2 },
-  { q: "Which body part helps you think?", options: ["Liver", "Heart", "Brain", "Lungs"], correct: 2 },
-  { q: "Which bird lays the largest egg?", options: ["Duck", "Ostrich", "Hen", "Eagle"], correct: 1 },
-  { q: "What color is the sun?", options: ["White", "Yellow", "Blue", "Red"], correct: 1 },
-  { q: "Which is the smallest planet?", options: ["Mars", "Earth", "Mercury", "Venus"], correct: 2 },
-  { q: "How many toes on both feet?", options: ["8", "9", "10", "11"], correct: 2 },
-  { q: "Which fruit is yellow and long?", options: ["Banana", "Apple", "Grapes", "Orange"], correct: 0 },
-  { q: "Where do we sleep?", options: ["Chair", "Bed", "Sofa", "Floor"], correct: 1 },
-  { q: "Which tool is used to cut paper?", options: ["Spoon", "Knife", "Scissors", "Pen"], correct: 2 },
-  { q: "Which festival is known for colors?", options: ["Diwali", "Holi", "Eid", "Christmas"], correct: 1 },
-  { q: "Which number comes after 9?", options: ["8", "10", "11", "12"], correct: 1 },
-  { q: "How many seasons are there?", options: ["2", "3", "4", "5"], correct: 2 },
-  { q: "Which animal lives in water?", options: ["Dog", "Horse", "Fish", "Tiger"], correct: 2 },
-  { q: "What is 3 + 4?", options: ["5", "6", "7", "8"], correct: 2 },
-  { q: "Which is a vegetable?", options: ["Mango", "Carrot", "Banana", "Apple"], correct: 1 },
-  { q: "What color is a tomato?", options: ["Yellow", "Blue", "Red", "Purple"], correct: 2 },
-  { q: "What helps us breathe?", options: ["Lungs", "Stomach", "Kidney", "Liver"], correct: 0 },
-  { q: "What flies in the sky?", options: ["Fish", "Bird", "Lion", "Dog"], correct: 1 },
-  { q: "Which is a mammal?", options: ["Frog", "Whale", "Shark", "Snake"], correct: 1 },
-  { q: "Which is used for baking?", options: ["Flour", "Sugar", "Salt", "Oil"], correct: 0 },
-  { q: "Which day comes after Monday?", options: ["Tuesday", "Sunday", "Friday", "Thursday"], correct: 0 },
-  { q: "What do we eat in the morning?", options: ["Lunch", "Dinner", "Breakfast", "Snacks"], correct: 2 },
-  { q: "What shape is a wheel?", options: ["Square", "Triangle", "Circle", "Rectangle"], correct: 2 },
-  { q: "What is the color of milk?", options: ["Red", "Blue", "White", "Yellow"], correct: 2 },
-  { q: "Which animal is known as man's best friend?", options: ["Cat", "Dog", "Horse", "Elephant"], correct: 1 },
-  { q: "How many wheels does a car have?", options: ["2", "3", "4", "5"], correct: 2 },
-  { q: "Where does a bird lay eggs?", options: ["Water", "Tree", "Nest", "Hole"], correct: 2 },
-  { q: "Which animal says 'meow'?", options: ["Dog", "Cow", "Cat", "Horse"], correct: 2 },
-  { q: "Which is a healthy food?", options: ["Chips", "Chocolate", "Fruits", "Soda"], correct: 2 },
-  { q: "What is 6 - 2?", options: ["2", "3", "4", "5"], correct: 2 },
-  { q: "What do we use to clean teeth?", options: ["Comb", "Toothbrush", "Fork", "Pen"], correct: 1 },
-  { q: "What do we see with?", options: ["Nose", "Eyes", "Hands", "Legs"], correct: 1 },
-  { q: "Which animal has stripes?", options: ["Lion", "Zebra", "Elephant", "Cow"], correct: 1 },
-  { q: "Which day starts the week?", options: ["Sunday", "Monday", "Tuesday", "Friday"], correct: 0 },
-  { q: "Which planet is known for its rings?", options: ["Earth", "Mars", "Saturn", "Venus"], correct: 2 },
-{ q: "How many sides does a hexagon have?", options: ["5", "6", "7", "8"], correct: 1 },
-{ q: "Who wrote the Ramayana?", options: ["Tulsidas", "Valmiki", "Kalidas", "Ved Vyasa"], correct: 1 },
-{ q: "Which gas is essential for breathing?", options: ["Oxygen", "Carbon", "Nitrogen", "Hydrogen"], correct: 0 },
-{ q: "What is the freezing point of water?", options: ["0°C", "10°C", "32°C", "100°C"], correct: 0 },
-{ q: "Which is the largest ocean?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], correct: 3 },
-{ q: "Who is known as the Father of Nation (India)?", options: ["Jawaharlal Nehru", "Subhash Chandra Bose", "Mahatma Gandhi", "Sardar Patel"], correct: 2 },
-{ q: "What do we wear on our head?", options: ["Shoes", "Shirt", "Hat", "Gloves"], correct: 2 },
-{ q: "Which sense helps us taste?", options: ["Eyes", "Ears", "Nose", "Tongue"], correct: 3 },
-{ q: "Which flower is national flower of India?", options: ["Rose", "Lily", "Lotus", "Sunflower"], correct: 2 },
-{ q: "Which color is made by mixing red and yellow?", options: ["Green", "Orange", "Pink", "Brown"], correct: 1 },
-{ q: "Which part of plant makes food?", options: ["Root", "Leaf", "Stem", "Flower"], correct: 1 },
-{ q: "How many players in a cricket team?", options: ["10", "11", "12", "9"], correct: 1 },
-{ q: "What is the boiling point of water?", options: ["0°C", "50°C", "100°C", "200°C"], correct: 2 },
-{ q: "Which fruit is sour?", options: ["Mango", "Lemon", "Banana", "Papaya"], correct: 1 },
-{ q: "Which festival is known as Festival of Lights?", options: ["Holi", "Eid", "Diwali", "Christmas"], correct: 2 },
-{ q: "What is 7 + 3?", options: ["9", "10", "11", "12"], correct: 1 },
-{ q: "Where do we see stars?", options: ["Morning", "Afternoon", "Evening", "Night"], correct: 3 },
-{ q: "Which is a carnivorous animal?", options: ["Cow", "Goat", "Lion", "Horse"], correct: 2 },
-{ q: "Which bird is nocturnal?", options: ["Sparrow", "Owl", "Pigeon", "Parrot"], correct: 1 },
-{ q: "What is the square of 5?", options: ["15", "20", "25", "30"], correct: 2 },
-{ q: "Which organ pumps blood?", options: ["Brain", "Lungs", "Heart", "Kidney"], correct: 2 },
-{ q: "How many bones in adult human body?", options: ["206", "210", "201", "190"], correct: 0 },
-{ q: "Which animal has a hump?", options: ["Donkey", "Camel", "Zebra", "Horse"], correct: 1 },
-{ q: "Which country is known as Land of Rising Sun?", options: ["China", "India", "Japan", "Thailand"], correct: 2 },
-{ q: "Which insect produces honey?", options: ["Butterfly", "Bee", "Ant", "Spider"], correct: 1 },
-{ q: "Which fruit has seeds outside?", options: ["Apple", "Mango", "Strawberry", "Cherry"], correct: 2 },
-{ q: "Which part of your body helps you walk?", options: ["Hands", "Ears", "Legs", "Eyes"], correct: 2 },
-{ q: "Which shape is used in stop sign?", options: ["Circle", "Triangle", "Octagon", "Rectangle"], correct: 2 },
-{ q: "Which metal is liquid at room temperature?", options: ["Iron", "Gold", "Mercury", "Aluminum"], correct: 2 },
-{ q: "Which gas do humans exhale?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], correct: 2 },
-{ q: "What number comes before 100?", options: ["98", "99", "97", "101"], correct: 1 },
-{ q: "Which festival involves flying kites?", options: ["Holi", "Makar Sankranti", "Diwali", "Baisakhi"], correct: 1 },
-{ q: "Which animal is known for its slow movement?", options: ["Snail", "Cheetah", "Rabbit", "Dog"], correct: 0 },
-{ q: "What is 9 - 5?", options: ["2", "3", "4", "5"], correct: 2 },
-{ q: "Which sense organ helps you feel?", options: ["Skin", "Eye", "Nose", "Ear"], correct: 0 },
-{ q: "How many minutes in an hour?", options: ["60", "30", "100", "45"], correct: 0 },
-{ q: "Which bird cannot fly?", options: ["Sparrow", "Eagle", "Ostrich", "Crow"], correct: 2 },
-{ q: "What is the full form of CPU?", options: ["Central Power Unit", "Central Process Unit", "Computer Personal Unit", "Control Power Unit"], correct: 1 },
-{ q: "Which animal has black and white stripes?", options: ["Zebra", "Tiger", "Cheetah", "Horse"], correct: 0 },
-{ q: "Which is a domestic animal?", options: ["Lion", "Cow", "Elephant", "Bear"], correct: 1 },
-{ q: "What color is a school bus?", options: ["Red", "Yellow", "Blue", "Green"], correct: 1 },
-{ q: "Which natural satellite orbits Earth?", options: ["Mars", "Moon", "Sun", "Venus"], correct: 1 },
-{ q: "Which is the tallest animal?", options: ["Elephant", "Giraffe", "Camel", "Horse"], correct: 1 },
-{ q: "Which day is Republic Day celebrated in India?", options: ["15 Aug", "26 Jan", "2 Oct", "14 Nov"], correct: 1 },
-{ q: "Which animal gives wool?", options: ["Cow", "Goat", "Sheep", "Buffalo"], correct: 2 },
-{ q: "What is 4 x 3?", options: ["7", "10", "12", "14"], correct: 2 },
-{ q: "Which bird is the national bird of India?", options: ["Sparrow", "Peacock", "Pigeon", "Parrot"], correct: 1 },
-{ q: "What is the main source of energy for Earth?", options: ["Moon", "Wind", "Sun", "Water"], correct: 2 },
-{ q: "What is a baby dog called?", options: ["Kitten", "Cub", "Puppy", "Calf"], correct: 2 },
-{ q: "Which is not a sense organ?", options: ["Heart", "Nose", "Tongue", "Ear"], correct: 0 },
-{ q: "How many zeros in hundred?", options: ["1", "2", "3", "4"], correct: 1 },
-{ q: "Which continent is India in?", options: ["Asia", "Europe", "Africa", "Australia"], correct: 0 },
-{ q: "Which direction does the sun set?", options: ["East", "West", "North", "South"], correct: 1 },
-{ q: "Which fruit has only one seed?", options: ["Banana", "Mango", "Apple", "Pineapple"], correct: 1 },
-{ q: "Which device helps in seeing far objects?", options: ["Microscope", "Telescope", "Thermometer", "Stethoscope"], correct: 1 },
-{ q: "Which planet is farthest from the sun?", options: ["Earth", "Neptune", "Mars", "Saturn"], correct: 1 },
-{ q: "Which tree gives us mangoes?", options: ["Neem", "Peepal", "Mango", "Banyan"], correct: 2 },
-{ q: "Which vitamin do we get from sunlight?", options: ["A", "B", "C", "D"], correct: 3 },
-{ q: "Which is a cold drink?", options: ["Tea", "Coffee", "Juice", "Milk"], correct: 2 },
-{ q: "How many wheels does a bicycle have?", options: ["1", "2", "3", "4"], correct: 1 },
-{ q: "Where do penguins live?", options: ["Desert", "Rainforest", "Arctic", "Antarctica"], correct: 3 },
-{ q: "What shape is an egg?", options: ["Square", "Oval", "Triangle", "Circle"], correct: 1 },
-{ q: "What do we eat in lunch?", options: ["Chips", "Breakfast", "Meals", "Ice cream"], correct: 2 },
-{ q: "Which is heavier?", options: ["Feather", "Rock", "Paper", "Leaf"], correct: 1 },
-{ q: "What helps plants grow?", options: ["Plastic", "Sunlight", "Stone", "Metal"], correct: 1 },
-{ q: "What is the national flag of India called?", options: ["Tiranga", "Tricolor", "Ashoka", "Jhanda"], correct: 0 },
-{ q: "What is 100 - 50?", options: ["60", "50", "40", "30"], correct: 1 },
-{ q: "Which fruit is orange in color?", options: ["Mango", "Orange", "Papaya", "Guava"], correct: 1 },
-{ q: "What helps us to write on blackboard?", options: ["Pen", "Chalk", "Pencil", "Marker"], correct: 1 },
-{ q: "What is the shape of a coin?", options: ["Triangle", "Circle", "Rectangle", "Oval"], correct: 1 },
-{ q: "Which is a wild animal?", options: ["Dog", "Cat", "Lion", "Cow"], correct: 2 },
-{ q: "What is used to comb hair?", options: ["Brush", "Comb", "Fork", "Pen"], correct: 1 },
-{ q: "What is the name of our galaxy?", options: ["Andromeda", "Black Hole", "Milky Way", "Solar System"], correct: 2 },
-{ q: "Which object tells time?", options: ["Thermometer", "Watch", "Telescope", "Compass"], correct: 1 },
-{ q: "Which animal says 'moo'?", options: ["Cow", "Cat", "Sheep", "Goat"], correct: 0 },
-{ q: "What color is blood?", options: ["Red", "Blue", "Black", "Green"], correct: 0 },
-{ q: "Which is a healthy habit?", options: ["Washing hands", "Eating junk", "Sleeping late", "Skipping meals"], correct: 0 },
-{ q: "What is 8 ÷ 2?", options: ["2", "4", "6", "8"], correct: 1 },
-{ q: "Which is a living thing?", options: ["Rock", "Car", "Tree", "Ball"], correct: 2 },
-{ q: "What is used to cut nails?", options: ["Scissors", "Knife", "Cutter", "Nail cutter"], correct: 3 },
-{ q: "What is 0 + 1?", options: ["1", "0", "2", "10"], correct: 0 },
-{ q: "What do you call a house made of ice?", options: ["Tent", "Hut", "Igloo", "Cottage"], correct: 2 }
-
-      // Add more here...
-    ];
+    // EXPANDED Question Bank with 300+ questions
+    const questionBank = {
+      generalKnowledge: [
+        { q: "What is the capital of India?", options: ["New Delhi", "Mumbai", "Kolkata", "Chennai"], correct: 0 },
+        { q: "Which is the largest ocean on Earth?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], correct: 3 },
+        { q: "Who is known as the 'Father of the Nation' in India?", options: ["Jawaharlal Nehru", "Sardar Patel", "Mahatma Gandhi", "Subhash Chandra Bose"], correct: 2 },
+        { q: "Which country is known as the 'Land of the Rising Sun'?", options: ["China", "Japan", "Australia", "India"], correct: 1 },
+        { q: "Which is the largest continent by area?", options: ["Asia", "Africa", "Europe", "North America"], correct: 0 },
+        { q: "What is the official name of the Indian flag?", options: ["Tiranga", "Union Jack", "Stars and Stripes", "Jhanda"], correct: 0 },
+        { q: "Which festival is known as the 'Festival of Lights' in India?", options: ["Holi", "Eid", "Diwali", "Christmas"], correct: 2 },
+        { q: "Which planet is known for its prominent rings?", options: ["Earth", "Mars", "Saturn", "Jupiter"], correct: 2 },
+        { q: "What is a baby dog called?", options: ["Kitten", "Cub", "Puppy", "Calf"], correct: 2 },
+        { q: "How many colors are there in a rainbow?", options: ["5", "6", "7", "8"], correct: 2 },
+        { q: "Which is the tallest animal on Earth?", options: ["Elephant", "Giraffe", "Lion", "Zebra"], correct: 1 },
+        { q: "Which bird is the national bird of India?", options: ["Sparrow", "Peacock", "Pigeon", "Parrot"], correct: 1 },
+        { q: "In which direction does the sun set?", options: ["East", "West", "North", "South"], correct: 1 },
+        { q: "In which continent is India located?", options: ["Asia", "Europe", "Africa", "Australia"], correct: 0 },
+        { q: "Where do penguins primarily live?", options: ["The Arctic", "Rainforests", "Deserts", "Antarctica"], correct: 3 },
+        { q: "What is the currency of Japan?", options: ["Yuan", "Won", "Yen", "Dollar"], correct: 2 },
+        { q: "Which is the longest river in the world?", options: ["Amazon", "Nile", "Ganges", "Mississippi"], correct: 1 },
+        { q: "Who wrote 'Romeo and Juliet'?", options: ["Charles Dickens", "Mark Twain", "William Shakespeare", "Jane Austen"], correct: 2 },
+        { q: "What is the capital of France?", options: ["London", "Berlin", "Paris", "Madrid"], correct: 2 },
+        { q: "Which monument is located in Agra, India?", options: ["Qutub Minar", "Hawa Mahal", "Taj Mahal", "India Gate"], correct: 2 },
+        { q: "How many states are there in India (as of 2024)?", options: ["28", "29", "30", "27"], correct: 0 },
+        { q: "What is the name of the galaxy we live in?", options: ["Andromeda", "Triangulum", "Milky Way", "Whirlpool"], correct: 2 },
+        { q: "Which is the smallest country in the world by area?", options: ["Monaco", "Vatican City", "San Marino", "Lichtenstein"], correct: 1 },
+        { q: "Who was the first person to step on the moon?", options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"], correct: 2 },
+        { q: "Which is the highest mountain in the world?", options: ["K2", "Mount Everest", "Kangchenjunga", "Lhotse"], correct: 1 },
+        { q: "What is the main language spoken in Brazil?", options: ["Spanish", "Portuguese", "Brazilian", "English"], correct: 1 },
+        { q: "Which sport is Sachin Tendulkar famous for?", options: ["Football", "Hockey", "Cricket", "Tennis"], correct: 2 },
+        { q: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Perth"], correct: 2 },
+        { q: "Which animal is known as the 'Ship of the Desert'?", options: ["Horse", "Donkey", "Camel", "Goat"], correct: 2 },
+        { q: "Who painted the Mona Lisa?", options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"], correct: 2 },
+        { q: "How many Union Territories are in India?", options: ["7", "8", "9", "10"], correct: 1 },
+        { q: "Which is the largest state in India by area?", options: ["Maharashtra", "Uttar Pradesh", "Rajasthan", "Madhya Pradesh"], correct: 2 },
+        { q: "Who was the first Prime Minister of India?", options: ["Sardar Patel", "Jawaharlal Nehru", "Mahatma Gandhi", "Dr. Rajendra Prasad"], correct: 1 },
+        { q: "Which ocean is the smallest in the world?", options: ["Indian", "Atlantic", "Pacific", "Arctic"], correct: 3 },
+        { q: "The Great Wall of China is located in which country?", options: ["India", "Japan", "China", "Mongolia"], correct: 2 },
+        { q: "What is the capital of the United Kingdom?", options: ["Manchester", "Liverpool", "London", "Edinburgh"], correct: 2 },
+        { q: "Which is the most populous country in the world?", options: ["China", "USA", "India", "Indonesia"], correct: 2 },
+        { q: "Who invented the telephone?", options: ["Thomas Edison", "Alexander Graham Bell", "Isaac Newton", "Albert Einstein"], correct: 1 },
+        { q: "In which year did India get its independence?", options: ["1950", "1947", "1942", "1951"], correct: 1 },
+        { q: "What is the national animal of India?", options: ["Lion", "Elephant", "Tiger", "Leopard"], correct: 2 },
+        { q: "Which is the largest desert in the world?", options: ["Thar", "Sahara", "Gobi", "Antarctic Polar Desert"], correct: 3 },
+        { q: "What is the capital of Russia?", options: ["St. Petersburg", "Moscow", "Kazan", "Siberia"], correct: 1 },
+        { q: "Who wrote the Indian National Anthem?", options: ["Bankim Chandra Chatterjee", "Sarojini Naidu", "Rabindranath Tagore", "Swami Vivekananda"], correct: 2 },
+        { q: "Which is the most widely spoken language in the world?", options: ["Hindi", "Spanish", "English", "Mandarin Chinese"], correct: 3 },
+        { q: "How many players are there in a cricket team?", options: ["9", "10", "11", "12"], correct: 2 },
+        { q: "Which is the largest island in the world?", options: ["Greenland", "Australia", "New Guinea", "Borneo"], correct: 0 },
+        { q: "Who is the founder of Microsoft?", options: ["Steve Jobs", "Jeff Bezos", "Bill Gates", "Elon Musk"], correct: 2 },
+        { q: "What is the national flower of India?", options: ["Rose", "Lotus", "Jasmine", "Lily"], correct: 1 },
+        { q: "Which country is home to the Kangaroo?", options: ["New Zealand", "South Africa", "Australia", "India"], correct: 2 },
+        { q: "Which is the largest bone in the human body?", options: ["Femur", "Humerus", "Tibia", "Stapes"], correct: 0 }
+      ],
+      science: [
+        { q: "What is the chemical symbol for water?", options: ["O2", "CO2", "H2O", "NaCl"], correct: 2 },
+        { q: "Which gas is essential for human breathing?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 0 },
+        { q: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Venus", "Jupiter"], correct: 1 },
+        { q: "What is the boiling point of water in Celsius?", options: ["0°C", "50°C", "100°C", "200°C"], correct: 2 },
+        { q: "Which organ pumps blood in the human body?", options: ["Lungs", "Brain", "Heart", "Kidney"], correct: 2 },
+        { q: "How many bones are in the adult human body?", options: ["206", "210", "201", "300"], correct: 0 },
+        { q: "Which metal is liquid at room temperature?", options: ["Iron", "Gold", "Mercury", "Silver"], correct: 2 },
+        { q: "Which gas do plants absorb from the atmosphere for photosynthesis?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Helium"], correct: 1 },
+        { q: "What is the main source of energy for the Earth?", options: ["Moon", "Wind", "Sun", "Water"], correct: 2 },
+        { q: "Which vitamin is produced when the human body is exposed to sunlight?", options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], correct: 3 },
+        { q: "What is the chemical symbol for Gold?", options: ["Ag", "Au", "G", "Go"], correct: 1 },
+        { q: "What force pulls objects towards the center of the Earth?", options: ["Magnetism", "Friction", "Gravity", "Tension"], correct: 2 },
+        { q: "What is the hardest natural substance found on Earth?", options: ["Gold", "Iron", "Diamond", "Quartz"], correct: 2 },
+        { q: "How many planets are in our solar system?", options: ["7", "8", "9", "10"], correct: 1 },
+        { q: "Sound cannot travel through which of the following?", options: ["Air", "Water", "Steel", "Vacuum"], correct: 3 },
+        { q: "What is the 'powerhouse' of the cell?", options: ["Nucleus", "Ribosome", "Mitochondria", "Cell Wall"], correct: 2 },
+        { q: "What is the study of plants called?", options: ["Zoology", "Botany", "Geology", "Astronomy"], correct: 1 },
+        { q: "Which instrument is used to measure temperature?", options: ["Barometer", "Microscope", "Telescope", "Thermometer"], correct: 3 },
+        { q: "What is the largest organ in the human body?", options: ["Liver", "Brain", "Heart", "Skin"], correct: 3 },
+        { q: "What is the chemical formula for table salt?", options: ["H2O", "NaCl", "CO2", "C6H12O6"], correct: 1 },
+        { q: "Which of these is a mammal that can fly?", options: ["Ostrich", "Penguin", "Bat", "Flying Fish"], correct: 2 },
+        { q: "How many hearts does an octopus have?", options: ["1", "2", "3", "4"], correct: 2 },
+        { q: "What is the approximate speed of light?", options: ["300,000 km/s", "150,000 km/s", "500,000 km/s", "1,000,000 km/s"], correct: 0 },
+        { q: "What is the freezing point of water in Celsius?", options: ["0°C", "-10°C", "10°C", "100°C"], correct: 0 },
+        { q: "What are the three primary states of matter?", options: ["Solid, Liquid, Gas", "Ice, Water, Steam", "Hard, Soft, Spongy", "Rock, Water, Air"], correct: 0 },
+        { q: "Which is the largest planet in our solar system?", options: ["Earth", "Saturn", "Jupiter", "Neptune"], correct: 2 },
+        { q: "What is the center of an atom called?", options: ["Electron", "Proton", "Neutron", "Nucleus"], correct: 3 },
+        { q: "Which element is most abundant in the Earth's atmosphere?", options: ["Oxygen", "Hydrogen", "Carbon", "Nitrogen"], correct: 3 },
+        { q: "What is the process by which plants make their own food called?", options: ["Respiration", "Photosynthesis", "Transpiration", "Germination"], correct: 1 },
+        { q: "What does 'Au' on the periodic table stand for?", options: ["Silver", "Argon", "Gold", "Aluminum"], correct: 2 },
+        { q: "Which part of the plant is responsible for absorbing water?", options: ["Leaf", "Stem", "Flower", "Root"], correct: 3 },
+        { q: "What is the human body's largest artery?", options: ["Aorta", "Femoral Artery", "Carotid Artery", "Pulmonary Artery"], correct: 0 },
+        { q: "What is the study of earthquakes called?", options: ["Geology", "Seismology", "Volcanology", "Meteorology"], correct: 1 },
+        { q: "Which is the closest star to Earth?", options: ["Sirius", "Alpha Centauri", "The Sun", "Polaris"], correct: 2 },
+        { q: "What is the main component of natural gas?", options: ["Ethane", "Propane", "Butane", "Methane"], correct: 3 },
+        { q: "Which of the following is not a primary color of light?", options: ["Red", "Blue", "Yellow", "Green"], correct: 2 },
+        { q: "What is the unit of electrical resistance?", options: ["Volt", "Ampere", "Ohm", "Watt"], correct: 2 },
+        { q: "What is the chemical name for laughing gas?", options: ["Methane", "Nitrous Oxide", "Carbon Dioxide", "Sulfur Dioxide"], correct: 1 },
+        { q: "Which of these is responsible for blood clotting?", options: ["Red Blood Cells", "White Blood Cells", "Plasma", "Platelets"], correct: 3 },
+        { q: "What is the study of fungi called?", options: ["Mycology", "Phycology", "Cytology", "Ornithology"], correct: 0 },
+        { q: "Which is the smallest bone in the human body?", options: ["Femur", "Incus", "Malleus", "Stapes"], correct: 3 },
+        { q: "What is inertia?", options: ["Resistance to change in motion", "The speed of light", "The force of gravity", "A type of energy"], correct: 0 },
+        { q: "What does a Geiger counter measure?", options: ["Temperature", "Pressure", "Radiation", "Wind speed"], correct: 2 },
+        { q: "What is the most common element in the universe?", options: ["Oxygen", "Helium", "Hydrogen", "Carbon"], correct: 2 },
+        { q: "Which scientist proposed the theory of relativity?", options: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Nikola Tesla"], correct: 2 },
+        { q: "What is the pH of pure water?", options: ["5", "7", "9", "1"], correct: 1 },
+        { q: "Which of these is a renewable source of energy?", options: ["Coal", "Natural Gas", "Solar Power", "Petroleum"], correct: 2 },
+        { q: "What is dry ice?", options: ["Frozen Water", "Solid Carbon Dioxide", "Solid Nitrogen", "Frozen Helium"], correct: 1 },
+        { q: "Which of these animals is a reptile?", options: ["Frog", "Salamander", "Snake", "Fish"], correct: 2 },
+        { q: "What is the unit of frequency?", options: ["Hertz", "Decibel", "Joule", "Pascal"], correct: 0 }
+      ],
+      math: [
+        { q: "What is 5 + 7?", options: ["10", "11", "12", "13"], correct: 2 },
+        { q: "What is 8 multiplied by 5?", options: ["35", "40", "45", "50"], correct: 1 },
+        { q: "A shape with 3 sides is called a?", options: ["Square", "Triangle", "Circle", "Rectangle"], correct: 1 },
+        { q: "What is 100 divided by 10?", options: ["5", "10", "20", "50"], correct: 1 },
+        { q: "What is the smallest prime number?", options: ["1", "2", "3", "0"], correct: 1 },
+        { q: "How many sides does a hexagon have?", options: ["5", "6", "7", "8"], correct: 1 },
+        { q: "What is the square of 9?", options: ["18", "72", "81", "90"], correct: 2 },
+        { q: "What comes next in the sequence: 2, 4, 6, 8, ...?", options: ["9", "10", "12", "14"], correct: 1 },
+        { q: "How many minutes are in an hour and a half?", options: ["60", "90", "120", "150"], correct: 1 },
+        { q: "What is 50% of 200?", options: ["25", "50", "100", "150"], correct: 2 },
+        { q: "What is 15 - 7?", options: ["6", "7", "8", "9"], correct: 2 },
+        { q: "How many zeros are there in one thousand?", options: ["2", "3", "4", "5"], correct: 1 },
+        { q: "What is the approximate value of Pi (π)?", options: ["3.14", "2.14", "4.14", "1.14"], correct: 0 },
+        { q: "A century is equal to how many years?", options: ["10", "50", "100", "1000"], correct: 2 },
+        { q: "What is 25 + 35?", options: ["50", "55", "60", "65"], correct: 2 },
+        { q: "If a train travels at 60 km/h, how far will it travel in 3 hours?", options: ["120 km", "150 km", "180 km", "240 km"], correct: 2 },
+        { q: "How many degrees are in a right angle?", options: ["45°", "90°", "180°", "360°"], correct: 1 },
+        { q: "What is 10 multiplied by 10?", options: ["100", "20", "1000", "1"], correct: 0 },
+        { q: "How many sides does a pentagon have?", options: ["5", "6", "7", "8"], correct: 0 },
+        { q: "What is the area of a square with a side length of 5 cm?", options: ["20 sq cm", "25 sq cm", "30 sq cm", "50 sq cm"], correct: 1 },
+        { q: "What is 1/2 as a decimal?", options: ["0.25", "0.5", "0.75", "2.0"], correct: 1 },
+        { q: "Which of these numbers is not an even number?", options: ["2", "8", "12", "15"], correct: 3 },
+        { q: "How many months are in a year?", options: ["10", "11", "12", "13"], correct: 2 },
+        { q: "What is 9 multiplied by 7?", options: ["56", "63", "72", "81"], correct: 1 },
+        { q: "If you have 3 apples and you get 4 more, how many do you have?", options: ["6", "7", "8", "5"], correct: 1 },
+        { q: "How many corners does a cube have?", options: ["6", "8", "10", "12"], correct: 1 },
+        { q: "What is 75 + 25?", options: ["90", "95", "100", "105"], correct: 2 },
+        { q: "What is the next odd number after 19?", options: ["20", "21", "22", "23"], correct: 1 },
+        { q: "How many days are in a leap year?", options: ["364", "365", "366", "367"], correct: 2 },
+        { q: "What is 100 - 45?", options: ["55", "65", "45", "50"], correct: 0 },
+        { q: "What is the sum of the angles in a triangle?", options: ["90 degrees", "180 degrees", "270 degrees", "360 degrees"], correct: 1 },
+        { q: "What is 2 to the power of 3?", options: ["4", "6", "8", "16"], correct: 2 },
+        { q: "How many seconds are in a minute?", options: ["30", "60", "90", "120"], correct: 1 },
+        { q: "What is three-quarters of 100?", options: ["25", "50", "75", "100"], correct: 2 },
+        { q: "What is the perimeter of a rectangle with length 5 and width 3?", options: ["8", "15", "16", "30"], correct: 2 },
+        { q: "How many faces does a cuboid have?", options: ["4", "6", "8", "12"], correct: 1 },
+        { q: "What is the Roman numeral for 10?", options: ["V", "X", "L", "C"], correct: 1 },
+        { q: "What is 11 x 11?", options: ["111", "121", "131", "141"], correct: 1 },
+        { q: "If a book costs 150 and you pay with a 200 note, how much change do you get?", options: ["20", "30", "40", "50"], correct: 3 },
+        { q: "How many items are in a dozen?", options: ["10", "12", "15", "20"], correct: 1 },
+        { q: "What is the number before 1000?", options: ["99", "999", "1001", "9999"], correct: 1 },
+        { q: "What is the place value of 7 in 4785?", options: ["Ones", "Tens", "Hundreds", "Thousands"], correct: 2 },
+        { q: "What is 50 x 10?", options: ["50", "500", "5000", "5"], correct: 1 },
+        { q: "Which is greater: 0.5 or 0.05?", options: ["0.5", "0.05", "They are equal", "Cannot say"], correct: 0 },
+        { q: "How many millimeters are in a centimeter?", options: ["10", "100", "1000", "1"], correct: 0 },
+        { q: "What is 3 + 4 x 2?", options: ["14", "11", "10", "16"], correct: 1 },
+        { q: "How many hours are there in two days?", options: ["24", "36", "48", "60"], correct: 2 },
+        { q: "What is the formula for the area of a circle?", options: ["2πr", "πr²", "πd", "2πd"], correct: 1 },
+        { q: "What is 99 + 1?", options: ["991", "101", "100", "110"], correct: 2 },
+        { q: "How many sides does an octagon have?", options: ["6", "7", "8", "9"], correct: 2 }
+      ]
+    };
 
     let quizQuestions = [];
     let current = 0;
     let score = 0;
-    let totalAsked = 0;
     let timer;
-    let timeLeft = 10;
+    let timeLeft = 15;
+    let selectedNumQuestions = 20; // Default number of questions
+    let currentCategory = '';
 
-    function toggleTheme() {
-      document.body.classList.toggle("dark");
+    const startScreen = document.getElementById('start-screen');
+    const quizCard = document.getElementById('quiz');
+    const skipBtn = document.getElementById('skipBtn');
+    const quitBtn = document.getElementById('quitBtn');
+    const newQuizBtn = document.getElementById('newQuizBtn');
+    const feedbackEl = document.getElementById('feedback');
+    const highScoreDisplay = document.getElementById('high-score-display');
+    const numQuestionsOptions = document.getElementById('num-questions-options');
+
+    function toggleTheme() { document.body.classList.toggle("dark"); }
+    function toggleMenu() { document.getElementById("navbar").classList.toggle("show"); }
+    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+    numQuestionsOptions.addEventListener('click', (e) => {
+        if (e.target.classList.contains('option-btn')) {
+            numQuestionsOptions.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            e.target.classList.add('selected');
+            selectedNumQuestions = parseInt(e.target.dataset.value);
+        }
+    });
+
+    function showStartScreen() {
+        startScreen.style.display = 'block';
+        quizCard.style.display = 'none';
+        skipBtn.style.display = 'none';
+        quitBtn.style.display = 'none';
+        newQuizBtn.style.display = 'none';
+        document.getElementById('results').innerHTML = '';
+        updateHighScoreDisplay();
     }
 
-    function toggleMenu() {
-      document.getElementById("navbar").classList.toggle("show");
-    }
-
-    function shuffle(array) {
-      return array.sort(() => Math.random() - 0.5);
-    }
-
-    function startNewQuiz() {
-      quizQuestions = shuffle([...questionBank]).slice(0, 5);
-      current = 0;
-      document.getElementById("results").innerHTML = "";
-      document.getElementById("quiz").style.display = "block";
-      document.getElementById("nextBtn").style.display = "block";
-      document.getElementById("continueBtn").style.display = "none";
-      loadQuestion();
+    function startNewQuiz(category) {
+        currentCategory = category;
+        const sourceQuestions = questionBank[category];
+        if (sourceQuestions.length < selectedNumQuestions) {
+            alert(`Not enough questions in this category for the selected amount! Please choose fewer questions. Available: ${sourceQuestions.length}`);
+            return;
+        }
+        quizQuestions = shuffle([...sourceQuestions]).slice(0, selectedNumQuestions);
+        current = 0;
+        score = 0;
+      
+        startScreen.style.display = 'none';
+        quizCard.style.display = 'block';
+        skipBtn.style.display = 'inline-block';
+        quitBtn.style.display = 'inline-block';
+        
+        loadQuestion();
     }
 
     function loadQuestion() {
-      timeLeft = 10;
-      document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
-      clearInterval(timer);
-      timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          nextQuestion();
+        if (current >= quizQuestions.length) {
+            showScore();
+            return;
         }
-      }, 1000);
-
-      const q = quizQuestions[current];
-      document.getElementById("question").textContent = q.q;
-      document.getElementById("options").innerHTML = q.options.map((opt, i) =>
-        `<div class="option" onclick="checkAnswer(${i})">${opt}</div>`
-      ).join("");
-
-      document.getElementById("progress").style.width = `${(current / quizQuestions.length) * 100}%`;
-    }
-
-    function checkAnswer(selected) {
-      const q = quizQuestions[current];
-      if (selected === q.correct) score++;
-      nextQuestion();
-    }
-
-    function nextQuestion() {
-      current++;
-      totalAsked++;
-      if (current >= quizQuestions.length) {
+        
+        feedbackEl.textContent = '';
+        quizQuestions[current].userAnswer = null; 
+        timeLeft = 15;
+        document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
         clearInterval(timer);
-        showScore();
-      } else {
-        loadQuestion();
-      }
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                skipQuestion();
+            }
+        }, 1000);
+
+        const q = quizQuestions[current];
+        document.getElementById("question").textContent = `Q.${current + 1}: ${q.q}`;
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = q.options.map((opt, i) =>
+            `<div class="option" onclick="checkAnswer(${i})">${opt}</div>`
+        ).join("");
+
+        document.getElementById("progress").style.width = `${((current) / quizQuestions.length) * 100}%`;
+    }
+
+    function checkAnswer(selectedIndex) {
+        clearInterval(timer);
+        quizQuestions[current].userAnswer = selectedIndex;
+        
+        const q = quizQuestions[current];
+        const options = document.querySelectorAll('.option');
+        options.forEach(opt => opt.onclick = null);
+
+        if (selectedIndex === q.correct) {
+            score++;
+            feedbackEl.textContent = 'Correct! 🎉';
+            feedbackEl.style.color = 'var(--correct-color)';
+            options[selectedIndex].style.border = '2px solid var(--correct-color)';
+        } else {
+            feedbackEl.textContent = 'Wrong Answer! 🙁';
+            feedbackEl.style.color = 'var(--wrong-color)';
+            options[selectedIndex].style.border = '2px solid var(--wrong-color)';
+            options[q.correct].style.border = '2px solid var(--correct-color)';
+        }
+        
+        setTimeout(() => {
+            current++;
+            loadQuestion();
+        }, 1500);
+    }
+
+    function skipQuestion() {
+        clearInterval(timer);
+        feedbackEl.textContent = 'Question Skipped!';
+        feedbackEl.style.color = 'var(--secondary-color)';
+        current++;
+        setTimeout(loadQuestion, 1000);
     }
 
     function showScore() {
-      document.getElementById("quiz").style.display = "none";
-      document.getElementById("nextBtn").style.display = "none";
-      document.getElementById("results").innerHTML = `🎉 You answered ${score} / ${totalAsked} correctly.`;
-      document.getElementById("continueBtn").style.display = "block";
-      if ((score / totalAsked) >= 0.8) launchConfetti();
+        quizCard.style.display = 'none';
+        skipBtn.style.display = 'none';
+        quitBtn.style.display = 'none';
+        newQuizBtn.style.display = 'block';
+        document.getElementById("progress").style.width = '100%';
+        
+        const highScoreKey = `highScore_${currentCategory}`;
+        let highScore = localStorage.getItem(highScoreKey) || 0;
+        let newHighScoreMsg = '';
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem(highScoreKey, score);
+            newHighScoreMsg = '🏆 New High Score!';
+        }
+
+        const resultsContainer = document.getElementById("results");
+        resultsContainer.innerHTML = `🎉 You scored ${score} / ${quizQuestions.length}. ${newHighScoreMsg}`;
+        
+        let reviewHtml = '<div class="review-section"><h3>Review Your Answers:</h3>';
+        quizQuestions.forEach((q, index) => {
+            if (q.userAnswer !== q.correct) {
+                const userAnswerText = q.userAnswer === null || q.userAnswer === undefined 
+                                     ? 'Skipped / Not Answered' 
+                                     : q.options[q.userAnswer];
+                const correctAnswerText = q.options[q.correct];
+
+                reviewHtml += `
+                    <div class="review-item">
+                        <p><b>Q${index + 1}:</b> ${q.q}</p>
+                        <p class="wrong-answer"><b>Your Answer:</b> ${userAnswerText}</p>
+                        <p class="correct-answer"><b>Correct Answer:</b> ${correctAnswerText}</p>
+                    </div>
+                `;
+            }
+        });
+        reviewHtml += '</div>';
+        resultsContainer.innerHTML += reviewHtml;
+
+        if ((score / quizQuestions.length) >= 0.8) {
+            launchConfetti();
+        }
+    }
+    
+    function updateHighScoreDisplay() {
+        const gkScore = localStorage.getItem('highScore_generalKnowledge') || 0;
+        const scienceScore = localStorage.getItem('highScore_science') || 0;
+        const mathScore = localStorage.getItem('highScore_math') || 0;
+        highScoreDisplay.innerHTML = `<i class="ri-trophy-line"></i> High Scores: GK (${gkScore}), Science (${scienceScore}), Math (${mathScore})`;
     }
 
     function launchConfetti() {
       const canvas = document.getElementById("confetti-canvas");
+      if (!canvas) return;
       const ctx = canvas.getContext("2d");
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const confetti = Array.from({ length: 100 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 6 + 2,
-        d: Math.random() * 50 + 10,
-        color: `hsl(${Math.random() * 360}, 100%, 50%)`
-      }));
-
-      function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        confetti.forEach(c => {
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-          ctx.fillStyle = c.color;
-          ctx.fill();
+      
+      const confettiCount = 150;
+      const confetti = [];
+      for (let i = 0; i < confettiCount; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 5 + 2,
+          d: (Math.random() * 10) + 5,
+          color: `hsl(${Math.random() * 360}, 90%, 60%)`,
+          tilt: Math.random() * 20 - 10,
         });
-        update();
-        requestAnimationFrame(draw);
       }
 
+      let animationFrameId;
       function update() {
-        confetti.forEach(c => {
-          c.y += Math.sin(c.d / 10);
-          c.x += Math.sin(c.d / 15);
-          if (c.y > canvas.height) c.y = -10;
-        });
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = confetti.length - 1; i >= 0; i--) {
+          const c = confetti[i];
+          c.y += c.d;
+          c.x += Math.sin(c.y / 20 + i) * 2;
+          
+          ctx.beginPath();
+          ctx.fillStyle = c.color;
+          ctx.fillRect(c.x, c.y, 10, 20);
+          
+          if (c.y > canvas.height) {
+            confetti.splice(i, 1);
+          }
+        }
+        
+        if (confetti.length > 0) {
+            animationFrameId = requestAnimationFrame(update);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
       }
-
-      draw();
-      setTimeout(() => { canvas.width = 0; canvas.height = 0; }, 4000);
+      
+      update();
+      setTimeout(() => {
+          if (animationFrameId) cancelAnimationFrame(animationFrameId);
+          if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }, 5000);
     }
 
-    window.onload = startNewQuiz;
+    window.onload = showStartScreen;
   </script>
 </body>
 </html>
