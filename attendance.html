@@ -20,21 +20,16 @@
     .navbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
     .navbar h1 { font-size: 20px; color: var(--accent); margin: 0; }
     .navbar h1 small { font-size: 10px; color: var(--text); opacity: 0.7; display: block; font-weight: normal; }
-    .nav-buttons { display: flex; gap: 8px; }
+    .nav-buttons { display: flex; gap: 8px; align-items: center; }
     .nav-buttons button { background: transparent; border: none; font-size: 22px; color: var(--accent); padding: 6px; cursor: pointer; transition: transform 0.2s ease; }
     .nav-buttons button:hover { transform: scale(1.3); }
+    #logoutBtn { font-size: 14px; background: var(--danger); color: white; border-radius: 5px; padding: 6px 10px; }
     .container { padding: 20px; max-width: 1200px; margin: auto; }
     .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     .section { background: var(--card-bg); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 0 12px rgba(0, 255, 255, 0.1); animation: fadeInUp 0.5s ease-in-out; }
     h2 { border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
     input, select, button, textarea { padding: 12px; margin: 10px 0; width: 100%; border-radius: 8px; border: 1px solid #ffffff33; font-size: 16px; background: rgba(255, 255, 255, 0.1); color: inherit; box-sizing: border-box; }
-    
-    /* FIX: Added style for select options in dark mode to make text visible */
-    select option {
-      background: var(--main-bg);
-      color: var(--text);
-    }
-    
+    select option { background: var(--main-bg); color: var(--text); }
     button { background: var(--accent); color: #000; font-weight: bold; cursor: pointer; transition: background 0.3s ease; border: none; }
     button:hover { background: var(--hover); }
     button.danger { background-color: var(--danger); color: white; }
@@ -70,6 +65,29 @@
     .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
     .modal-content { background-color: var(--main-bg); margin: 10% auto; padding: 20px; border: 1px solid var(--accent); width: 80%; max-width: 800px; border-radius: 15px; animation: fadeInUp 0.4s; }
     .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    
+    #loginModal { display: flex; }
+    #loginModal .modal-content { max-width: 400px; text-align: center; }
+    #loginModal h2 { margin-top: 0; }
+    
+    /* LOGIN FIX: New robust logic to show/hide admin sections */
+    .admin-only {
+        display: none !important;
+    }
+    .admin-mode .admin-only {
+        display: block !important;
+    }
+    .admin-mode button.admin-only {
+        display: inline-block !important;
+    }
+    .admin-mode .grid-container.admin-only {
+        display: grid !important;
+    }
+     .admin-mode .flex-buttons.admin-only,
+    .admin-mode .admin-only .flex-buttons {
+        display: flex !important;
+    }
+    
     @keyframes fadeInUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
     @keyframes slideUp { from {transform: translate(-50%, 100px); opacity: 0;} to {transform: translate(-50%, 0); opacity: 1;} }
     @keyframes slideDown { from {transform: translateY(-100%);} to {transform: translateY(0);} }
@@ -78,12 +96,23 @@
 </head>
 <body>
 
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2>Login</h2>
+        <p>Enter admin password for full access or continue as a student for read-only view.</p>
+        <input type="password" id="adminPassword" placeholder="Admin Password" onkeyup="if(event.key==='Enter') checkLogin()">
+        <button onclick="checkLogin()">Login as Admin</button>
+        <button class="warning" onclick="enterStudentMode()">Continue as Student</button>
+    </div>
+</div>
+
 <header>
   <div class="navbar">
-    <h1>🎓 Smart Attendance Pro <small id="lastSaved">Not saved yet</small></h1>
+    <h1>🎓 Smart Attendance Pro <small id="appMode">Student View</small></h1>
     <div class="nav-buttons">
       <button onclick="toggleTheme()" title="Toggle Theme">🌗</button>
-      <button onclick="resetData()" title="Reset All Data">🗑️</button>
+      <button onclick="resetData()" title="Reset All Data" class="admin-only">🗑️</button>
+      <button onclick="logout()" id="logoutBtn" style="display:none;">Logout</button>
     </div>
   </div>
 </header>
@@ -98,7 +127,7 @@
         </div>
     </div>
 
-    <div class="grid-container">
+    <div class="grid-container admin-only">
         <div class="section">
             <h2>1️⃣ Subjects</h2>
             <input type="text" id="subjectInput" placeholder="e.g. Java, OS">
@@ -114,20 +143,20 @@
         </div>
     </div>
 
-  <div class="section">
+  <div class="section admin-only">
     <h2>3️⃣ Manage Students</h2>
     <input type="text" id="studentSearchManage" onkeyup="renderStudentList()" placeholder="🔍 Search for a student to manage...">
     <div id="studentList"></div>
   </div>
 
-  <div class="section">
+  <div class="section admin-only">
     <h2>4️⃣ Mark Attendance</h2>
     <input type="date" id="attendanceDate">
     <button onclick="markAttendance()">Load/Edit Attendance for Date</button>
     <div id="attendanceForm"></div>
   </div>
   
-  <div class="section">
+  <div class="section admin-only">
     <h2>🔄 Bulk Attendance Update</h2>
     <p>Mark a range of dates for the selected subject.</p>
     <div class="grid-container">
@@ -143,24 +172,24 @@
     <button onclick="bulkUpdateAttendance()">Apply Bulk Update</button>
   </div>
 
-
   <div class="section" id="viewSection">
     <h2>5️⃣ View & Export</h2>
+    <select id="subjectSelectView" onchange="handleSubjectChangeView()" style="margin-bottom:10px;"></select>
     <div class="grid-container">
-        <div><label for="dateFrom">From:</label><input type="date" id="dateFrom"></div>
-        <div><label for="dateTo">To:</label><input type="date" id="dateTo"></div>
+        <div class="admin-only"><label for="dateFrom">From:</label><input type="date" id="dateFrom"></div>
+        <div class="admin-only"><label for="dateTo">To:</label><input type="date" id="dateTo"></div>
         <div><label for="studentSearch">Search Student:</label><input type="text" id="studentSearch" onkeyup="generateTable()"></div>
         <div><label for="lowAttendanceThreshold">Low Attendance %:</label><input type="number" id="lowAttendanceThreshold" value="75" step="1" min="0" max="100"></div>
     </div>
     <div class="flex-buttons">
         <button onclick="generateTable()">Show Attendance</button>
-        <button onclick="downloadCSV()">Download CSV</button>
+        <button onclick="downloadCSV()" class="admin-only">Download CSV</button>
         <button onclick="printReport()">🖨️ Print Report</button>
     </div>
     <div id="attendanceTable"></div>
   </div>
 
-  <div class="section">
+  <div class="section admin-only">
     <h2>6️⃣ Data Management & Settings</h2>
     <div class="flex-buttons">
         <button onclick="document.getElementById('importFile').click()">Import Data (JSON)</button>
@@ -168,10 +197,10 @@
         <button class="warning" onclick="exportData()">Export Data (JSON)</button>
     </div>
     <h4>Settings</h4>
-    <label>Old Reset Password:</label>
+    <label>Old Admin Password:</label>
     <input type="password" id="oldResetPassword" placeholder="Enter current password">
-    <label>Set New Reset Password:</label>
-    <input type="password" id="newResetPassword" placeholder="Enter new password to reset data">
+    <label>Set New Admin Password:</label>
+    <input type="password" id="newResetPassword" placeholder="Enter new password">
     <button onclick="saveSettings()">Update Password</button>
   </div>
 </div>
@@ -189,9 +218,10 @@
   let data = JSON.parse(localStorage.getItem("attendanceData")) || {
     students: [],
     subjects: {},
-    settings: { resetPassword: "admin123" }
+    settings: { resetPassword: "admin" }
   };
   
+  let isAdmin = false;
   let lastDeleted = null;
   let undoTimeout = null;
   const THEME_KEY = 'attendance-theme';
@@ -206,15 +236,16 @@
   }
 
   function saveData() {
+    if (!isAdmin) return;
     localStorage.setItem("attendanceData", JSON.stringify(data));
     const now = new Date();
-    document.getElementById('lastSaved').textContent = `Last saved: ${now.toLocaleTimeString()}`;
+    document.getElementById('appMode').textContent = `Admin Mode | Last saved: ${now.toLocaleTimeString()}`;
     updateAnalytics();
   }
   
   function saveFilters() {
       const filters = {
-          subject: document.getElementById('subjectSelect').value,
+          subject: document.getElementById('subjectSelectView').value,
           dateFrom: document.getElementById('dateFrom').value,
           dateTo: document.getElementById('dateTo').value,
       };
@@ -222,6 +253,7 @@
   }
 
   function resetData() {
+    if (!isAdmin) return showToast("Admin access required", "error");
     if (confirm("🚨 Are you sure you want to delete ALL data? This cannot be undone.")) {
         const password = prompt("Enter admin password to confirm reset:");
         if (password === data.settings.resetPassword) {
@@ -234,21 +266,50 @@
   }
   
   function saveSettings() {
+      if (!isAdmin) return showToast("Admin access required", "error");
       const oldPass = document.getElementById('oldResetPassword').value;
       const newPass = document.getElementById('newResetPassword').value;
-
       if (oldPass !== data.settings.resetPassword) {
           return showToast("Incorrect old password!", "error");
       }
       if (!newPass || newPass.length < 4) {
           return showToast("New password must be at least 4 characters long.", "error");
       }
-      
       data.settings.resetPassword = newPass;
       saveData();
       showToast("Password updated successfully!");
       document.getElementById('oldResetPassword').value = '';
       document.getElementById('newResetPassword').value = '';
+  }
+
+  function checkLogin() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === data.settings.resetPassword) {
+        isAdmin = true;
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('logoutBtn').style.display = 'block';
+        // LOGIN FIX: Add 'admin-mode' class to body to show admin sections
+        document.body.classList.add('admin-mode');
+        document.body.classList.remove('student-mode'); // Optional: for state clarity
+        document.getElementById('appMode').textContent = 'Admin Mode';
+        showToast("Logged in as Admin successfully!", "success");
+        generateTable();
+    } else {
+        showToast("Incorrect password!", "error");
+    }
+  }
+
+  function enterStudentMode() {
+    isAdmin = false;
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'block';
+    document.body.classList.add('student-mode');
+    document.body.classList.remove('admin-mode');
+    document.getElementById('appMode').textContent = 'Student View';
+  }
+  
+  function logout() {
+      location.reload();
   }
   
   (function () {
@@ -267,6 +328,7 @@
   }
   
   function addSubject() {
+    if (!isAdmin) return showToast("Admin access required", "error");
     const subject = document.getElementById("subjectInput").value.trim();
     const threshold = document.getElementById("subjectThresholdInput").value;
     if (!subject) return showToast("Enter subject name", "error");
@@ -282,6 +344,7 @@
   }
 
   function deleteSubject() {
+      if (!isAdmin) return showToast("Admin access required", "error");
       const subject = document.getElementById("subjectSelect").value;
       if (!subject) return showToast("Please select a subject to delete", "error");
       if (confirm(`Are you sure you want to delete the subject "${subject}" and all its records?`)) {
@@ -296,18 +359,21 @@
   }
   
   function updateSubjectSelect() {
-    const select = document.getElementById("subjectSelect");
-    const oldVal = select.value;
-    select.innerHTML = '<option value="">-- Select Subject --</option>';
+    const adminSelect = document.getElementById("subjectSelect");
+    const viewSelect = document.getElementById("subjectSelectView");
+    const oldAdminVal = adminSelect.value;
+    const oldViewVal = viewSelect.value;
+    adminSelect.innerHTML = '<option value="">-- Select Subject --</option>';
+    viewSelect.innerHTML = '<option value="">-- Select Subject to View --</option>';
     Object.keys(data.subjects).sort().forEach(subject => {
       const option = document.createElement("option");
       option.value = subject;
       option.textContent = subject;
-      select.appendChild(option);
+      adminSelect.appendChild(option.cloneNode(true));
+      viewSelect.appendChild(option);
     });
-    if (oldVal && data.subjects[oldVal]) {
-      select.value = oldVal;
-    }
+    if (oldAdminVal && data.subjects[oldAdminVal]) adminSelect.value = oldAdminVal;
+    if (oldViewVal && data.subjects[oldViewVal]) viewSelect.value = oldViewVal;
   }
 
   function handleSubjectChange() {
@@ -315,22 +381,27 @@
       if (subjectName && data.subjects[subjectName]) {
           document.getElementById('lowAttendanceThreshold').value = data.subjects[subjectName].threshold;
       }
-      saveFilters();
+  }
+
+  function handleSubjectChangeView() {
+    const subjectName = document.getElementById('subjectSelectView').value;
+    if (subjectName && data.subjects[subjectName]) {
+        document.getElementById('lowAttendanceThreshold').value = data.subjects[subjectName].threshold;
+    }
+    if(isAdmin) saveFilters();
+    generateTable();
   }
 
   function addStudent() {
+    if (!isAdmin) return showToast("Admin access required", "error");
     const namesInput = document.getElementById("studentInput").value.trim();
     if (!namesInput) return showToast("Enter student name(s)", "error");
     const names = namesInput.split(/[\n,]+/).map(name => name.trim()).filter(Boolean);
     let addedCount = 0;
     let duplicateCount = 0;
     names.forEach(name => {
-        if (data.students.includes(name)) {
-            duplicateCount++;
-        } else {
-            data.students.push(name);
-            addedCount++;
-        }
+        if (data.students.includes(name)) duplicateCount++;
+        else { data.students.push(name); addedCount++; }
     });
     if (addedCount > 0) {
         data.students.sort();
@@ -350,8 +421,7 @@
       const filter = document.getElementById('studentSearchManage').value.toLowerCase();
       const studentsToRender = data.students.filter(name => name.toLowerCase().includes(filter));
       if (studentsToRender.length === 0) {
-          listDiv.innerHTML = "<p>No students found.</p>";
-          return;
+          listDiv.innerHTML = "<p>No students found.</p>"; return;
       }
       studentsToRender.forEach(name => {
           const studentDiv = document.createElement("div");
@@ -360,13 +430,13 @@
               <div>
                   <button class="warning" onclick="editStudent('${name}')">Edit</button>
                   <button class="danger" onclick="deleteStudent('${name}')">Delete</button>
-              </div>
-          `;
+              </div>`;
           listDiv.appendChild(studentDiv);
       });
   }
 
   function editStudent(oldName) {
+      if (!isAdmin) return showToast("Admin access required", "error");
       const newName = prompt(`Editing student: ${oldName}\nEnter new name:`, oldName);
       if (newName && newName.trim() !== oldName) {
           const trimmedNewName = newName.trim();
@@ -392,6 +462,7 @@
   }
   
   function deleteStudent(nameToDelete) {
+      if (!isAdmin) return showToast("Admin access required", "error");
       if (confirm(`Are you sure you want to delete ${nameToDelete}? This will remove them from all attendance records.`)) {
           lastDeleted = { type: 'student', name: nameToDelete, value: nameToDelete };
           showUndoButton();
@@ -409,14 +480,12 @@
   }
 
   function markAttendance() {
+    if (!isAdmin) return showToast("Admin access required", "error");
     const subject = document.getElementById("subjectSelect").value;
     const date = document.getElementById("attendanceDate").value;
     const form = document.getElementById("attendanceForm");
-
     if (!subject || !date) return showToast("Select subject and date", "error");
-    
     data.subjects[subject].attendance[date] = data.subjects[subject].attendance[date] || { students: {}, note: '' };
-
     form.innerHTML = `<h4>Marking for ${subject} on ${date}</h4>
     <textarea id="attendanceNote" placeholder="Add a note for this date (e.g., Class Test)...">${data.subjects[subject].attendance[date].note || ''}</textarea>
     <div class="flex-buttons">
@@ -424,9 +493,7 @@
         <button onclick="markAll('Absent')">Mark All Absent</button>
         <button class="warning" onclick="markAttendance()">Clear/Reload</button>
     </div>`;
-    
     const existingData = data.subjects[subject].attendance[date].students || {};
-
     data.students.forEach(name => {
       const status = existingData[name] || { primary: "Absent", secondary: "On-Time" };
       const row = document.createElement("label");
@@ -439,21 +506,17 @@
             <input type="radio" name="${name}-secondary" value="Late" ${status.secondary === 'Late' ? 'checked' : ''}> Late
             <input type="radio" name="${name}-secondary" value="Early" ${status.secondary === 'Early' ? 'checked' : ''}> Early
             <input type="radio" name="${name}-secondary" value="On-Time" ${status.secondary === 'On-Time' ? 'checked' : ''}> On-Time
-        </div>
-      `;
+        </div>`;
       form.appendChild(row);
     });
-
     const saveBtn = document.createElement("button");
     saveBtn.textContent = "Save Attendance";
     saveBtn.onclick = () => {
+      if (!isAdmin) return showToast("Admin access required", "error");
       data.students.forEach(name => {
         const primaryStatus = document.querySelector(`input[name="${name}-primary"]:checked`).value;
         const secondaryStatus = document.querySelector(`input[name="${name}-secondary"]:checked`).value;
-        data.subjects[subject].attendance[date].students[name] = {
-            primary: primaryStatus,
-            secondary: secondaryStatus
-        };
+        data.subjects[subject].attendance[date].students[name] = { primary: primaryStatus, secondary: secondaryStatus };
       });
       data.subjects[subject].attendance[date].note = document.getElementById('attendanceNote').value.trim();
       saveData();
@@ -464,28 +527,25 @@
   }
   
   function markAll(status) {
+      if (!isAdmin) return showToast("Admin access required", "error");
       if (!confirm(`Are you sure you want to mark all students as ${status}?`)) return;
       document.querySelectorAll(`#attendanceForm input[name$="-primary"]`).forEach(radio => {
-          if (radio.value === status) {
-              radio.checked = true;
-          }
+          if (radio.value === status) radio.checked = true;
       });
   }
   
   function bulkUpdateAttendance() {
+      if (!isAdmin) return showToast("Admin access required", "error");
       const subject = document.getElementById("subjectSelect").value;
       const from = document.getElementById('bulkDateFrom').value;
       const to = document.getElementById('bulkDateTo').value;
       const status = document.getElementById('bulkStatus').value;
-
       if (!subject || !from || !to) return showToast("Please select a subject and a date range.", "error");
       if (to < from) return showToast("'To' date cannot be before 'From' date.", "error");
       if (!confirm(`This will apply the status '${status}' to all students for the selected date range. Are you sure?`)) return;
-
       let currentDate = new Date(from);
       const endDate = new Date(to);
       let datesAffected = 0;
-
       while (currentDate <= endDate) {
           const dateStr = currentDate.toISOString().split('T')[0];
           data.subjects[subject].attendance[dateStr] = { students: {}, note: `Bulk Update: ${status}` };
@@ -501,89 +561,67 @@
   }
 
   function generateTable() {
-    const subjectName = document.getElementById("subjectSelect").value;
-    if (!subjectName) return showToast("Select a subject", "error");
-    
-    saveFilters();
+    const subjectName = document.getElementById("subjectSelectView").value;
+    if (!subjectName) {
+        document.getElementById("attendanceTable").innerHTML = "<p>Please select a subject to view attendance.</p>";
+        return;
+    }
+    if (isAdmin) saveFilters();
     const div = document.getElementById("attendanceTable");
     const searchFilter = document.getElementById("studentSearch").value.toLowerCase();
-    const dateFrom = document.getElementById("dateFrom").value;
-    const dateTo = document.getElementById("dateTo").value;
     const threshold = parseInt(document.getElementById("lowAttendanceThreshold").value);
-
     const students = data.students.filter(s => s.toLowerCase().includes(searchFilter));
     const attendance = data.subjects[subjectName].attendance;
     let dates = Object.keys(attendance).sort();
     
-    if (dateFrom) dates = dates.filter(d => d >= dateFrom);
-    if (dateTo) dates = dates.filter(d => d <= dateTo);
+    if (isAdmin) {
+        const dateFrom = document.getElementById("dateFrom").value;
+        const dateTo = document.getElementById("dateTo").value;
+        if (dateFrom) dates = dates.filter(d => d >= dateFrom);
+        if (dateTo) dates = dates.filter(d => d <= dateTo);
+    }
     
     if (!students.length) return div.innerHTML = "<p>No matching students found.</p>";
     if (!dates.length) return div.innerHTML = "<p>No attendance data for the selected criteria.</p>";
-    
     let table = `<div style="overflow-x:auto"><table id="reportTable"><thead><tr>
-        <th onclick="sortTable(0)">Student</th>
-        <th onclick="sortTable(1, 'desc')">Attendance %</th>
+        <th onclick="sortTable(0)">Student</th><th onclick="sortTable(1, 'desc')">Attendance %</th>
         <th>Total</th><th>Present</th><th>Absent</th><th>Late</th><th>Early</th>`;
     dates.forEach(d => {
         const note = attendance[d].note || '';
         table += `<th><div class="note-tooltip">${d.substring(5)}${note ? `<span class="tooltiptext">${note}</span>` : ''}</div></th>`;
     });
     table += "</tr></thead><tbody>";
-
-    let grandTotals = { present: 0, absent: 0, late: 0, early: 0, totalClasses: 0 };
-
+    let grandTotals = { present: 0, absent: 0, late: 0, early: 0 };
     students.forEach(s => {
       let present = 0, absent = 0, late = 0, early = 0;
       let dateCells = '';
-
       dates.forEach(d => {
         const status = attendance[d].students[s] || {primary: '-'};
         let cellText = status.primary ? status.primary.charAt(0) : '-';
         let cellClass = `status-${status.primary}`;
-        
         if (status.primary === "Present") {
             present++;
-            if (status.secondary === "Late") {
-                late++;
-                cellText = "P(L)";
-                cellClass += ' status-Late';
-            } else if (status.secondary === "Early") {
-                early++;
-                cellText = "P(E)";
-                cellClass += ' status-Early';
-            }
-        } else if (status.primary === "Absent") {
-            absent++;
-        }
+            if (status.secondary === "Late") { late++; cellText = "P(L)"; cellClass += ' status-Late'; }
+            else if (status.secondary === "Early") { early++; cellText = "P(E)"; cellClass += ' status-Early'; }
+        } else if (status.primary === "Absent") { absent++; }
         dateCells += `<td class="${cellClass}">${cellText}</td>`;
       });
-      
       const totalClasses = present + absent;
       const percentage = totalClasses > 0 ? ((present / totalClasses) * 100).toFixed(1) : 0;
       const lowAttendanceClass = percentage < threshold ? 'low-attendance' : '';
-
       table += `<tr class="${lowAttendanceClass}">
-        <td onclick="showStudentReport('${s}')">${s}</td>
-        <td>${percentage}%</td>
+        <td onclick="showStudentReport('${s}')">${s}</td><td>${percentage}%</td>
         <td>${totalClasses}</td><td>${present}</td><td>${absent}</td><td>${late}</td><td>${early}</td>
-        ${dateCells}
-      </tr>`;
-
-      grandTotals.present += present;
-      grandTotals.absent += absent;
-      grandTotals.late += late;
-      grandTotals.early += early;
+        ${dateCells}</tr>`;
+      grandTotals.present += present; grandTotals.absent += absent;
+      grandTotals.late += late; grandTotals.early += early;
     });
-    
     const totalGrandClasses = grandTotals.present + grandTotals.absent;
     const avgPercentage = totalGrandClasses > 0 ? ((grandTotals.present / totalGrandClasses) * 100).toFixed(1) : 0;
     table += `</tbody><tfoot><tr style="font-weight:bold; background:rgba(0,255,255,0.1);">
-        <td>AVERAGE / TOTALS</td><td>${avgPercentage}%</td>
-        <td>${totalGrandClasses}</td><td>${grandTotals.present}</td><td>${grandTotals.absent}</td>
-        <td>${grandTotals.late}</td><td>${grandTotals.early}</td>
-        <td colspan="${dates.length}"></td>
-    </tr></tfoot></table></div>`;
+        <td>AVERAGE / TOTALS</td><td>${avgPercentage}%</td><td>${totalGrandClasses}</td>
+        <td>${grandTotals.present}</td><td>${grandTotals.absent}</td><td>${grandTotals.late}</td>
+        <td>${grandTotals.early}</td><td colspan="${dates.length}"></td></tr></tfoot></table></div>`;
     div.innerHTML = table;
   }
   
@@ -592,8 +630,7 @@
     table = document.getElementById("reportTable");
     switching = true;
     while (switching) {
-        switching = false;
-        rows = table.rows;
+        switching = false; rows = table.rows;
         for (i = 1; i < (rows.length - 2); i++) {
             shouldSwitch = false;
             x = rows[i].getElementsByTagName("TD")[n];
@@ -601,8 +638,7 @@
             let valX = isNaN(parseFloat(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
             let valY = isNaN(parseFloat(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
             if (dir === 'asc' ? valX > valY : valX < valY) {
-                shouldSwitch = true;
-                break;
+                shouldSwitch = true; break;
             }
         }
         if (shouldSwitch) {
@@ -613,35 +649,30 @@
   }
 
   function downloadCSV() {
+    if (!isAdmin) return showToast("Admin access required", "error");
     const table = document.getElementById("reportTable");
     if(!table) return showToast("Generate the table first", "error");
     let csv = [];
-    for (let i = 0; i < table.rows.length; i++) {
-        let row = [], cols = table.rows[i].querySelectorAll("td, th");
-        for (let j = 0; j < cols.length; j++) {
-            row.push('"' + cols[j].innerText.trim() + '"');
-        }
-        csv.push(row.join(","));
-    }
-    const subject = document.getElementById("subjectSelect").value;
+    table.querySelectorAll("tr").forEach(row => {
+        let rowData = [];
+        row.querySelectorAll("td, th").forEach(cell => rowData.push('"' + cell.innerText.trim() + '"'));
+        csv.push(rowData.join(","));
+    });
+    const subject = document.getElementById("subjectSelectView").value;
     const blob = new Blob([csv.join("\n")], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
+    a.href = URL.createObjectURL(blob);
     a.download = `${subject}_attendance_report.csv`;
     a.click();
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(a.href);
   }
   
   function printReport() {
     const tableContainer = document.getElementById("attendanceTable");
     if (!tableContainer.innerHTML.includes('<table')) return showToast("Please generate the attendance table first.", "error");
-    const subject = document.getElementById("subjectSelect").value;
+    const subject = document.getElementById("subjectSelectView").value;
     const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>Attendance Report - ' + subject + '</title>');
-    printWindow.document.write('<style>body{font-family:sans-serif;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ccc;padding:8px;text-align:center;} th{background:#eee;} .low-attendance{background-color:#ffdddd !important;} tfoot{font-weight:bold;}</style>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(`<h2>Attendance Report: ${subject}</h2>`);
+    printWindow.document.write(`<html><head><title>Attendance Report - ${subject}</title><style>body{font-family:sans-serif;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ccc;padding:8px;text-align:center;} th{background:#eee;} .low-attendance{background-color:#ffdddd !important;} tfoot{font-weight:bold;}</style></head><body><h2>Attendance Report: ${subject}</h2>`);
     printWindow.document.write(tableContainer.innerHTML);
     printWindow.document.write('</body></html>');
     printWindow.document.close();
@@ -649,34 +680,32 @@
   }
 
   function exportData() {
+      if (!isAdmin) return showToast("Admin access required", "error");
       if (!Object.keys(data.subjects).length && !data.students.length) return showToast("No data to export.", "error");
-      const jsonData = JSON.stringify(data, null, 2);
-      const blob = new Blob([jsonData], {type: "application/json"});
-      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
+      const file = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+      a.href = URL.createObjectURL(file);
       a.download = 'attendance_backup.json';
       a.click();
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(a.href);
       showToast("Data exported successfully!");
   }
 
   function importData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    if (!isAdmin) return showToast("Admin access required", "error");
+    const file = event.target.files[0]; if (!file) return;
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
             const importedData = JSON.parse(e.target.result);
             if (importedData.students && importedData.subjects && importedData.settings) {
                 if (confirm("Are you sure you want to overwrite current data with the imported file?")) {
-                    data = importedData;
-                    saveData();
+                    data = importedData; saveData();
                     showToast("Data imported successfully! Reloading...");
                     setTimeout(() => location.reload(), 1500);
                 }
             } else { throw new Error("Invalid file format"); }
-        } catch (error) { showToast("Error importing file.", "error"); }
+        } catch (error) { showToast("Error importing file: " + error.message, "error"); }
     };
     reader.readAsText(file);
     event.target.value = '';
@@ -685,12 +714,10 @@
   function updateAnalytics() {
     document.getElementById('totalStudents').textContent = data.students.length;
     document.getElementById('totalSubjects').textContent = Object.keys(data.subjects).length;
-    
-    const selectedSubject = document.getElementById('subjectSelect').value;
+    const selectedSubject = document.getElementById('subjectSelectView').value;
     if (selectedSubject && data.subjects[selectedSubject]) {
         const attendance = data.subjects[selectedSubject].attendance;
-        let totalClasses = 0;
-        let attendedClasses = 0;
+        let totalClasses = 0, attendedClasses = 0;
         Object.values(attendance).forEach(dateRecord => {
             Object.values(dateRecord.students).forEach(status => {
                 if (status.primary === 'Present' || status.primary === 'Absent') totalClasses++;
@@ -706,9 +733,8 @@
 
   function showStudentReport(studentName) {
     const modalBody = document.getElementById('modal-body');
-    let reportHtml = `<h2>Attendance Report for: ${studentName}</h2>`;
-    reportHtml += '<table><thead><tr><th>Subject</th><th>Percentage</th><th>Total Classes</th><th>Present</th><th>Absent</th><th>Late</th><th>Early</th></tr></thead><tbody>';
-    
+    let reportHtml = `<h2>Attendance Report for: ${studentName}</h2>
+    <table><thead><tr><th>Subject</th><th>Percentage</th><th>Total Classes</th><th>Present</th><th>Absent</th><th>Late</th><th>Early</th></tr></thead><tbody>`;
     Object.keys(data.subjects).forEach(subjectName => {
         const subject = data.subjects[subjectName];
         let total = 0, present = 0, late = 0, early = 0;
@@ -724,13 +750,9 @@
             }
         });
         const percentage = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
-        reportHtml += `<tr>
-            <td>${subjectName}</td><td>${percentage}%</td>
-            <td>${total}</td><td>${present}</td><td>${total - present}</td>
-            <td>${late}</td><td>${early}</td>
-        </tr>`;
+        reportHtml += `<tr><td>${subjectName}</td><td>${percentage}%</td><td>${total}</td>
+        <td>${present}</td><td>${total - present}</td><td>${late}</td><td>${early}</td></tr>`;
     });
-
     reportHtml += '</tbody></table>';
     modalBody.innerHTML = reportHtml;
     document.getElementById('studentReportModal').style.display = 'block';
@@ -745,12 +767,12 @@
       container.innerHTML = `<button onclick="undoDelete()">Undo Delete (${lastDeleted.type})</button>`;
       clearTimeout(undoTimeout);
       undoTimeout = setTimeout(() => {
-          container.innerHTML = '';
-          lastDeleted = null;
+          container.innerHTML = ''; lastDeleted = null;
       }, 10000);
   }
 
   function undoDelete() {
+      if (!isAdmin) return showToast("Admin access required", "error");
       if (!lastDeleted) return;
       if (lastDeleted.type === 'student') {
           data.students.push(lastDeleted.name);
@@ -767,24 +789,22 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const filters = JSON.parse(localStorage.getItem(FILTER_KEY));
-    if (filters) {
-        document.getElementById('subjectSelect').value = filters.subject || '';
-        document.getElementById('dateFrom').value = filters.dateFrom || '';
-        document.getElementById('dateTo').value = filters.dateTo || '';
-    }
     updateSubjectSelect();
     renderStudentList();
     updateAnalytics();
-    handleSubjectChange();
-    if(localStorage.getItem("attendanceData")) {
-        document.getElementById('lastSaved').textContent = 'Loaded from storage';
+    
+    const filters = JSON.parse(localStorage.getItem(FILTER_KEY));
+    if (filters) {
+        document.getElementById('subjectSelectView').value = filters.subject || '';
+        if (isAdmin) { // Only load date filters if admin
+            document.getElementById('dateFrom').value = filters.dateFrom || '';
+            document.getElementById('dateTo').value = filters.dateTo || '';
+        }
     }
+    handleSubjectChangeView();
     window.onclick = function(event) {
         const modal = document.getElementById('studentReportModal');
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+        if (event.target == modal) modal.style.display = "none";
     }
     document.getElementById('dateFrom').addEventListener('change', saveFilters);
     document.getElementById('dateTo').addEventListener('change', saveFilters);
