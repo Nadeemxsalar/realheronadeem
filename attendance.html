@@ -2,325 +2,410 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>College Attendance System</title>
+  <title>Smart Attendance Pro 🎓</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     :root {
-      --main-bg: #1e1e2f;
-      --card-bg: rgba(255, 255, 255, 0.05);
-      --accent: #00ffff;
-      --text: #ffffff;
-      --hover: #00cccc;
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-blur: blur(12px);
+      --main-bg: #1e1e2f; --card-bg: rgba(255, 255, 255, 0.05); --accent: #00ffff; --text: #ffffff;
+      --hover: #00cccc; --glass-bg: rgba(40, 40, 60, 0.6); --glass-blur: blur(12px);
+      --danger: #ff4757; --warning: #ffa502; --success: #2ed573;
     }
-
     body.light {
-      --main-bg: #f0f0f4;
-      --card-bg: #ffffffdd;
-      --accent: #0077ff;
-      --text: #000000;
-      --hover: #0055cc;
-      --glass-bg: rgba(255, 255, 255, 0.4);
+      --main-bg: #f0f0f4; --card-bg: #ffffff; --accent: #0077ff; --text: #000000;
+      --hover: #0055cc; --glass-bg: rgba(255, 255, 255, 0.7);
     }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); transition: background 0.4s, color 0.4s; }
+    header { position: sticky; top: 0; z-index: 1000; backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); background: var(--glass-bg); padding: 10px 16px; border-bottom: 1px solid #ffffff22; animation: slideDown 0.5s ease-in-out; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .navbar h1 { font-size: 20px; color: var(--accent); margin: 0; }
+    .navbar h1 small { font-size: 10px; color: var(--text); opacity: 0.7; display: block; font-weight: normal; }
+    .nav-buttons { display: flex; gap: 8px; }
+    .nav-buttons button { background: transparent; border: none; font-size: 22px; color: var(--accent); padding: 6px; cursor: pointer; transition: transform 0.2s ease; }
+    .nav-buttons button:hover { transform: scale(1.3); }
+    .container { padding: 20px; max-width: 1200px; margin: auto; }
+    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .section { background: var(--card-bg); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 0 12px rgba(0, 255, 255, 0.1); animation: fadeInUp 0.5s ease-in-out; }
+    h2 { border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+    input, select, button, textarea { padding: 12px; margin: 10px 0; width: 100%; border-radius: 8px; border: 1px solid #ffffff33; font-size: 16px; background: rgba(255, 255, 255, 0.1); color: inherit; box-sizing: border-box; }
+    
+    /* FIX: Added style for select options in dark mode to make text visible */
+    select option {
       background: var(--main-bg);
       color: var(--text);
-      transition: background 0.4s, color 0.4s;
     }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      background: var(--glass-bg);
-      padding: 10px 16px;
-      border-bottom: 1px solid #ffffff22;
-      animation: slideDown 0.5s ease-in-out;
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: nowrap;
-    }
-
-    .navbar h1 {
-      font-size: 20px;
-      color: var(--accent);
-      margin: 0;
-      white-space: nowrap;
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .nav-buttons button {
-      background: transparent;
-      border: none;
-      font-size: 22px;
-      color: var(--accent);
-      padding: 6px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .nav-buttons button:hover {
-      transform: scale(1.3);
-    }
-
-    .container {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    .section {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 12px #00ffff30;
-      animation: fadeInUp 0.5s ease-in-out;
-    }
-
-    input, select, button {
-      padding: 12px;
-      margin: 10px 0;
-      width: 100%;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-      background: #ffffff10;
-      color: inherit;
-    }
-
-    button {
-      background: var(--accent);
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: var(--hover);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #ffffff10;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ffffff33;
-      padding: 10px;
-      text-align: center;
-    }
-
-    th {
-      background: #00ffff20;
-    }
-
-    .present {
-      background-color: #00ff0030;
-    }
-
-    .absent {
-      background-color: #ff000030;
-    }
-
-    #toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--accent);
-      color: black;
-      padding: 10px 20px;
-      border-radius: 6px;
-      display: none;
-      z-index: 999;
-      animation: slideUp 0.4s ease;
-    }
-
-    @keyframes fadeInUp {
-      from {opacity: 0; transform: translateY(20px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-
-    @keyframes slideUp {
-      from {transform: translateY(100px);}
-      to {transform: translateY(0);}
-    }
-
-    @keyframes slideDown {
-      from {transform: translateY(-100%);}
-      to {transform: translateY(0);}
-    }
-
-    @media (max-width: 600px) {
-      .navbar {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 5px;
-      }
-
-      .navbar h1 {
-        font-size: 16px;
-      }
-
-      .nav-buttons button {
-        font-size: 18px;
-        padding: 5px;
-      }
-
-      .container {
-        padding: 12px;
-      }
-    }
-select {
-  padding: 12px;
-  margin: 10px 0;
-  width: 100%;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-  background-color: #1e1e2f;
-  color: var(--text);
-}
-
-body.light select {
-  background-color: #fff;
-  color: #000;
-}
-
+    
+    button { background: var(--accent); color: #000; font-weight: bold; cursor: pointer; transition: background 0.3s ease; border: none; }
+    button:hover { background: var(--hover); }
+    button.danger { background-color: var(--danger); color: white; }
+    button.warning { background-color: var(--warning); color: white; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ffffff33; padding: 10px; text-align: center; }
+    th { background: rgba(0, 255, 255, 0.15); cursor: pointer; }
+    th .note-tooltip { position: relative; display: inline-block; }
+    th .note-tooltip .tooltiptext { visibility: hidden; width: 160px; background-color: #333; color: #fff; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -80px; opacity: 0; transition: opacity 0.3s; }
+    th .note-tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+    .status-Present { background-color: rgba(46, 213, 115, 0.2); }
+    .status-Absent { background-color: rgba(255, 71, 87, 0.2); }
+    .status-Late { border-left: 3px solid var(--warning); }
+    .status-Early { border-right: 3px solid var(--warning); }
+    .status-Holiday, .status-Cancelled { background-color: rgba(150, 150, 150, 0.3); }
+    tr.low-attendance { background-color: rgba(255, 71, 87, 0.3) !important; }
+    #reportTable td:first-child { cursor: pointer; text-decoration: underline; color: var(--accent); }
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 8px; display: none; z-index: 9999; animation: slideUp 0.4s ease; font-weight: bold; }
+    .toast-success { background: var(--success); color: black; }
+    .toast-error { background: var(--danger); color: white; }
+    #studentList div { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #ffffff22; }
+    #studentList button { width: auto; padding: 5px 10px; font-size: 14px; margin: 0 5px; }
+    #attendanceForm label { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; padding: 8px; border-bottom: 1px solid #ffffff1A; }
+    #attendanceForm .radio-group { display: flex; gap: 10px; align-items: center;}
+    #attendanceForm input[type="radio"] { width: auto; margin: 0 5px; }
+    .flex-buttons { display: flex; gap: 10px; }
+    .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; text-align: center; }
+    .analytic-card { background: rgba(0, 255, 255, 0.1); padding: 15px; border-radius: 10px; }
+    .analytic-card h3 { margin: 0 0 5px 0; font-size: 28px; color: var(--accent); }
+    .analytic-card p { margin: 0; opacity: 0.8; }
+    #undo-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 10000; }
+    #undo-container button { background-color: var(--warning); color: black; }
+    .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+    .modal-content { background-color: var(--main-bg); margin: 10% auto; padding: 20px; border: 1px solid var(--accent); width: 80%; max-width: 800px; border-radius: 15px; animation: fadeInUp 0.4s; }
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    @keyframes fadeInUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
+    @keyframes slideUp { from {transform: translate(-50%, 100px); opacity: 0;} to {transform: translate(-50%, 0); opacity: 1;} }
+    @keyframes slideDown { from {transform: translateY(-100%);} to {transform: translateY(0);} }
+    @media print { body > *:not(.printable) { display: none; } .printable { display: block; } table { font-size: 10px; } th, td { padding: 4px; } }
   </style>
 </head>
 <body>
 
 <header>
   <div class="navbar">
-    <h1>📘 Attendance</h1>
+    <h1>🎓 Smart Attendance Pro <small id="lastSaved">Not saved yet</small></h1>
     <div class="nav-buttons">
       <button onclick="toggleTheme()" title="Toggle Theme">🌗</button>
-      <button onclick="resetData()" title="Reset All">🗑️</button>
+      <button onclick="resetData()" title="Reset All Data">🗑️</button>
     </div>
   </div>
 </header>
 
 <div class="container">
+    <div class="section">
+        <h2>📊 Analytics Dashboard</h2>
+        <div class="analytics-grid">
+            <div class="analytic-card"><h3 id="totalStudents">0</h3><p>Total Students</p></div>
+            <div class="analytic-card"><h3 id="totalSubjects">0</h3><p>Total Subjects</p></div>
+            <div class="analytic-card"><h3 id="avgAttendance">N/A</h3><p>Avg. Attendance (Selected Subject)</p></div>
+        </div>
+    </div>
+
+    <div class="grid-container">
+        <div class="section">
+            <h2>1️⃣ Subjects</h2>
+            <input type="text" id="subjectInput" placeholder="e.g. Java, OS">
+            <input type="number" id="subjectThresholdInput" value="75" min="0" max="100" placeholder="Low Attendance % (e.g., 75)">
+            <button onclick="addSubject()">Add Subject</button>
+            <select id="subjectSelect" onchange="handleSubjectChange()"></select>
+            <button class="danger" onclick="deleteSubject()">Delete Selected Subject</button>
+        </div>
+        <div class="section">
+            <h2>2️⃣ Add Students</h2>
+            <textarea id="studentInput" placeholder="Enter student names, one per line or comma separated" rows="4"></textarea>
+            <button onclick="addStudent()">Add Student(s)</button>
+        </div>
+    </div>
 
   <div class="section">
-    <h2>1️⃣ Add Subject</h2>
-    <input type="text" id="subjectInput" placeholder="e.g. Java, OS">
-    <button onclick="addSubject()">Add Subject</button>
-    <select id="subjectSelect">
-      <option value="">-- Select Subject --</option>
-    </select>
+    <h2>3️⃣ Manage Students</h2>
+    <input type="text" id="studentSearchManage" onkeyup="renderStudentList()" placeholder="🔍 Search for a student to manage...">
+    <div id="studentList"></div>
   </div>
 
   <div class="section">
-    <h2>2️⃣ Add Student</h2>
-    <input type="text" id="studentInput" placeholder="Enter student name">
-    <button onclick="addStudent()">Add Student</button>
-  </div>
-
-  <div class="section">
-    <h2>3️⃣ Mark Attendance</h2>
+    <h2>4️⃣ Mark Attendance</h2>
     <input type="date" id="attendanceDate">
-    <button onclick="markAttendance()">Start Marking</button>
+    <button onclick="markAttendance()">Load/Edit Attendance for Date</button>
     <div id="attendanceForm"></div>
   </div>
-
+  
   <div class="section">
-    <h2>4️⃣ View & Download Attendance</h2>
-    <button onclick="generateTable()">Show Attendance</button>
-    <button onclick="downloadCSV()">Download CSV</button>
+    <h2>🔄 Bulk Attendance Update</h2>
+    <p>Mark a range of dates for the selected subject.</p>
+    <div class="grid-container">
+        <div><label>From Date: <input type="date" id="bulkDateFrom"></label></div>
+        <div><label>To Date: <input type="date" id="bulkDateTo"></label></div>
+        <div><label>Mark as:
+            <select id="bulkStatus">
+                <option value="Holiday">Holiday</option>
+                <option value="Cancelled">Cancelled Class</option>
+            </select>
+        </label></div>
+    </div>
+    <button onclick="bulkUpdateAttendance()">Apply Bulk Update</button>
+  </div>
+
+
+  <div class="section" id="viewSection">
+    <h2>5️⃣ View & Export</h2>
+    <div class="grid-container">
+        <div><label for="dateFrom">From:</label><input type="date" id="dateFrom"></div>
+        <div><label for="dateTo">To:</label><input type="date" id="dateTo"></div>
+        <div><label for="studentSearch">Search Student:</label><input type="text" id="studentSearch" onkeyup="generateTable()"></div>
+        <div><label for="lowAttendanceThreshold">Low Attendance %:</label><input type="number" id="lowAttendanceThreshold" value="75" step="1" min="0" max="100"></div>
+    </div>
+    <div class="flex-buttons">
+        <button onclick="generateTable()">Show Attendance</button>
+        <button onclick="downloadCSV()">Download CSV</button>
+        <button onclick="printReport()">🖨️ Print Report</button>
+    </div>
     <div id="attendanceTable"></div>
   </div>
 
+  <div class="section">
+    <h2>6️⃣ Data Management & Settings</h2>
+    <div class="flex-buttons">
+        <button onclick="document.getElementById('importFile').click()">Import Data (JSON)</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="warning" onclick="exportData()">Export Data (JSON)</button>
+    </div>
+    <h4>Settings</h4>
+    <label>Old Reset Password:</label>
+    <input type="password" id="oldResetPassword" placeholder="Enter current password">
+    <label>Set New Reset Password:</label>
+    <input type="password" id="newResetPassword" placeholder="Enter new password to reset data">
+    <button onclick="saveSettings()">Update Password</button>
+  </div>
 </div>
 
-<div id="toast">Saved ✅</div>
+<div id="toast"></div>
+<div id="undo-container"></div>
+<div id="studentReportModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modal-body"></div>
+  </div>
+</div>
 
 <script>
   let data = JSON.parse(localStorage.getItem("attendanceData")) || {
     students: [],
-    subjects: {}
+    subjects: {},
+    settings: { resetPassword: "admin123" }
   };
-
+  
+  let lastDeleted = null;
+  let undoTimeout = null;
   const THEME_KEY = 'attendance-theme';
+  const FILTER_KEY = 'attendance-filters';
 
-  function showToast(msg = "Saved ✅") {
+  function showToast(msg, type = "success") {
     const toast = document.getElementById("toast");
-    toast.innerText = msg;
+    toast.textContent = msg;
+    toast.className = type === "success" ? "toast-success" : "toast-error";
     toast.style.display = "block";
-    setTimeout(() => toast.style.display = "none", 3000);
+    setTimeout(() => { toast.style.display = "none"; }, 3000);
   }
 
   function saveData() {
     localStorage.setItem("attendanceData", JSON.stringify(data));
+    const now = new Date();
+    document.getElementById('lastSaved').textContent = `Last saved: ${now.toLocaleTimeString()}`;
+    updateAnalytics();
+  }
+  
+  function saveFilters() {
+      const filters = {
+          subject: document.getElementById('subjectSelect').value,
+          dateFrom: document.getElementById('dateFrom').value,
+          dateTo: document.getElementById('dateTo').value,
+      };
+      localStorage.setItem(FILTER_KEY, JSON.stringify(filters));
   }
 
   function resetData() {
-    const password = prompt("Enter admin password to reset:");
-    if (password === "admin123") {
-      localStorage.clear();
-      location.reload();
-    } else {
-      alert("❌ Incorrect password!");
+    if (confirm("🚨 Are you sure you want to delete ALL data? This cannot be undone.")) {
+        const password = prompt("Enter admin password to confirm reset:");
+        if (password === data.settings.resetPassword) {
+            localStorage.clear();
+            location.reload();
+        } else {
+            showToast("❌ Incorrect password!", "error");
+        }
     }
   }
+  
+  function saveSettings() {
+      const oldPass = document.getElementById('oldResetPassword').value;
+      const newPass = document.getElementById('newResetPassword').value;
 
+      if (oldPass !== data.settings.resetPassword) {
+          return showToast("Incorrect old password!", "error");
+      }
+      if (!newPass || newPass.length < 4) {
+          return showToast("New password must be at least 4 characters long.", "error");
+      }
+      
+      data.settings.resetPassword = newPass;
+      saveData();
+      showToast("Password updated successfully!");
+      document.getElementById('oldResetPassword').value = '';
+      document.getElementById('newResetPassword').value = '';
+  }
+  
+  (function () {
+    const theme = localStorage.getItem(THEME_KEY);
+    if (theme === "light") document.body.classList.add("light");
+    const dateInput = document.getElementById("attendanceDate");
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.value = today;
+    dateInput.max = today;
+  })();
+
+  function toggleTheme() {
+    document.body.classList.toggle("light");
+    const theme = document.body.classList.contains("light") ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, theme);
+  }
+  
   function addSubject() {
     const subject = document.getElementById("subjectInput").value.trim();
-    if (!subject) return alert("Enter subject name");
+    const threshold = document.getElementById("subjectThresholdInput").value;
+    if (!subject) return showToast("Enter subject name", "error");
     if (!data.subjects[subject]) {
-      data.subjects[subject] = { attendance: {} };
+      data.subjects[subject] = { attendance: {}, threshold: parseInt(threshold) || 75 };
       saveData();
       updateSubjectSelect();
       showToast("Subject Added ✅");
     } else {
-      alert("Subject already exists");
+      showToast("Subject already exists", "error");
     }
     document.getElementById("subjectInput").value = "";
   }
 
+  function deleteSubject() {
+      const subject = document.getElementById("subjectSelect").value;
+      if (!subject) return showToast("Please select a subject to delete", "error");
+      if (confirm(`Are you sure you want to delete the subject "${subject}" and all its records?`)) {
+          lastDeleted = { type: 'subject', name: subject, value: data.subjects[subject] };
+          showUndoButton();
+          delete data.subjects[subject];
+          saveData();
+          updateSubjectSelect();
+          generateTable();
+          showToast(`Subject "${subject}" deleted`, "success");
+      }
+  }
+  
   function updateSubjectSelect() {
     const select = document.getElementById("subjectSelect");
+    const oldVal = select.value;
     select.innerHTML = '<option value="">-- Select Subject --</option>';
-    Object.keys(data.subjects).forEach(subject => {
+    Object.keys(data.subjects).sort().forEach(subject => {
       const option = document.createElement("option");
       option.value = subject;
       option.textContent = subject;
       select.appendChild(option);
     });
+    if (oldVal && data.subjects[oldVal]) {
+      select.value = oldVal;
+    }
   }
-  updateSubjectSelect();
+
+  function handleSubjectChange() {
+      const subjectName = document.getElementById('subjectSelect').value;
+      if (subjectName && data.subjects[subjectName]) {
+          document.getElementById('lowAttendanceThreshold').value = data.subjects[subjectName].threshold;
+      }
+      saveFilters();
+  }
 
   function addStudent() {
-    const name = document.getElementById("studentInput").value.trim();
-    if (!name) return alert("Enter student name");
-    if (!data.students.includes(name)) {
-      data.students.push(name);
-      saveData();
-      showToast("Student Added ✅");
-    } else {
-      alert("Student already exists");
+    const namesInput = document.getElementById("studentInput").value.trim();
+    if (!namesInput) return showToast("Enter student name(s)", "error");
+    const names = namesInput.split(/[\n,]+/).map(name => name.trim()).filter(Boolean);
+    let addedCount = 0;
+    let duplicateCount = 0;
+    names.forEach(name => {
+        if (data.students.includes(name)) {
+            duplicateCount++;
+        } else {
+            data.students.push(name);
+            addedCount++;
+        }
+    });
+    if (addedCount > 0) {
+        data.students.sort();
+        saveData();
+        renderStudentList();
+        showToast(`${addedCount} student(s) added ✅`);
+    } 
+    if (duplicateCount > 0) {
+        showToast(`${duplicateCount} student(s) already exist and were not added.`, "error");
     }
     document.getElementById("studentInput").value = "";
+  }
+  
+  function renderStudentList() {
+      const listDiv = document.getElementById("studentList");
+      listDiv.innerHTML = "";
+      const filter = document.getElementById('studentSearchManage').value.toLowerCase();
+      const studentsToRender = data.students.filter(name => name.toLowerCase().includes(filter));
+      if (studentsToRender.length === 0) {
+          listDiv.innerHTML = "<p>No students found.</p>";
+          return;
+      }
+      studentsToRender.forEach(name => {
+          const studentDiv = document.createElement("div");
+          studentDiv.innerHTML = `
+              <span>${name}</span>
+              <div>
+                  <button class="warning" onclick="editStudent('${name}')">Edit</button>
+                  <button class="danger" onclick="deleteStudent('${name}')">Delete</button>
+              </div>
+          `;
+          listDiv.appendChild(studentDiv);
+      });
+  }
+
+  function editStudent(oldName) {
+      const newName = prompt(`Editing student: ${oldName}\nEnter new name:`, oldName);
+      if (newName && newName.trim() !== oldName) {
+          const trimmedNewName = newName.trim();
+          if (data.students.includes(trimmedNewName)) {
+              return showToast("A student with this name already exists.", "error");
+          }
+          const index = data.students.indexOf(oldName);
+          data.students[index] = trimmedNewName;
+          Object.values(data.subjects).forEach(subject => {
+              Object.keys(subject.attendance).forEach(date => {
+                  if (subject.attendance[date].students[oldName]) {
+                      subject.attendance[date].students[trimmedNewName] = subject.attendance[date].students[oldName];
+                      delete subject.attendance[date].students[oldName];
+                  }
+              });
+          });
+          data.students.sort();
+          saveData();
+          renderStudentList();
+          generateTable();
+          showToast("Student name updated successfully.");
+      }
+  }
+  
+  function deleteStudent(nameToDelete) {
+      if (confirm(`Are you sure you want to delete ${nameToDelete}? This will remove them from all attendance records.`)) {
+          lastDeleted = { type: 'student', name: nameToDelete, value: nameToDelete };
+          showUndoButton();
+          data.students = data.students.filter(s => s !== nameToDelete);
+          Object.values(data.subjects).forEach(subject => {
+              Object.values(subject.attendance).forEach(dateRecord => {
+                  delete dateRecord.students[nameToDelete];
+              });
+          });
+          saveData();
+          renderStudentList();
+          generateTable();
+          showToast(`${nameToDelete} has been deleted.`);
+      }
   }
 
   function markAttendance() {
@@ -328,96 +413,382 @@ body.light select {
     const date = document.getElementById("attendanceDate").value;
     const form = document.getElementById("attendanceForm");
 
-    if (!subject || !date) return alert("Select subject and date");
+    if (!subject || !date) return showToast("Select subject and date", "error");
+    
+    data.subjects[subject].attendance[date] = data.subjects[subject].attendance[date] || { students: {}, note: '' };
 
-    form.innerHTML = `<h4>Marking for ${subject} on ${date}</h4>`;
+    form.innerHTML = `<h4>Marking for ${subject} on ${date}</h4>
+    <textarea id="attendanceNote" placeholder="Add a note for this date (e.g., Class Test)...">${data.subjects[subject].attendance[date].note || ''}</textarea>
+    <div class="flex-buttons">
+        <button onclick="markAll('Present')">Mark All Present</button>
+        <button onclick="markAll('Absent')">Mark All Absent</button>
+        <button class="warning" onclick="markAttendance()">Clear/Reload</button>
+    </div>`;
+    
+    const existingData = data.subjects[subject].attendance[date].students || {};
+
     data.students.forEach(name => {
-      const label = document.createElement("label");
-      label.style.display = "block";
-      label.innerHTML = `<input type="checkbox" id="chk_${name}"> ${name}`;
-      form.appendChild(label);
+      const status = existingData[name] || { primary: "Absent", secondary: "On-Time" };
+      const row = document.createElement("label");
+      row.innerHTML = `
+        <span>${name}</span>
+        <div class="radio-group">
+            <input type="radio" name="${name}-primary" value="Present" ${status.primary === 'Present' ? 'checked' : ''}> P
+            <input type="radio" name="${name}-primary" value="Absent" ${status.primary === 'Absent' ? 'checked' : ''}> A
+            <span style="border-left: 1px solid #fff; padding-left:10px; margin-left:5px;"></span>
+            <input type="radio" name="${name}-secondary" value="Late" ${status.secondary === 'Late' ? 'checked' : ''}> Late
+            <input type="radio" name="${name}-secondary" value="Early" ${status.secondary === 'Early' ? 'checked' : ''}> Early
+            <input type="radio" name="${name}-secondary" value="On-Time" ${status.secondary === 'On-Time' ? 'checked' : ''}> On-Time
+        </div>
+      `;
+      form.appendChild(row);
     });
 
     const saveBtn = document.createElement("button");
     saveBtn.textContent = "Save Attendance";
     saveBtn.onclick = () => {
-      if (!data.subjects[subject].attendance[date]) {
-        data.subjects[subject].attendance[date] = {};
-      }
       data.students.forEach(name => {
-        const chk = document.getElementById("chk_" + name).checked;
-        data.subjects[subject].attendance[date][name] = chk ? "Present" : "Absent";
+        const primaryStatus = document.querySelector(`input[name="${name}-primary"]:checked`).value;
+        const secondaryStatus = document.querySelector(`input[name="${name}-secondary"]:checked`).value;
+        data.subjects[subject].attendance[date].students[name] = {
+            primary: primaryStatus,
+            secondary: secondaryStatus
+        };
       });
+      data.subjects[subject].attendance[date].note = document.getElementById('attendanceNote').value.trim();
       saveData();
-      showToast();
+      showToast("Attendance saved!");
       form.innerHTML = "";
     };
     form.appendChild(saveBtn);
   }
+  
+  function markAll(status) {
+      if (!confirm(`Are you sure you want to mark all students as ${status}?`)) return;
+      document.querySelectorAll(`#attendanceForm input[name$="-primary"]`).forEach(radio => {
+          if (radio.value === status) {
+              radio.checked = true;
+          }
+      });
+  }
+  
+  function bulkUpdateAttendance() {
+      const subject = document.getElementById("subjectSelect").value;
+      const from = document.getElementById('bulkDateFrom').value;
+      const to = document.getElementById('bulkDateTo').value;
+      const status = document.getElementById('bulkStatus').value;
+
+      if (!subject || !from || !to) return showToast("Please select a subject and a date range.", "error");
+      if (to < from) return showToast("'To' date cannot be before 'From' date.", "error");
+      if (!confirm(`This will apply the status '${status}' to all students for the selected date range. Are you sure?`)) return;
+
+      let currentDate = new Date(from);
+      const endDate = new Date(to);
+      let datesAffected = 0;
+
+      while (currentDate <= endDate) {
+          const dateStr = currentDate.toISOString().split('T')[0];
+          data.subjects[subject].attendance[dateStr] = { students: {}, note: `Bulk Update: ${status}` };
+          data.students.forEach(student => {
+              data.subjects[subject].attendance[dateStr].students[student] = { primary: status, secondary: null };
+          });
+          currentDate.setDate(currentDate.getDate() + 1);
+          datesAffected++;
+      }
+      saveData();
+      showToast(`${datesAffected} days have been updated successfully!`, "success");
+      generateTable();
+  }
 
   function generateTable() {
-    const subject = document.getElementById("subjectSelect").value;
-    if (!subject) return alert("Select a subject");
-
+    const subjectName = document.getElementById("subjectSelect").value;
+    if (!subjectName) return showToast("Select a subject", "error");
+    
+    saveFilters();
     const div = document.getElementById("attendanceTable");
-    const students = data.students;
-    const attendance = data.subjects[subject].attendance;
-    const dates = Object.keys(attendance);
-    if (!dates.length) return div.innerHTML = "<p>No data yet.</p>";
+    const searchFilter = document.getElementById("studentSearch").value.toLowerCase();
+    const dateFrom = document.getElementById("dateFrom").value;
+    const dateTo = document.getElementById("dateTo").value;
+    const threshold = parseInt(document.getElementById("lowAttendanceThreshold").value);
 
-    let table = `<table><tr><th>Student</th>`;
-    dates.forEach(d => table += `<th>${d}</th>`);
-    table += "</tr>";
+    const students = data.students.filter(s => s.toLowerCase().includes(searchFilter));
+    const attendance = data.subjects[subjectName].attendance;
+    let dates = Object.keys(attendance).sort();
+    
+    if (dateFrom) dates = dates.filter(d => d >= dateFrom);
+    if (dateTo) dates = dates.filter(d => d <= dateTo);
+    
+    if (!students.length) return div.innerHTML = "<p>No matching students found.</p>";
+    if (!dates.length) return div.innerHTML = "<p>No attendance data for the selected criteria.</p>";
+    
+    let table = `<div style="overflow-x:auto"><table id="reportTable"><thead><tr>
+        <th onclick="sortTable(0)">Student</th>
+        <th onclick="sortTable(1, 'desc')">Attendance %</th>
+        <th>Total</th><th>Present</th><th>Absent</th><th>Late</th><th>Early</th>`;
+    dates.forEach(d => {
+        const note = attendance[d].note || '';
+        table += `<th><div class="note-tooltip">${d.substring(5)}${note ? `<span class="tooltiptext">${note}</span>` : ''}</div></th>`;
+    });
+    table += "</tr></thead><tbody>";
+
+    let grandTotals = { present: 0, absent: 0, late: 0, early: 0, totalClasses: 0 };
 
     students.forEach(s => {
-      table += `<tr><td>${s}</td>`;
-      dates.forEach(d => {
-        const status = attendance[d][s] || "-";
-        const cls = status === "Present" ? "present" : status === "Absent" ? "absent" : "";
-        table += `<td class="${cls}">${status}</td>`;
-      });
-      table += "</tr>";
-    });
-    table += "</table>";
+      let present = 0, absent = 0, late = 0, early = 0;
+      let dateCells = '';
 
-    div.innerHTML = `<div style="overflow-x:auto">${table}</div>`;
+      dates.forEach(d => {
+        const status = attendance[d].students[s] || {primary: '-'};
+        let cellText = status.primary ? status.primary.charAt(0) : '-';
+        let cellClass = `status-${status.primary}`;
+        
+        if (status.primary === "Present") {
+            present++;
+            if (status.secondary === "Late") {
+                late++;
+                cellText = "P(L)";
+                cellClass += ' status-Late';
+            } else if (status.secondary === "Early") {
+                early++;
+                cellText = "P(E)";
+                cellClass += ' status-Early';
+            }
+        } else if (status.primary === "Absent") {
+            absent++;
+        }
+        dateCells += `<td class="${cellClass}">${cellText}</td>`;
+      });
+      
+      const totalClasses = present + absent;
+      const percentage = totalClasses > 0 ? ((present / totalClasses) * 100).toFixed(1) : 0;
+      const lowAttendanceClass = percentage < threshold ? 'low-attendance' : '';
+
+      table += `<tr class="${lowAttendanceClass}">
+        <td onclick="showStudentReport('${s}')">${s}</td>
+        <td>${percentage}%</td>
+        <td>${totalClasses}</td><td>${present}</td><td>${absent}</td><td>${late}</td><td>${early}</td>
+        ${dateCells}
+      </tr>`;
+
+      grandTotals.present += present;
+      grandTotals.absent += absent;
+      grandTotals.late += late;
+      grandTotals.early += early;
+    });
+    
+    const totalGrandClasses = grandTotals.present + grandTotals.absent;
+    const avgPercentage = totalGrandClasses > 0 ? ((grandTotals.present / totalGrandClasses) * 100).toFixed(1) : 0;
+    table += `</tbody><tfoot><tr style="font-weight:bold; background:rgba(0,255,255,0.1);">
+        <td>AVERAGE / TOTALS</td><td>${avgPercentage}%</td>
+        <td>${totalGrandClasses}</td><td>${grandTotals.present}</td><td>${grandTotals.absent}</td>
+        <td>${grandTotals.late}</td><td>${grandTotals.early}</td>
+        <td colspan="${dates.length}"></td>
+    </tr></tfoot></table></div>`;
+    div.innerHTML = table;
+  }
+  
+  function sortTable(n, dir = 'asc') {
+    let table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("reportTable");
+    switching = true;
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 2); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            let valX = isNaN(parseFloat(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
+            let valY = isNaN(parseFloat(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
+            if (dir === 'asc' ? valX > valY : valX < valY) {
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
   }
 
   function downloadCSV() {
+    const table = document.getElementById("reportTable");
+    if(!table) return showToast("Generate the table first", "error");
+    let csv = [];
+    for (let i = 0; i < table.rows.length; i++) {
+        let row = [], cols = table.rows[i].querySelectorAll("td, th");
+        for (let j = 0; j < cols.length; j++) {
+            row.push('"' + cols[j].innerText.trim() + '"');
+        }
+        csv.push(row.join(","));
+    }
     const subject = document.getElementById("subjectSelect").value;
-    if (!subject) return alert("Select a subject");
-
-    const students = data.students;
-    const attendance = data.subjects[subject].attendance;
-    const dates = Object.keys(attendance);
-    if (!dates.length) return alert("No data");
-
-    let csv = "Student," + dates.join(",") + "\n";
-    students.forEach(s => {
-      const row = [s];
-      dates.forEach(d => row.push(attendance[d][s] || "-"));
-      csv += row.join(",") + "\n";
-    });
-
-    const blob = new Blob([csv], { type: "text/csv" });
+    const blob = new Blob([csv.join("\n")], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${subject}_attendance.csv`;
+    a.download = `${subject}_attendance_report.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
-
-  (function () {
-    const theme = localStorage.getItem(THEME_KEY);
-    if (theme === "light") document.body.classList.add("light");
-  })();
-
-  function toggleTheme() {
-    document.body.classList.toggle("light");
-    const theme = document.body.classList.contains("light") ? "light" : "dark";
-    localStorage.setItem("attendance-theme", theme);
+  
+  function printReport() {
+    const tableContainer = document.getElementById("attendanceTable");
+    if (!tableContainer.innerHTML.includes('<table')) return showToast("Please generate the attendance table first.", "error");
+    const subject = document.getElementById("subjectSelect").value;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Attendance Report - ' + subject + '</title>');
+    printWindow.document.write('<style>body{font-family:sans-serif;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ccc;padding:8px;text-align:center;} th{background:#eee;} .low-attendance{background-color:#ffdddd !important;} tfoot{font-weight:bold;}</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(`<h2>Attendance Report: ${subject}</h2>`);
+    printWindow.document.write(tableContainer.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
   }
+
+  function exportData() {
+      if (!Object.keys(data.subjects).length && !data.students.length) return showToast("No data to export.", "error");
+      const jsonData = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonData], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'attendance_backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Data exported successfully!");
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            if (importedData.students && importedData.subjects && importedData.settings) {
+                if (confirm("Are you sure you want to overwrite current data with the imported file?")) {
+                    data = importedData;
+                    saveData();
+                    showToast("Data imported successfully! Reloading...");
+                    setTimeout(() => location.reload(), 1500);
+                }
+            } else { throw new Error("Invalid file format"); }
+        } catch (error) { showToast("Error importing file.", "error"); }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+  
+  function updateAnalytics() {
+    document.getElementById('totalStudents').textContent = data.students.length;
+    document.getElementById('totalSubjects').textContent = Object.keys(data.subjects).length;
+    
+    const selectedSubject = document.getElementById('subjectSelect').value;
+    if (selectedSubject && data.subjects[selectedSubject]) {
+        const attendance = data.subjects[selectedSubject].attendance;
+        let totalClasses = 0;
+        let attendedClasses = 0;
+        Object.values(attendance).forEach(dateRecord => {
+            Object.values(dateRecord.students).forEach(status => {
+                if (status.primary === 'Present' || status.primary === 'Absent') totalClasses++;
+                if (status.primary === 'Present') attendedClasses++;
+            });
+        });
+        const avg = totalClasses > 0 ? ((attendedClasses / totalClasses) * 100).toFixed(1) + '%' : 'N/A';
+        document.getElementById('avgAttendance').textContent = avg;
+    } else {
+        document.getElementById('avgAttendance').textContent = 'N/A';
+    }
+  }
+
+  function showStudentReport(studentName) {
+    const modalBody = document.getElementById('modal-body');
+    let reportHtml = `<h2>Attendance Report for: ${studentName}</h2>`;
+    reportHtml += '<table><thead><tr><th>Subject</th><th>Percentage</th><th>Total Classes</th><th>Present</th><th>Absent</th><th>Late</th><th>Early</th></tr></thead><tbody>';
+    
+    Object.keys(data.subjects).forEach(subjectName => {
+        const subject = data.subjects[subjectName];
+        let total = 0, present = 0, late = 0, early = 0;
+        Object.values(subject.attendance).forEach(dateRecord => {
+            const status = dateRecord.students[studentName];
+            if (status && (status.primary === 'Present' || status.primary === 'Absent')) {
+                total++;
+                if (status.primary === 'Present') {
+                    present++;
+                    if (status.secondary === 'Late') late++;
+                    if (status.secondary === 'Early') early++;
+                }
+            }
+        });
+        const percentage = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
+        reportHtml += `<tr>
+            <td>${subjectName}</td><td>${percentage}%</td>
+            <td>${total}</td><td>${present}</td><td>${total - present}</td>
+            <td>${late}</td><td>${early}</td>
+        </tr>`;
+    });
+
+    reportHtml += '</tbody></table>';
+    modalBody.innerHTML = reportHtml;
+    document.getElementById('studentReportModal').style.display = 'block';
+  }
+  
+  function closeModal() {
+      document.getElementById('studentReportModal').style.display = 'none';
+  }
+
+  function showUndoButton() {
+      const container = document.getElementById('undo-container');
+      container.innerHTML = `<button onclick="undoDelete()">Undo Delete (${lastDeleted.type})</button>`;
+      clearTimeout(undoTimeout);
+      undoTimeout = setTimeout(() => {
+          container.innerHTML = '';
+          lastDeleted = null;
+      }, 10000);
+  }
+
+  function undoDelete() {
+      if (!lastDeleted) return;
+      if (lastDeleted.type === 'student') {
+          data.students.push(lastDeleted.name);
+          data.students.sort();
+          renderStudentList();
+      } else if (lastDeleted.type === 'subject') {
+          data.subjects[lastDeleted.name] = lastDeleted.value;
+          updateSubjectSelect();
+      }
+      saveData();
+      showToast(`${lastDeleted.type} '${lastDeleted.name}' has been restored.`);
+      lastDeleted = null;
+      document.getElementById('undo-container').innerHTML = '';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const filters = JSON.parse(localStorage.getItem(FILTER_KEY));
+    if (filters) {
+        document.getElementById('subjectSelect').value = filters.subject || '';
+        document.getElementById('dateFrom').value = filters.dateFrom || '';
+        document.getElementById('dateTo').value = filters.dateTo || '';
+    }
+    updateSubjectSelect();
+    renderStudentList();
+    updateAnalytics();
+    handleSubjectChange();
+    if(localStorage.getItem("attendanceData")) {
+        document.getElementById('lastSaved').textContent = 'Loaded from storage';
+    }
+    window.onclick = function(event) {
+        const modal = document.getElementById('studentReportModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    document.getElementById('dateFrom').addEventListener('change', saveFilters);
+    document.getElementById('dateTo').addEventListener('change', saveFilters);
+  });
 </script>
 
 </body>
