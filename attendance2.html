@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Attendance Pro 🎓 (Supabase Edition)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --main-bg: #1e1e2f; --card-bg: rgba(255, 255, 255, 0.05); --accent: #00ffff; --text: #ffffff;
+      --hover: #00cccc; --glass-bg: rgba(40, 40, 60, 0.6); --glass-blur: blur(12px);
+      --danger: #ff4757; --warning: #ffa502; --success: #2ed573;
+    }
+    body.light {
+      --main-bg: #f0f0f4; --card-bg: #ffffff; --accent: #0077ff; --text: #000000;
+      --hover: #0055cc; --glass-bg: rgba(255, 255, 255, 0.7);
+    }
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); }
+    header { position: sticky; top: 0; z-index: 1000; backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); background: var(--glass-bg); padding: 10px 16px; border-bottom: 1px solid #ffffff22; animation: slideDown 0.5s ease-in-out; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .navbar h1 { font-size: 20px; color: var(--accent); margin: 0; }
+    .navbar h1 small { font-size: 10px; color: var(--text); opacity: 0.7; display: block; font-weight: normal; }
+    .nav-buttons { display: flex; gap: 8px; align-items: center; }
+    button { background: var(--accent); color: #000; font-weight: bold; cursor: pointer; transition: background 0.3s ease; border: none; padding: 12px; margin: 10px 0; width: 100%; border-radius: 8px; font-size: 16px; box-sizing: border-box;}
+    button:hover { background: var(--hover); }
+    .nav-buttons button { width: auto; padding: 6px; font-size: 22px; background: transparent; }
+    .nav-buttons button:hover { transform: scale(1.3); }
+    #logoutBtn { font-size: 14px; background: var(--danger); color: white; border-radius: 5px; padding: 6px 10px; }
+    .container { padding: 20px; max-width: 1200px; margin: auto; }
+    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .section { background: var(--card-bg); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 0 12px rgba(0, 255, 255, 0.1); animation: fadeInUp 0.5s ease-in-out; }
+    h2 { border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+    input, select, textarea { padding: 12px; margin: 10px 0; width: 100%; border-radius: 8px; border: 1px solid #ffffff33; font-size: 16px; background: rgba(255, 255, 255, 0.1); color: inherit; box-sizing: border-box; }
+    button.danger { background-color: var(--danger); color: white; }
+    button.warning { background-color: var(--warning); color: white; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ffffff33; padding: 10px; text-align: center; }
+    th .note-tooltip { position: relative; display: inline-block; }
+    th .note-tooltip .tooltiptext { visibility: hidden; width: 160px; background-color: #333; color: #fff; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -80px; opacity: 0; transition: opacity 0.3s; }
+    th .note-tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+    .status-Present { background-color: rgba(46, 213, 115, 0.2); }
+    .status-Absent { background-color: rgba(255, 71, 87, 0.2); }
+    .status-Late { border-left: 3px solid var(--warning); }
+    .status-Early { border-right: 3px solid var(--warning); }
+    .status-Holiday, .status-Cancelled { background-color: rgba(150, 150, 150, 0.3); }
+    tr.low-attendance { background-color: rgba(255, 71, 87, 0.3) !important; }
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 8px; display: none; z-index: 9999; animation: slideUp 0.4s ease; font-weight: bold; }
+    .toast-success { background: var(--success); color: black; }
+    .toast-error { background: var(--danger); color: white; }
+    #studentList div { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #ffffff22; }
+    #studentList button { width: auto; padding: 5px 10px; font-size: 14px; margin: 0 5px; }
+    #attendanceForm label { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; padding: 8px; border-bottom: 1px solid #ffffff1A; }
+    #attendanceForm .radio-group { display: flex; gap: 10px; align-items: center;}
+    #attendanceForm input[type="radio"] { width: auto; margin: 0 5px; }
+    .flex-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    .flex-buttons button { flex-grow: 1; }
+    .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; text-align: center; }
+    .analytic-card { background: rgba(0, 255, 255, 0.1); padding: 15px; border-radius: 10px; }
+    .analytic-card h3 { margin: 0 0 5px 0; font-size: 28px; color: var(--accent); }
+    .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+    .modal-content { background-color: var(--main-bg); padding: 20px; border: 1px solid var(--accent); width: 80%; max-width: 400px; border-radius: 15px; animation: fadeInUp 0.4s; text-align: center; }
+    
+    .admin-only { display: none !important; }
+    .app-container { display: none; }
+    body.admin-mode .admin-only { display: grid !important; }
+    body.admin-mode button.admin-only, body.admin-mode .flex-buttons.admin-only { display: flex !important; }
+    body.admin-mode .app-container, body.student-mode .app-container { display: block; }
+    body.logged-out #loginModal { display: flex; }
+        
+    @keyframes fadeInUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
+    @keyframes slideUp { from {transform: translate(-50%, 100px); opacity: 0;} to {transform: translate(-50%, 0); opacity: 1;} }
+    @keyframes slideDown { from {transform: translateY(-100%);} to {transform: translateY(0);} }
+  </style>
+</head>
+<body class="logged-out">
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2>Login Access</h2>
+        <input type="email" id="email" placeholder="Email" autocomplete="email">
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+        <div class="flex-buttons">
+            <button onclick="handleAdminLogin()">Login as Admin</button>
+            <button class="warning" onclick="enterStudentMode()">Continue as Student</button>
+        </div>
+    </div>
+</div>
+
+<div class="app-container">
+    <header>
+        <div class="navbar">
+            <h1>🎓 Smart Attendance Pro <small id="appMode">Loading...</small></h1>
+            <div class="nav-buttons">
+                <button onclick="toggleTheme()" title="Toggle Theme">🌗</button>
+                <button onclick="resetAllData()" title="Reset All Data" class="admin-only danger">🗑️</button>
+                <button onclick="logout()" id="logoutBtn" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>📊 Analytics Dashboard</h2>
+            <div class="analytics-grid">
+                <div class="analytic-card"><h3 id="totalStudents">0</h3><p>Total Students</p></div>
+                <div class="analytic-card"><h3 id="totalSubjects">0</h3><p>Total Subjects</p></div>
+                <div class="analytic-card"><h3 id="avgAttendance">N/A</h3><p>Avg. Attendance</p></div>
+            </div>
+        </div>
+
+        <div class="grid-container admin-only">
+            <div class="section">
+                <h2>1️⃣ Subjects</h2>
+                <input type="text" id="subjectInput" placeholder="e.g. Java, OS">
+                <input type="number" id="subjectThresholdInput" value="75" min="0" max="100" placeholder="Low Attendance %">
+                <button onclick="addSubject()">Add Subject</button>
+                <select id="subjectSelect"></select>
+                <button class="danger" onclick="deleteSubject()">Delete Selected Subject</button>
+            </div>
+            <div class="section">
+                <h2>2️⃣ Add Students</h2>
+                <textarea id="studentInput" placeholder="Enter student names, one per line" rows="4"></textarea>
+                <button onclick="addStudent()">Add Student(s)</button>
+            </div>
+        </div>
+
+        <div class="section admin-only">
+            <h2>3️⃣ Manage Students</h2>
+            <div id="studentList"></div>
+        </div>
+
+        <div class="section admin-only">
+            <h2>4️⃣ Mark Attendance</h2>
+            <input type="date" id="attendanceDate">
+            <button onclick="loadAttendanceForm()">Load/Edit Attendance for Date</button>
+            <div id="attendanceForm"></div>
+        </div>
+        
+        <div class="section admin-only">
+            <h2>🔄 Bulk Attendance Update</h2>
+            <div class="grid-container">
+                <div><label>From Date: <input type="date" id="bulkDateFrom"></label></div>
+                <div><label>To Date: <input type="date" id="bulkDateTo"></label></div>
+                <div><label>Mark as:
+                    <select id="bulkStatus">
+                        <option value="Holiday">Holiday</option>
+                        <option value="Cancelled">Cancelled Class</option>
+                    </select>
+                </label></div>
+            </div>
+            <button onclick="bulkUpdateAttendance()">Apply Bulk Update</button>
+        </div>
+
+        <div class="section" id="viewSection">
+            <h2>5️⃣ View & Export</h2>
+            <select id="subjectSelectView" onchange="generateTable()"></select>
+            <div class="flex-buttons">
+                <button onclick="generateTable()">Show Attendance</button>
+                <button onclick="downloadCSV()" class="admin-only">Download CSV</button>
+                <button onclick="printReport()">🖨️ Print Report</button>
+            </div>
+            <div id="attendanceTable"></div>
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    // ✅ =================================================================================
+    // Aapki Supabase URL aur Sahi ANON KEY
+    // ===================================================================================
+    const SUPABASE_URL = 'https://ekfcglngqqfaczpqwxll.supabase.co'; 
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrZmNnbG5ncXFmYWN6cHF3eGxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAyOTUxNTIsImV4cCI6MjA3NTg3MTE1Mn0.Hi-CTda3VvVCtsIcIp_MPJkYy1yWAz49mkS5nG7IrIA';
+    // ===================================================================================
+    
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    const ADMIN_EMAIL = "nadeemxsalar@gmail.com";
+    const ADMIN_PASSWORD = "@Nadeem20";
+
+    let isAdmin = false;
+    let localData = { students: [], subjects: [], attendance: [], notes: [] };
+
+    // Login and Initialization
+    function handleAdminLogin() {
+        if (document.getElementById('email').value === ADMIN_EMAIL && document.getElementById('password').value === ADMIN_PASSWORD) {
+            sessionStorage.setItem('isAdmin', 'true');
+            initializeApp();
+        } else {
+            showToast("Invalid Admin Credentials!", "error");
+        }
+    }
+
+    function enterStudentMode() {
+        sessionStorage.removeItem('isAdmin');
+        initializeApp();
+    }
+
+    function logout() {
+        sessionStorage.removeItem('isAdmin');
+        location.reload();
+    }
+
+    async function initializeApp() {
+        isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+        document.body.className = isAdmin ? 'admin-mode' : 'student-mode';
+        if(isAdmin) {
+             document.getElementById('appMode').textContent = 'Admin Mode';
+             document.getElementById('logoutBtn').style.display = 'inline-block';
+        } else {
+             document.getElementById('appMode').textContent = 'Student View';
+             document.getElementById('logoutBtn').style.display = 'none';
+        }
+        await loadDataFromSupabase();
+    }
+    
+    // Data Loading & UI Updates
+    async function loadDataFromSupabase() {
+        showToast('Loading data from cloud...');
+        const [{ data: subjects }, { data: students }, { data: attendance }, { data: notes }] = await Promise.all([
+            db.from('subjects').select('*').order('name'),
+            db.from('students').select('*').order('name'),
+            db.from('attendance').select('*'),
+            db.from('attendance_notes').select('*')
+        ]);
+        if(subjects === null) { // Agar API key galat hai to data null aayega
+            showToast("Connection Error: Invalid API Key or URL. Please check.", "error");
+            return;
+        }
+        localData = { subjects, students, attendance, notes };
+        updateAllUI();
+        showToast('Data loaded successfully!', 'success');
+    }
+    
+    function updateAllUI() {
+        updateSubjectSelects();
+        if (isAdmin) renderStudentList();
+        updateAnalytics();
+        generateTable();
+    }
+
+    function updateSubjectSelects() {
+        const selects = [document.getElementById("subjectSelect"), document.getElementById("subjectSelectView")];
+        selects.forEach(sel => {
+            const currentVal = sel.value;
+            sel.innerHTML = `<option value="">-- Select Subject --</option>`;
+            localData.subjects.forEach(subject => {
+                sel.innerHTML += `<option value="${subject.id}">${subject.name}</option>`;
+            });
+            if (localData.subjects.some(s => s.id === currentVal)) {
+                sel.value = currentVal;
+            }
+        });
+    }
+
+    function renderStudentList() {
+        const listDiv = document.getElementById("studentList");
+        listDiv.innerHTML = "";
+        if (localData.students.length === 0) { listDiv.innerHTML = "<p>No students added yet.</p>"; return; }
+        localData.students.forEach(s => {
+            listDiv.innerHTML += `<div><span>${s.name}</span><div>
+                <button class="warning" onclick="editStudent('${s.id}', '${s.name}')">Edit</button>
+                <button class="danger" onclick="deleteStudent('${s.id}')">Delete</button>
+            </div></div>`;
+        });
+    }
+
+    function updateAnalytics() {
+        document.getElementById('totalStudents').textContent = localData.students.length;
+        document.getElementById('totalSubjects').textContent = localData.subjects.length;
+        // Average attendance calculation can be added here if needed
+    }
+
+    function generateTable() {
+        const subjectId = document.getElementById("subjectSelectView").value;
+        const tableDiv = document.getElementById("attendanceTable");
+        if (!subjectId) { tableDiv.innerHTML = "<p>Select a subject to view.</p>"; return; }
+
+        const subject = localData.subjects.find(s => s.id === subjectId);
+        const attendanceForSubject = localData.attendance.filter(a => a.subject_id === subjectId);
+        const dates = [...new Set(attendanceForSubject.map(a => a.date))].sort();
+
+        if (dates.length === 0) { tableDiv.innerHTML = "<p>No attendance records for this subject.</p>"; return; }
+        
+        let tableHTML = `<div style="overflow-x:auto;"><table id="reportTable"><thead><tr><th>Student</th><th>%</th>`;
+        dates.forEach(d => {
+            const note = localData.notes.find(n => n.subject_id === subjectId && n.date === d)?.note || '';
+            tableHTML += `<th><div class="note-tooltip">${d.substring(5)}${note ? `<span class="tooltiptext">${note}</span>` : ''}</div></th>`;
+        });
+        tableHTML += `</tr></thead><tbody>`;
+
+        localData.students.forEach(student => {
+            let present = 0, absent = 0;
+            let dateCells = '';
+            dates.forEach(d => {
+                const record = attendanceForSubject.find(a => a.student_id === student.id && a.date === d);
+                let cellText = '-'; let cellClass = '';
+                if (record) {
+                    cellText = record.primary_status.charAt(0);
+                    cellClass = `status-${record.primary_status}`;
+                    if(record.primary_status === 'Present') {
+                        present++;
+                        if(record.secondary_status === 'Late') { cellText = 'P(L)'; cellClass += ' status-Late'; }
+                        if(record.secondary_status === 'Early') { cellText = 'P(E)'; cellClass += ' status-Early'; }
+                    } else if (record.primary_status === 'Absent') {
+                        absent++;
+                    }
+                }
+                dateCells += `<td class="${cellClass}">${cellText}</td>`;
+            });
+            const totalClasses = present + absent;
+            const percentage = totalClasses > 0 ? ((present / totalClasses) * 100).toFixed(0) : 0;
+            const lowAttClass = subject && percentage < subject.threshold ? 'low-attendance' : '';
+
+            tableHTML += `<tr class="${lowAttClass}"><td>${student.name}</td><td>${percentage}%</td>${dateCells}</tr>`;
+        });
+
+        tableHTML += `</tbody></table></div>`;
+        tableDiv.innerHTML = tableHTML;
+    }
+
+    // Admin-Only Functions
+    async function addSubject() {
+        const name = document.getElementById("subjectInput").value.trim();
+        const threshold = document.getElementById("subjectThresholdInput").value;
+        if (!name) return showToast("Subject name is required", "error");
+        const { error } = await db.from('subjects').insert({ name, threshold });
+        if (error) return showToast(error.message, "error");
+        await loadDataFromSupabase();
+    }
+
+    async function deleteSubject() {
+        const subjectId = document.getElementById("subjectSelect").value;
+        if (!subjectId) return showToast("Please select a subject to delete", "error");
+        if (!confirm("Are you sure you want to delete this subject and all its records?")) return;
+        const { error } = await db.from('subjects').delete().eq('id', subjectId);
+        if (error) return showToast(error.message, "error");
+        await loadDataFromSupabase();
+    }
+
+    async function addStudent() {
+        const names = document.getElementById("studentInput").value.trim().split('\n').filter(Boolean);
+        if (names.length === 0) return showToast("Enter student names", "error");
+        const studentsToAdd = names.map(name => ({ name }));
+        const { error } = await db.from('students').insert(studentsToAdd);
+        if (error) return showToast(error.message, "error");
+        document.getElementById("studentInput").value = "";
+        await loadDataFromSupabase();
+    }
+
+    async function editStudent(studentId, oldName) {
+        const newName = prompt(`Enter new name for ${oldName}:`, oldName);
+        if (newName && newName.trim() !== oldName) {
+            const { error } = await db.from('students').update({ name: newName.trim() }).eq('id', studentId);
+            if(error) return showToast(error.message, "error");
+            await loadDataFromSupabase();
+        }
+    }
+
+    async function deleteStudent(studentId) {
+        if (!confirm("Are you sure?")) return;
+        const { error } = await db.from('students').delete().eq('id', studentId);
+        if (error) return showToast(error.message, "error");
+        await loadDataFromSupabase();
+    }
+    
+    async function resetAllData() {
+        if (!confirm("🚨 WARNING! This will permanently delete ALL data. Are you absolutely sure?")) return;
+        const { error } = await db.rpc('delete_all_data');
+        if (error) return showToast(error.message, "error");
+        showToast("All data has been wiped.", "success");
+        await loadDataFromSupabase();
+    }
+    
+    function loadAttendanceForm() {
+        const subjectId = document.getElementById("subjectSelect").value;
+        const date = document.getElementById("attendanceDate").value;
+        const form = document.getElementById("attendanceForm");
+        if (!subjectId || !date) return showToast("Select subject and date", "error");
+        
+        const attendanceForDate = localData.attendance.filter(a => a.subject_id === subjectId && a.date === date);
+        const note = localData.notes.find(n => n.subject_id === subjectId && n.date === date)?.note || '';
+
+        let formHTML = `<h4>Marking for ${date}</h4>
+            <textarea id="attendanceNote" placeholder="Add a note for this date (e.g., Class Test)...">${note}</textarea>`;
+        localData.students.forEach(student => {
+            const record = attendanceForDate.find(a => a.student_id === student.id);
+            formHTML += `<label><span>${student.name}</span><div class="radio-group">
+                <input type="radio" name="${student.id}-primary" value="Present" ${record?.primary_status === 'Present' ? 'checked' : ''}> P
+                <input type="radio" name="${student.id}-primary" value="Absent" ${record?.primary_status !== 'Present' ? 'checked' : ''}> A
+                <span style="border-left: 1px solid #fff; padding-left:10px; margin-left:5px;"></span>
+                <input type="radio" name="${student.id}-secondary" value="Late" ${record?.secondary_status === 'Late' ? 'checked' : ''}> Late
+                <input type="radio" name="${student.id}-secondary" value="Early" ${record?.secondary_status === 'Early' ? 'checked' : ''}> Early
+                <input type="radio" name="${student.id}-secondary" value="On-Time" ${!['Late', 'Early'].includes(record?.secondary_status) ? 'checked' : ''}> On-Time
+            </div></label>`;
+        });
+        formHTML += `<button onclick="saveAttendance('${subjectId}', '${date}')">Save Attendance</button>`;
+        form.innerHTML = formHTML;
+    }
+
+    async function saveAttendance(subjectId, date) {
+        showToast('Saving...');
+        const records = localData.students.map(s => ({
+            subject_id: subjectId, student_id: s.id, date: date,
+            primary_status: document.querySelector(`input[name="${s.id}-primary"]:checked`).value,
+            secondary_status: document.querySelector(`input[name="${s.id}-secondary"]:checked`).value
+        }));
+        const note = { subject_id: subjectId, date: date, note: document.getElementById('attendanceNote').value.trim() };
+
+        const { error: attError } = await db.from('attendance').upsert(records, { onConflict: 'subject_id,student_id,date' });
+        const { error: noteError } = await db.from('attendance_notes').upsert(note, { onConflict: 'subject_id,date' });
+
+        if (attError || noteError) return showToast("Error saving data!", "error");
+        await loadDataFromSupabase();
+    }
+    
+    async function bulkUpdateAttendance() {
+        const subjectId = document.getElementById("subjectSelect").value;
+        const from = document.getElementById('bulkDateFrom').value;
+        const to = document.getElementById('bulkDateTo').value;
+        const status = document.getElementById('bulkStatus').value;
+        if (!subjectId || !from || !to) return showToast("Please select subject and date range.", "error");
+
+        let records = [];
+        for (let d = new Date(from); d <= new Date(to); d.setDate(d.getDate() + 1)) {
+            const dateStr = d.toISOString().split('T')[0];
+            localData.students.forEach(s => {
+                records.push({ subject_id: subjectId, student_id: s.id, date: dateStr, primary_status: status, secondary_status: null });
+            });
+        }
+        const { error } = await db.from('attendance').upsert(records, { onConflict: 'subject_id,student_id,date' });
+        if (error) return showToast(error.message, "error");
+        await loadDataFromSupabase();
+    }
+
+    // Utility Functions
+    function showToast(msg, type = "success") {
+        const toast = document.getElementById("toast");
+        toast.textContent = msg;
+        toast.className = `toast-${type}`;
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 3000);
+    }
+    function toggleTheme() { document.body.classList.toggle("light"); }
+    function downloadCSV() { /* Code can be added here */ }
+    function printReport() { /* Code can be added here */ }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (sessionStorage.getItem('isAdmin') === 'true') {
+            initializeApp();
+        }
+        document.getElementById("attendanceDate").valueAsDate = new Date();
+    });
+</script>
+
+</body>
+</html>
