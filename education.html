@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EduVerse - Smart Learning</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <style>
+    /* === Original EduVerse CSS === */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
@@ -143,50 +147,6 @@
       cursor: pointer;
       border-radius: 5px;
     }
-
-    form {
-      background: rgba(255,255,255,0.07);
-      padding: 30px;
-      border-radius: 12px;
-      max-width: 600px;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 0 20px rgba(0,255,231,0.3);
-    }
-    .form-group {
-      position: relative;
-    }
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 6px;
-      border: none;
-      background: rgba(255,255,255,0.1);
-      color: white;
-    }
-    .form-group label {
-      position: absolute;
-      top: 10px;
-      left: 12px;
-      color: #ccc;
-      font-size: 0.9rem;
-      pointer-events: none;
-      transition: 0.3s;
-    }
-    .form-group input:focus + label,
-    .form-group textarea:focus + label,
-    .form-group input:not(:placeholder-shown) + label,
-    .form-group textarea:not(:placeholder-shown) + label {
-      top: -10px;
-      left: 8px;
-      background: #1e1e2f;
-      padding: 0 4px;
-      font-size: 0.75rem;
-      color: #00ffe7;
-    }
     footer {
       text-align: center;
       padding: 20px;
@@ -196,10 +156,144 @@
       nav { display: none; }
       .hamburger { display: block; }
     }
+    a{
+      text-decoration:none;
+    }
+    
+    /* === CSS FROM NEW CONTACT FORM (MERGED) === */
+    :root {
+      --primary-glow: #00bfff;
+      --secondary-glow: #1e90ff;
+      --background-dark: #0d0c22;
+      --form-background: rgba(23, 22, 53, 0.85);
+      --success-color: #2ed573;
+      --error-color: #ff4757;
+    }
 
-a{
-text-decoration:none;
-}
+    #contact {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+    
+    .contact-form {
+      max-width: 600px;
+      margin: auto;
+      background: var(--form-background);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeIn 1s ease-in-out;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .contact-form:hover {
+      transform: perspective(1000px) rotateY(5deg) scale(1.02);
+      box-shadow: 0 15px 50px 0 rgba(0, 0, 0, 0.5);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .contact-form h2 {
+      margin: 0 0 10px;
+      font-size: 2.5rem;
+      color: #fff;
+      text-align: center;
+      font-weight: 600;
+    }
+    .contact-form p {
+      text-align: center;
+      margin-bottom: 40px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .form-group {
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 12px 12px 12px 45px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-glow);
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+    .form-group label {
+      position: absolute;
+      top: 14px;
+      left: 45px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1rem;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    .form-group input:focus + label, 
+    .form-group input:valid + label,
+    .form-group textarea:focus + label,
+    .form-group textarea:valid + label {
+      top: -25px;
+      left: 5px;
+      font-size: 0.8rem;
+      color: var(--primary-glow);
+      background: #2d2d44; /* Match page background */
+      padding: 0 5px;
+      border-radius: 4px;
+    }
+    #name { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.5)' width='20px' height='20px'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"); }
+    #email { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.5)' width='20px' height='20px'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E"); }
+    #message { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.5)' width='20px' height='20px'%3E%3Cpath d='M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z'/%3E%3C/svg%3E"); }
+    
+    #name, #email, #message { background-repeat: no-repeat; }
+    #name, #email { background-position: 15px center; }
+    #message { background-position: 15px 15px; }
+    
+    .form-group input.invalid, .form-group textarea.invalid {
+      border-color: var(--error-color);
+      animation: shake 0.5s ease-in-out;
+    }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+    .error-message { color: var(--error-color); font-size: 0.8rem; margin-top: 8px; display: none; }
+
+    /* Scoped button styles to contact form to avoid conflicts */
+    .contact-form button {
+      width: 100%; padding: 15px; border: none;
+      background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+      color: white; font-size: 1.1rem; font-weight: 600;
+      border-radius: 8px; cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+      box-shadow: 0 0 10px var(--secondary-glow);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 10px var(--secondary-glow); }
+      50% { box-shadow: 0 0 25px var(--secondary-glow); }
+      100% { box-shadow: 0 0 10px var(--secondary-glow); }
+    }
+    .contact-form button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 30px var(--primary-glow);
+      animation-play-state: paused;
+    }
+    .contact-form button:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+    .contact-form button:disabled { background: #555; cursor: not-allowed; opacity: 0.7; animation: none; }
+    .loader { width: 20px; height: 20px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; display: none; animation: rotation 1s linear infinite; }
+    @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    #form-message { margin-top: 20px; text-align: center; font-size: 1rem; font-weight: 600; padding: 15px; border-radius: 8px; display: none; animation: slideIn 0.5s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .success { color: #fff; background-color: rgba(46, 213, 115, 0.8); display: block; }
+    .error { color: #fff; background-color: rgba(255, 71, 87, 0.8); display: block; }
   </style>
 </head>
 <body>
@@ -229,17 +323,16 @@ text-decoration:none;
   <section id="features">
     <h2 style="text-align:center; margin-bottom: 30px;">Features</h2>
     <div class="features">
-     <a href="attendance.html"> <div class="feature"><i class="fas fa-user-graduate"></i><h3> Attendance </h3><p> Record of student class presence.</p></div></a>
-     <a href="eduquiz.html"> <div class="feature"><i class="fas fa-brain"></i><h3>AI Quizzes</h3><p>Smart tests powered by AI.</p></div></a>
-     <a href="allcode.html"> <div class="feature"> <i class="fas fa-video"></i><h3>HD Lectures</h3><p>Crystal clear video content.</p> </div></a>
-     <a href="progress.html"> <div class="feature"><i class="fas fa-chart-line"></i><h3>Progress Tracker</h3><p>Visualize your success.</p></div></a>
-     <a href="certificate.html"> <div class="feature"><i class="fas fa-certificate"></i><h3>Certifications</h3><p>Official and verifiable.</p></div></a>
-     <a href="multilang.html"> <div class="feature"><i class="fas fa-language"></i><h3>Multi-language</h3><p>Courses in 10+ languages.</p></div></a>
-     <a href="offlinestu.html"> <div class="feature"><i class="fas fa-download"></i><h3>Offline Access</h3><p>Study anywhere, anytime.</p></div></a>
-     <a href="codingpractice.html"> <div class="feature"><i class="fas fa-laptop-code"></i><h3>Coding Labs</h3><p>Interactive coding practice.</p></div></a>
-     <a href="contact.html"> <div class="feature"><i class="fas fa-puzzle-piece"></i><h3>Gamified Learning</h3><p>Fun and motivating modules.</p></div></a>
-     <a href="chatbot.html"> <div class="feature"><i class="fas fa-headset"></i><h3>24x7 Support</h3><p>We're always here to help.</p></div></a>
-      <!-- Add 10+ more as needed -->
+      <a href="attendance.html"> <div class="feature"><i class="fas fa-user-graduate"></i><h3> Attendance </h3><p> Record of student class presence.</p></div></a>
+      <a href="eduquiz.html"> <div class="feature"><i class="fas fa-brain"></i><h3>AI Quizzes</h3><p>Smart tests powered by AI.</p></div></a>
+      <a href="allcode.html"> <div class="feature"> <i class="fas fa-video"></i><h3>HD Lectures</h3><p>Crystal clear video content.</p> </div></a>
+      <a href="progress.html"> <div class="feature"><i class="fas fa-chart-line"></i><h3>Progress Tracker</h3><p>Visualize your success.</p></div></a>
+      <a href="certificate.html"> <div class="feature"><i class="fas fa-certificate"></i><h3>Certifications</h3><p>Official and verifiable.</p></div></a>
+      <a href="multilang.html"> <div class="feature"><i class="fas fa-language"></i><h3>Multi-language</h3><p>Courses in 10+ languages.</p></div></a>
+      <a href="offlinestu.html"> <div class="feature"><i class="fas fa-download"></i><h3>Offline Access</h3><p>Study anywhere, anytime.</p></div></a>
+      <a href="codingpractice.html"> <div class="feature"><i class="fas fa-laptop-code"></i><h3>Coding Labs</h3><p>Interactive coding practice.</p></div></a>
+      <a href="contact.html"> <div class="feature"><i class="fas fa-puzzle-piece"></i><h3>Gamified Learning</h3><p>Fun and motivating modules.</p></div></a>
+      <a href="chatbot.html"> <div class="feature"><i class="fas fa-headset"></i><h3>24x7 Support</h3><p>We're always here to help.</p></div></a>
     </div>
   </section>
 
@@ -252,7 +345,7 @@ text-decoration:none;
         <button>Download</button>
       </div>
       <div class="book">
-        <img src="https://openlibrary.org/works/OL1832424W/Schaum's_outline_of_theory_and_problems_of_data_structures?edition=key%3A/books/OL2541770M" alt="Book 2" />
+        <img src="https://covers.openlibrary.org/b/id/8222086-L.jpg" alt="Book 2" />
         <p>Data Structures</p>
         <button>Open</button>
       </div>
@@ -260,36 +353,142 @@ text-decoration:none;
   </section>
 
   <section id="contact">
-    <h2 style="text-align:center; margin-bottom: 30px;">Contact Us</h2>
-    <form>
-      <div class="form-group">
-        <input type="text" required placeholder=" " />
-        <label>Name</label>
-      </div>
-      <div class="form-group">
-        <input type="email" required placeholder=" " />
-        <label>Email</label>
-      </div>
-      <div class="form-group">
-        <textarea rows="4" required placeholder=" "></textarea>
-        <label>Your Message</label>
-      </div>
-      <button class="btn" type="submit">Send Message</button>
-    </form>
+        <form id="contactForm" class="contact-form" novalidate>
+            <h2>Contact Us</h2>
+            <p>We'd love to hear from you. Please fill out the form below.</p>
+            
+            <div class="form-group">
+                <input type="text" id="name" name="name" required placeholder=" ">
+                <label for="name">Name</label>
+                <div class="error-message">Name is required.</div>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" id="email" name="email" required placeholder=" ">
+                <label for="email">Email</label>
+                <div class="error-message">Please enter a valid email address.</div>
+            </div>
+            
+            <div class="form-group">
+                <textarea id="message" name="message" rows="5" required placeholder=" "></textarea>
+                <label for="message">Message</label>
+                <div class="error-message">Message cannot be empty.</div>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                <span class="btn-text">Submit Now</span>
+                <div class="loader"></div>
+            </button>
+            
+            <div id="form-message"></div>
+        </form>
   </section>
-
   <footer>
     <p>© 2025 EduVerse. All rights reserved.</p>
   </footer>
 
   <script>
+    // Original script for hamburger menu
     function toggleMenu() {
       document.getElementById('mobileMenu').classList.toggle('active');
+    }
+
+    // --- SCRIPT FOR NEW CONTACT FORM ADDED ---
+    
+    // 1. Initialize Supabase Client
+    const supabaseUrl = 'https://htrpbywoaxqymgwilvot.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0cnBieXdvYXhxeW1nd2lsdm90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2MDQxOTksImV4cCI6MjA2NzE4MDE5OX0.Wo_UyilZsPcuefw8RIMU4CPJS6JKrawLwUcxNYEWxeg';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // 2. Select Form Elements
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const loader = submitBtn.querySelector('.loader');
+    const formMessage = document.getElementById('form-message');
+    
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+
+    // 3. Client-Side Validation Function
+    function validateForm() {
+        let isValid = true;
+        
+        document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.form-group input, .form-group textarea').forEach(el => el.classList.remove('invalid'));
+
+        if (nameInput.value.trim() === '') {
+            isValid = false;
+            nameInput.classList.add('invalid');
+            nameInput.parentElement.querySelector('.error-message').style.display = 'block';
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value.trim())) {
+            isValid = false;
+            emailInput.classList.add('invalid');
+            emailInput.parentElement.querySelector('.error-message').style.display = 'block';
+        }
+        
+        if (messageInput.value.trim() === '') {
+            isValid = false;
+            messageInput.classList.add('invalid');
+            messageInput.parentElement.querySelector('.error-message').style.display = 'block';
+        }
+        return isValid;
+    }
+
+    // 4. Add Form Submission Event Listener
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          formMessage.style.display = 'none';
+
+          if (!validateForm()) {
+              return;
+          }
+
+          submitBtn.disabled = true;
+          btnText.textContent = 'Submitting...';
+          loader.style.display = 'block';
+
+          const { data, error } = await supabaseClient
+              .from('contacts') // Make sure you have a 'contacts' table in Supabase
+              .insert([{ 
+                  name: nameInput.value.trim(), 
+                  email: emailInput.value.trim(), 
+                  message: messageInput.value.trim() 
+              }])
+              .select();
+
+          if (error) {
+              console.error('Error submitting data:', error.message);
+              formMessage.textContent = `Oops! An error occurred: ${error.message}`;
+              formMessage.className = 'error';
+              formMessage.style.display = 'block';
+
+              submitBtn.disabled = false;
+              btnText.textContent = 'Submit Now';
+              loader.style.display = 'none';
+          } else {
+              console.log('Data submitted successfully:', data);
+              formMessage.textContent = 'Thank you! Your message has been sent successfully.';
+              formMessage.className = 'success';
+              formMessage.style.display = 'block';
+              contactForm.reset();
+
+              btnText.textContent = 'Sent!';
+
+              setTimeout(() => {
+                  submitBtn.disabled = false;
+                  btnText.textContent = 'Submit Now';
+                  loader.style.display = 'none';
+                  formMessage.style.display = 'none';
+              }, 5000);
+          }
+      });
     }
   </script>
 </body>
 </html>
-
-
-
-
