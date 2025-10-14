@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Contact Form</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* CSS Code */
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --background-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        .contact-form {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 1s ease-in-out;
+            overflow: hidden; /* For animations */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .contact-form h2 {
+            margin: 0 0 10px;
+            font-size: 2.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .contact-form p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 10px rgba(118, 75, 162, 0.2);
+        }
+        
+        /* Input validation styles */
+        .form-group input.invalid, .form-group textarea.invalid {
+            border-color: var(--error-color);
+        }
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none; /* Hidden by default */
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: var(--background-gradient);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* --- New Spinner Animation --- */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: none; /* Hidden by default */
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- New Success Animation --- */
+        #form-message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success { 
+            color: var(--success-color);
+            background-color: #e9f7ef;
+            border: 1px solid var(--success-color);
+            display: block;
+        }
+        .error { 
+            color: var(--error-color);
+            background-color: #fceeed;
+            border: 1px solid var(--error-color);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <form id="contactForm" class="contact-form" novalidate>
+            <h2>Contact Us</h2>
+            <p>We'd love to hear from you. Please fill out the form below.</p>
+            
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+                <div class="error-message">Name is required.</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message">Please enter a valid email address.</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+                <div class="error-message">Message cannot be empty.</div>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                <span class="btn-text">Submit Now</span>
+                <div class="loader"></div>
+            </button>
+            
+            <div id="form-message"></div>
+        </form>
+    </div>
+
+    <script>
+        // --- 1. Initialize Supabase Client ---
+        const supabaseUrl = 'https://rreiwfbddivcmuipgctb.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZWl3ZmJkZGl2Y211aXBnY3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNzUwOTYsImV4cCI6MjA3NTk1MTA5Nn0.VjihzaL0Dksl9cnHC37oAJ2GGpXk7qk1adQZiS6n3VM';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // --- 2. Select Form Elements ---
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const loader = submitBtn.querySelector('.loader');
+        const formMessage = document.getElementById('form-message');
+        
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const messageInput = document.getElementById('message');
+
+        // --- 3. Client-Side Validation Function ---
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.form-group input, .form-group textarea').forEach(el => el.classList.remove('invalid'));
+
+            // Validate Name
+            if (nameInput.value.trim() === '') {
+                isValid = false;
+                nameInput.classList.add('invalid');
+                nameInput.nextElementSibling.style.display = 'block';
+            }
+            
+            // Validate Email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value.trim())) {
+                isValid = false;
+                emailInput.classList.add('invalid');
+                emailInput.nextElementSibling.style.display = 'block';
+            }
+            
+            // Validate Message
+            if (messageInput.value.trim() === '') {
+                isValid = false;
+                messageInput.classList.add('invalid');
+                messageInput.nextElementSibling.style.display = 'block';
+            }
+
+            return isValid;
+        }
+
+        // --- 4. Add Form Submission Event Listener ---
+        contactForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Stop default form submission
+            
+            // Hide previous messages
+            formMessage.style.display = 'none';
+
+            if (!validateForm()) {
+                return; // Stop if validation fails
+            }
+
+            // --- Start submission visual feedback ---
+            submitBtn.disabled = true;
+            btnText.textContent = 'Submitting...';
+            loader.style.display = 'block';
+
+            // Insert data into Supabase
+            const { data, error } = await supabaseClient
+                .from('contacts')
+                .insert([{ 
+                    name: nameInput.value.trim(), 
+                    email: emailInput.value.trim(), 
+                    message: messageInput.value.trim() 
+                }])
+                .select(); // Use .select() to get the inserted data back
+
+            // --- Handle response ---
+            if (error) {
+                console.error('Error submitting data:', error.message);
+                formMessage.textContent = `Oops! An error occurred: ${error.message}`;
+                formMessage.className = 'error';
+                formMessage.style.display = 'block';
+
+                // Reset button on error
+                submitBtn.disabled = false;
+                btnText.textContent = 'Submit Now';
+                loader.style.display = 'none';
+            } else {
+                console.log('Data submitted successfully:', data);
+                formMessage.textContent = 'Thank you! Your message has been sent successfully.';
+                formMessage.className = 'success';
+                formMessage.style.display = 'block';
+                contactForm.reset();
+
+                btnText.textContent = 'Sent!';
+
+                setTimeout(() => {
+                    // Reset form state after 5 seconds
+                    submitBtn.disabled = false;
+                    btnText.textContent = 'Submit Now';
+                    loader.style.display = 'none';
+                    formMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
